@@ -9,17 +9,17 @@
     "build": "astro build && bun scripts/precompress.ts && bun build server.ts --target bun --outfile build/server.js",
     "start": "bun server.ts",
     "preview": "bun run build && bun server.ts",
-    "lint": "biome check . && astro check",
-    "lint:fix": "biome check --write .",
+    "lint": "oxlint && bun fmt --check && astro check",
+    "format": "oxlint --fix && bun fmt",
     "test": "bun test"
   },
   "devDependencies": {
     "@anyblades/blades": "3.1.0-beta.5",
     "@astrojs/check": "^0.9.12",
     "@astrojs/sitemap": "^3.7.4",
-    "@biomejs/biome": "2.6.2",
     "@types/bun": "^1.4.4",
     "astro": "^7.4.2",
+    "oxlint": "^1.89.0",
     "typescript": "^6.0.3"
   }
 }

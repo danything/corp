@@ -15,30 +15,30 @@ const map: Record<Lang, Translation> = { ja, en };
  * パス(/company/)、英語版は /en/ 以下(/en/company/)
  */
 export function langPaths(): {
-	params: { lang?: string };
-	props: { lang: Lang };
+  params: { lang?: string };
+  props: { lang: Lang };
 }[] {
-	return LANGS.map((lang) => ({
-		params: { lang: lang === DEFAULT_LANG ? undefined : lang },
-		props: { lang },
-	}));
+  return LANGS.map((lang) => ({
+    params: { lang: lang === DEFAULT_LANG ? undefined : lang },
+    props: { lang },
+  }));
 }
 
 /** ページの URL のパスから言語を決める(/en/ 以下なら英語) */
 export function langFromPath(pathname: string): Lang {
-	return /^\/en(\/|$)/.test(pathname) ? "en" : DEFAULT_LANG;
+  return /^\/en(\/|$)/.test(pathname) ? "en" : DEFAULT_LANG;
 }
 
 /** 言語の部分(/en/)を除いたパス。日本語版と英語版で同じページなら同じ値になる */
 export function stripLang(pathname: string): string {
-	return pathname.replace(/^\/en(\/|$)/, "/");
+  return pathname.replace(/^\/en(\/|$)/, "/");
 }
 
 /** サイト内のパスを、その言語のページのパスにする(英語は /en/ 以下) */
 export function localeUrl(path: string, lang: Lang): string {
-	return lang === DEFAULT_LANG ? path : `/${lang}${path}`;
+  return lang === DEFAULT_LANG ? path : `/${lang}${path}`;
 }
 
 export function t(lang: Lang): Translation {
-	return map[lang];
+  return map[lang];
 }

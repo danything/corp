@@ -24,6 +24,7 @@
 ## サーバー
 
 `dist/` のファイルを返すほかに、次のことだけをする。
+
 - **旧ブログの URL の転送。** GET・HEAD で `dist/` に無いパスは、`https://b.doany.io` の同じパス (とクエリ) へ 301 で送る
   (`/posts/renewal/` → `https://b.doany.io/posts/renewal/`)。ページのパスに `/` が無ければ `/` 付きへ 301 (`/contact` → `/contact/`)。
   判定は起動時に読んだ `dist/` のファイルの一覧だけで決める。`/.well-known/matrix/*` は Gateway で Matrix へ向けているので来ない。
@@ -68,8 +69,8 @@ TURNSTILE_SECRET=1x0000000000000000000000000000000AA CONTACT_WEBHOOK_URL=https:/
 http://localhost:8080
 
 ```shell
-bun run lint       # Biome の検査と型チェック (astro check)
-bun run lint:fix   # Biome で整形と直せるものを直す
+bun run lint       # oxlint・整形の確かめ (bun fmt --check)・型チェック (astro check)
+bun run format     # oxlint で直せるものを直し、bun fmt で整形する
 bun test           # サーバーのテスト
 bun run build      # dist/ (サイトと .br) と build/server.js
 ```
@@ -85,6 +86,7 @@ docker run --rm -p 8080:8080 -e TURNSTILE_SECRET=1x00000000000000000000000000000
 
 main に push すると GitHub Actions (`.github/workflows/docker.yml`) がイメージを ghcr.io に公開し、
 `deploy/deployment.yaml` のタグを書き換えて push する。Argo CD (danything/gitops の ApplicationSet) が `deploy/` を namespace `corp` に同期する。
+
 - `deploy/httproute.yaml` — Cilium Gateway `doany` の `https-apex` リスナー、`doany.io`
 - `deploy/secret.yaml` — `InfisicalSecret`。Infisical の `/corp/corp-secrets` (`contact-webhook-url`・`turnstile-secret`) を Secret `corp-secrets` にする
 
