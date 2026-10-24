@@ -130,13 +130,19 @@
 	--doa-shadow-pop:
 		0 4px 12px rgb(24 28 37 / 0.06), 0 16px 32px -8px rgb(24 28 37 / 0.14);
 }
+/* 暗いのは、OS が暗くてライトを選んでいないときと、ダークを選んだとき (ThemeSwitch) */
 @media (prefers-color-scheme: dark) {
-	:root {
+	:root:not([data-theme="light"]) {
 		/* 黒い地では影が見えないので、件は地より一段明るい面だけで分ける */
 		--doa-item-shadow: none;
 		--doa-shadow-pop:
 			0 4px 12px rgb(0 0 0 / 0.3), 0 16px 40px -8px rgb(0 0 0 / 0.5);
 	}
+}
+:root[data-theme="dark"] {
+	--doa-item-shadow: none;
+	--doa-shadow-pop:
+		0 4px 12px rgb(0 0 0 / 0.3), 0 16px 40px -8px rgb(0 0 0 / 0.5);
 }
 @media (prefers-reduced-transparency: reduce) {
 	:root {
@@ -1234,4 +1240,62 @@ main {
 .feature-text .links a {
 	position: relative;
 	z-index: 1;
+}
+
+/*
+ * 明暗で出し分ける画面 (worklog・mogiri)。<picture> の media は OS しか見ないので、
+ * 明暗 2 枚を並べて置き、選んだ明暗 (data-theme) と OS の設定で片方を隠す
+ */
+.only-dark {
+	display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme="light"]) .only-dark {
+		display: block;
+	}
+
+	:root:not([data-theme="light"]) .only-light {
+		display: none;
+	}
+}
+
+:root[data-theme="dark"] .only-dark {
+	display: block;
+}
+
+:root[data-theme="dark"] .only-light {
+	display: none;
+}
+
+/* ヘッダーの明暗の切り替え。今の状態のアイコンだけを出す */
+.theme-switch {
+	flex-direction: row;
+	margin: 0;
+	border: 0;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+}
+
+.theme-switch::before {
+	content: none;
+}
+
+.theme-icon {
+	display: none;
+	width: 1.125rem;
+	height: 1.125rem;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+.theme-switch:not([data-mode]) .theme-icon[data-mode="auto"],
+.theme-switch[data-mode="auto"] .theme-icon[data-mode="auto"],
+.theme-switch[data-mode="light"] .theme-icon[data-mode="light"],
+.theme-switch[data-mode="dark"] .theme-icon[data-mode="dark"] {
+	display: block;
 }

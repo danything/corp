@@ -17,6 +17,14 @@ export const ja = {
 	},
 	skipToContent: "本文へ移動",
 
+	/** ヘッダーの明暗の切り替え (ThemeSwitch.astro)。読み上げは「表示の明暗: ライト」の形 */
+	theme: {
+		label: "表示の明暗",
+		auto: "OS に合わせる",
+		light: "ライト",
+		dark: "ダーク",
+	},
+
 	home: {
 		/** ページの題(<title>)でサイト名に添える */
 		title: "Web システムの開発と、中古車・登録手続きの相談",

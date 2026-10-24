@@ -1,0 +1,35 @@
+---
+/*
+ * 窓の枠に入れる画面 1 つ。dark があれば明暗 2 枚を並べ、選んだ明暗で片方を隠す
+ * (main.css の .only-light・.only-dark。<picture> の media は OS しか見ないため)
+ */
+type Sources = {
+	avif: string;
+	webp: { src: string; srcSet: { attribute: string } };
+};
+
+interface Props {
+	light: Sources;
+	dark?: Sources;
+	alt: string;
+	sizes: string;
+	width: number;
+	height: number;
+}
+
+const { light, dark, alt, sizes, width, height } = Astro.props;
+const pictures = dark
+	? [
+			{ src: light, class: "only-light" },
+			{ src: dark, class: "only-dark" },
+		]
+	: [{ src: light, class: undefined }];
+---
+
+{pictures.map((p) => (
+	<picture class={p.class}>
+		<source type="image/avif" srcset={p.src.avif} sizes={sizes} />
+		<source type="image/webp" srcset={p.src.webp.srcSet.attribute} sizes={sizes} />
+		<img src={p.src.webp.src} alt={alt} width={width} height={height} loading="lazy" decoding="async" />
+	</picture>
+))}

@@ -8,7 +8,7 @@ import { services } from "@/config";
 
 /*
  * トップの頭の右 (狭い画面では下) に出す、自社サービスの画面。トップページを 1280×800 で撮ったもの
- * (2 倍の解像度)。worklog は明暗があるので OS の設定で選び、トドロクは明るいほうしか無い。
+ * (2 倍の解像度)。worklog は明暗があるので選んだ明暗 (OS か ThemeSwitch) で出し分け、トドロクは明るいほうしか無い。
  * 前に重ねる worklog がページでいちばん大きい絵 (LCP) なので遅延させず先に取る。後ろのトドロクは遅延でよい
  */
 interface Props {
@@ -45,13 +45,24 @@ const tk = await sources(todoroku);
 <div class="hero-shots">
 	<a class="shot shot-front" href={url.worklog}>
 		<span class="shot-bar"><span class="shot-dots" aria-hidden="true"></span>{host(url.worklog)}</span>
-		<picture>
-			<source media="(prefers-color-scheme: dark)" type="image/avif" srcset={wDark.avif} sizes={sizes} />
-			<source media="(prefers-color-scheme: dark)" type="image/webp" srcset={wDark.webp.srcSet.attribute} sizes={sizes} />
+		{/* 明暗 2 枚。選んだ明暗で片方を隠す (main.css の .only-light・.only-dark) */}
+		<picture class="only-light">
 			<source type="image/avif" srcset={wLight.avif} sizes={sizes} />
 			<source type="image/webp" srcset={wLight.webp.srcSet.attribute} sizes={sizes} />
 			<img
 				src={wLight.webp.src}
+				alt={text.home.shots.worklog}
+				width={1280}
+				height={800}
+				fetchpriority="high"
+				decoding="async"
+			/>
+		</picture>
+		<picture class="only-dark">
+			<source type="image/avif" srcset={wDark.avif} sizes={sizes} />
+			<source type="image/webp" srcset={wDark.webp.srcSet.attribute} sizes={sizes} />
+			<img
+				src={wDark.webp.src}
 				alt={text.home.shots.worklog}
 				width={1280}
 				height={800}

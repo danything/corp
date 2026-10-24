@@ -1,4 +1,5 @@
 ---
+import ThemeSwitch from "@components/ThemeSwitch.astro";
 import { type Lang, localeUrl, stripLang, t } from "@i18n/translation";
 import { site } from "@/config";
 
@@ -38,6 +39,7 @@ const links = [
 			<li>
 				<a class="nav-link" href={localeUrl(current, other)} hreflang={other} lang={other} data-label={text.nav.switchLang} aria-label={text.nav.switchLangLabel}>{text.nav.switchLang}</a>
 			</li>
+			<li><ThemeSwitch lang={lang} /></li>
 		</ul>
 	</nav>
 </header>
