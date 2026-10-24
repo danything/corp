@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+
 import { RateLimiter } from "../server/rate-limit";
 
 test("上限を超えたら断り、時間が経てば戻る", () => {
