@@ -112,9 +112,12 @@ const host = (u: string) => new URL(u).host;
   padding-inline: var(--doa-space-3);
 }
 
-/* トップの名前・一文・ボタン (index.astro) に続いて、画面の 2 枚とリンクがふわっと入る */
+/*
+ * トップの名前・一文・ボタン (index.astro) に続いて、画面の 2 枚とリンクがふわっと入る。
+ * 巻くのに合わせて動かせるブラウザでは、画面の 2 枚は BrowserFrame.astro の rise + drift に任せる
+ * (ここで animation を書くと drift を消してしまい、2 枚が逃げなくなる)
+ */
 @media (prefers-reduced-motion: no-preference) {
-  .hero-shots .shot,
   .hero-links {
     animation: rise var(--doa-duration-reveal) var(--doa-ease) both;
     animation-delay: calc(var(--i, 0) * 70ms);
@@ -130,6 +133,15 @@ const host = (u: string) => new URL(u).host;
 
   .hero-links {
     --i: 5;
+  }
+}
+
+@supports not (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-shots .shot {
+      animation: rise var(--doa-duration-reveal) var(--doa-ease) both;
+      animation-delay: calc(var(--i, 0) * 70ms);
+    }
   }
 }
 
