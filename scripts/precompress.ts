@@ -13,31 +13,31 @@ import zlib from "node:zlib";
 const dir = process.argv[2] ?? "dist";
 
 const COMPRESSIBLE =
-	/\.(?:html|css|js|mjs|json|xml|svg|txt|webmanifest|map|ico)$/i;
+  /\.(?:html|css|js|mjs|json|xml|svg|txt|webmanifest|map|ico)$/i;
 
 const files = fs
-	.readdirSync(dir, { recursive: true, encoding: "utf8" })
-	.map((f) => path.join(dir, f))
-	.filter((f) => COMPRESSIBLE.test(f) && fs.statSync(f).isFile());
+  .readdirSync(dir, { recursive: true, encoding: "utf8" })
+  .map((f) => path.join(dir, f))
+  .filter((f) => COMPRESSIBLE.test(f) && fs.statSync(f).isFile());
 
 const kb = (n: number) => `${Math.round(n / 1024)}K`;
 let original = 0;
 let written = 0;
 
 for (const file of files) {
-	const buf = fs.readFileSync(file);
-	original += buf.length;
-	const out = zlib.brotliCompressSync(buf, {
-		params: {
-			[zlib.constants.BROTLI_PARAM_QUALITY]: 11,
-			[zlib.constants.BROTLI_PARAM_SIZE_HINT]: buf.length,
-		},
-	});
-	if (out.length >= buf.length) continue;
-	fs.writeFileSync(`${file}.br`, out);
-	written += out.length;
+  const buf = fs.readFileSync(file);
+  original += buf.length;
+  const out = zlib.brotliCompressSync(buf, {
+    params: {
+      [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+      [zlib.constants.BROTLI_PARAM_SIZE_HINT]: buf.length,
+    },
+  });
+  if (out.length >= buf.length) continue;
+  fs.writeFileSync(`${file}.br`, out);
+  written += out.length;
 }
 
 console.log(
-	`precompress: ${files.length} ファイル ${kb(original)} → .br ${kb(written)}`,
+  `precompress: ${files.length} ファイル ${kb(original)} → .br ${kb(written)}`,
 );

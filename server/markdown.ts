@@ -14,60 +14,61 @@ const ZWSP = "\u200B";
  * 改行を \n にそろえ、@ の後ろに幅の無い空白を挟む
  */
 export function neutralize(value: string): string {
-	return (
-		value
-			.replace(/\r\n?/g, "\n")
-			// biome-ignore lint/suspicious/noControlCharactersInRegex: 制御文字を取り除くための正規表現
-			.replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g, "")
-			.replace(/[\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069]/g, "")
-			.replaceAll("@", `@${ZWSP}`)
-	);
+  return (
+    value
+      .replace(/\r\n?/g, "\n")
+      // 制御文字を取り除くための正規表現
+      // oxlint-disable-next-line no-control-regex
+      .replace(/[\u0000-\u0008\u000b-\u001f\u007f-\u009f]/g, "")
+      .replace(/[\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069]/g, "")
+      .replaceAll("@", `@${ZWSP}`)
+  );
 }
 
 /** 文字列の中で最も長い ` の並び */
 function longestBacktickRun(value: string): number {
-	let longest = 0;
-	for (const m of value.matchAll(/`+/g))
-		longest = Math.max(longest, m[0].length);
-	return longest;
+  let longest = 0;
+  for (const m of value.matchAll(/`+/g))
+    longest = Math.max(longest, m[0].length);
+  return longest;
 }
 
 /** 1 行の値をインラインコードにする。改行やタブは空白 1 つにする */
 export function inlineCode(value: string): string {
-	const text = neutralize(value).replace(/\s+/g, " ").trim();
-	const fence = "`".repeat(longestBacktickRun(text) + 1);
-	// ` で始まる・終わる値は、区切りとくっつかないよう空白を挟む(CommonMark は両端の空白 1 つを取り除く)
-	const pad = text.startsWith("`") || text.endsWith("`") ? " " : "";
-	return `${fence}${pad}${text}${pad}${fence}`;
+  const text = neutralize(value).replace(/\s+/g, " ").trim();
+  const fence = "`".repeat(longestBacktickRun(text) + 1);
+  // ` で始まる・終わる値は、区切りとくっつかないよう空白を挟む(CommonMark は両端の空白 1 つを取り除く)
+  const pad = text.startsWith("`") || text.endsWith("`") ? " " : "";
+  return `${fence}${pad}${text}${pad}${fence}`;
 }
 
 /** 複数行の値をコードブロックにする */
 export function codeBlock(value: string): string {
-	const text = neutralize(value).replace(/\n+$/, "");
-	const fence = "`".repeat(Math.max(3, longestBacktickRun(text) + 1));
-	return `${fence}\n${text}\n${fence}`;
+  const text = neutralize(value).replace(/\n+$/, "");
+  const fence = "`".repeat(Math.max(3, longestBacktickRun(text) + 1));
+  return `${fence}\n${text}\n${fence}`;
 }
 
 export interface ContactMessage {
-	name: string;
-	email: string;
-	company: string;
-	message: string;
-	lang: "ja" | "en";
-	ip?: string;
+  name: string;
+  email: string;
+  company: string;
+  message: string;
+  lang: "ja" | "en";
+  ip?: string;
 }
 
 /** 通知の文面。見出しと項目名は固定の文字列で、利用者の入力はすべてコードに入れる */
 export function buildContactMarkdown(m: ContactMessage): string {
-	const lines = [
-		"**doany.io のお問い合わせ**",
-		"",
-		`- 名前: ${inlineCode(m.name)}`,
-		`- メール: ${inlineCode(m.email)}`,
-		`- 会社・団体: ${m.company ? inlineCode(m.company) : "(なし)"}`,
-		`- 言語: ${m.lang === "en" ? "英語" : "日本語"}`,
-	];
-	if (m.ip) lines.push(`- IP: ${inlineCode(m.ip)}`);
-	lines.push("", codeBlock(m.message));
-	return lines.join("\n");
+  const lines = [
+    "**doany.io のお問い合わせ**",
+    "",
+    `- 名前: ${inlineCode(m.name)}`,
+    `- メール: ${inlineCode(m.email)}`,
+    `- 会社・団体: ${m.company ? inlineCode(m.company) : "(なし)"}`,
+    `- 言語: ${m.lang === "en" ? "英語" : "日本語"}`,
+  ];
+  if (m.ip) lines.push(`- IP: ${inlineCode(m.ip)}`);
+  lines.push("", codeBlock(m.message));
+  return lines.join("\n");
 }

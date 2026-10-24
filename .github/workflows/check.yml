@@ -1,6 +1,6 @@
 name: Check
 
-# PR で Biome・型チェック(astro check)・サーバーのテスト(bun test)・ビルドを通す
+# PR でリント (oxlint)・整形 (bun fmt)・型チェック(astro check)・サーバーのテスト(bun test)・ビルドを通す
 on:
   pull_request:
     branches: [main]
@@ -23,7 +23,7 @@ jobs:
           node-version: 24.22.1
           check-latest: true
       - run: bun install --frozen-lockfile
-      # Biome の検査と型チェック(biome check . && astro check)
+      # リント・整形の確かめ・型チェック(oxlint && bun fmt --check && astro check)
       - run: bun run lint
       # server.ts のテスト(tests/)
       - run: bun test
