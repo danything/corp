@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="noren">
+	<title>noren</title>
+	<rect width="32" height="32" rx="7" fill="#1e3a5f"/>
+	<rect x="5" y="7" width="22" height="2.5" rx="1.25" fill="#ffffff"/>
+	<rect x="6" y="10.5" width="5.5" height="15" rx="1" fill="#ffffff"/>
+	<rect x="13.25" y="10.5" width="5.5" height="15" rx="1" fill="#ffffff"/>
+	<rect x="20.5" y="10.5" width="5.5" height="15" rx="1" fill="#ffffff"/>
+</svg>

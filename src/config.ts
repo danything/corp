@@ -57,7 +57,7 @@ export const works = [
     id: "denpa",
     url: "https://github.com/DAnything/denpa",
   },
-  { id: "mogiri", url: "https://github.com/5ym/mogiri" },
+  { id: "noren", url: "https://github.com/5ym/noren" },
   {
     id: "yuzuriha",
     url: "https://y.doany.io/",

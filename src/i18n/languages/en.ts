@@ -120,8 +120,8 @@ export const en: Translation = {
     shots: {
       denpa:
         "The denpa recordings list, with recordings and reservations of made-up programmes, and a month calendar and filters on the right",
-      mogiri:
-        "The mogiri counter sales screen: cards for an admission ticket, a festival T-shirt (S, M, L) and yakisoba, each with quantity buttons",
+      noren:
+        "The noren storefront: cards with prices for a sample download, a T-shirt picked up at the venue and an admission ticket, with the three steps of buying below",
       yuzuriha:
         "Yuzuriha: a satellite map of Japan with property counts grouped by area, and filters on the left",
     },
@@ -132,9 +132,9 @@ export const en: Translation = {
       name: "denpa",
       body: "A system for recording and watching TV. It has two parts: an agent that drives the tuner and streams the raw TS, and the main app for the programme guide, reservations, recording, encoding, streaming and live viewing. No separate media server. Written in TypeScript and Svelte, with C# on the tuner side.",
     },
-    mogiri: {
-      name: "mogiri",
-      body: "A web app for events: QR admission, pre-orders, in-store pickup and self-checkout. It merges qes (admission) and Smart QR Payment (sales). The first version used Django REST Framework and Nuxt; it's now a single Bun, SvelteKit and SQLite app.",
+    noren: {
+      name: "noren (暖簾)",
+      body: "A web app for selling at small shops and events. Downloads are emailed after payment; goods and tickets are picked up at the venue by showing a QR code. Staff get screens for scanning QR codes at pickup and entry, and for counter sales with cash or Square, and sign in with OIDC. It merges the noren download shop with mogiri, which handled QR admission, pickup and counter sales. A single Bun, SvelteKit and SQLite app.",
     },
     yuzuriha: {
       name: "yuzuriha (譲葉)",
