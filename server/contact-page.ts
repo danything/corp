@@ -3,6 +3,7 @@
 // エラーの文言はページの側(src/components/ContactForm.astro の data-msg-*)にあり、
 // ページの JavaScript と同じものを使う。書き換えは Bun の HTMLRewriter で、値はエスケープされる
 import path from "node:path";
+
 import type { ContactInput, ErrorCode, Field, Lang } from "./contact";
 
 export const contactPagePath = (lang: Lang) =>
