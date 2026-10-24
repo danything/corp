@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="譲葉">
+  <rect width="32" height="32" rx="7" fill="#11171c" />
+  <!-- ユズリハの葉。新しい葉が出てから古い葉が落ちる木で、譲り渡すことの見立て -->
+  <path d="M16 3.5c7.4 5.6 9.4 11.6 6.9 18-1.7 4.2-4 6.3-6.9 6.9-2.9-.6-5.2-2.7-6.9-6.9-2.5-6.4-.5-12.4 6.9-18Z" fill="#34d399" />
+  <g stroke="#11171c" stroke-linecap="round" fill="none">
+    <path d="M16 27.5V8" stroke-width="1.8" />
+    <path d="M16 15.5 11.4 12.4M16 21.5l-4.6-3.1M16 15.5l4.6-3.1M16 21.5l4.6-3.1" stroke-width="1.6" />
+  </g>
+</svg>

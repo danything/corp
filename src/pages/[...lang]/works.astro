@@ -1,7 +1,20 @@
 ---
-import Icon from "@components/Icon.astro";
+import { getImage, Image } from "astro:assets";
 import { type Lang, langPaths, t } from "@i18n/translation";
 import Layout from "@layouts/Layout.astro";
+import blades from "@/assets/logos/blades.png";
+import denpaLogo from "@/assets/logos/denpa.svg";
+import epgstation from "@/assets/logos/epgstation.png";
+import ffmpeg from "@/assets/logos/ffmpeg.svg";
+import helm from "@/assets/logos/helm.svg";
+import kubernetes from "@/assets/logos/kubernetes.svg";
+import mogiriLogo from "@/assets/logos/mogiri.svg";
+import talos from "@/assets/logos/talos.svg";
+import yuzurihaLogo from "@/assets/logos/yuzuriha.svg";
+import denpaShot from "@/assets/works/denpa.webp";
+import mogiriDark from "@/assets/works/mogiri-dark.webp";
+import mogiriLight from "@/assets/works/mogiri-light.webp";
+import yuzurihaShot from "@/assets/works/yuzuriha.webp";
 import { github, oss, works } from "@/config";
 
 // 実績(/works/ と /en/works/)。自社サービスは事業内容(/business/#services)に置く
@@ -13,6 +26,66 @@ const page = text.worksPage;
 // {user}・{org} を GitHub へのリンクにする
 const [beforeUser, rest = ""] = page.others.split("{user}");
 const [between, afterOrg] = rest.split("{org}");
+
+/*
+ * 名前の前に置くアイコン。自分のものはアプリのアイコン (角丸の台ごとの絵) をそのまま、
+ * ほかのものは本家のロゴ (Simple Icons・リポジトリやサイトのアイコン) を白い台に載せる
+ */
+type Logo = { src: ImageMetadata; plate?: boolean };
+const logos: Record<string, Logo> = {
+	denpa: { src: denpaLogo },
+	mogiri: { src: mogiriLogo },
+	yuzuriha: { src: yuzurihaLogo },
+	helmMosp: { src: helm, plate: true },
+	gitops: { src: kubernetes, plate: true },
+	ffmpeg: { src: ffmpeg, plate: true },
+	blades: { src: blades, plate: true },
+	talos: { src: talos, plate: true },
+	epgstation: { src: epgstation, plate: true },
+};
+
+/** 画面を撮れるものは横長の件にして、説明の隣に画面を置く。label は窓の帯に出す名前。
+ * dark があれば OS の設定が暗いときにそちらを出す */
+const shots: Record<
+	string,
+	{ src: ImageMetadata; dark?: ImageMetadata; label: string; alt: string }
+> = {
+	denpa: { src: denpaShot, label: "denpa", alt: page.shots.denpa },
+	mogiri: {
+		src: mogiriLight,
+		dark: mogiriDark,
+		label: "mogiri",
+		alt: page.shots.mogiri,
+	},
+	yuzuriha: {
+		src: yuzurihaShot,
+		label: "y.doany.io",
+		alt: page.shots.yuzuriha,
+	},
+};
+
+const widths = [480, 720, 960, 1280];
+// 広い画面では件の右の列 (最大 36rem 前後)、狭い画面では幅いっぱい
+const sizes = "(min-width: 860px) 36rem, 90vw";
+async function sources(src: ImageMetadata) {
+	const [avif, webp] = await Promise.all(
+		(["avif", "webp"] as const).map((format) =>
+			getImage({ src, format, width: 960, widths, sizes }),
+		),
+	);
+	return { avif: avif.srcSet.attribute, webp };
+}
+const shotSources = Object.fromEntries(
+	await Promise.all(
+		Object.entries(shots).map(async ([id, s]) => [
+			id,
+			{
+				light: await sources(s.src),
+				dark: s.dark && (await sources(s.dark)),
+			},
+		]),
+	),
+);
 ---
 
 <Layout title={page.title} description={page.description}>
@@ -21,13 +94,46 @@ const [between, afterOrg] = rest.split("{org}");
 	<section aria-labelledby="works">
 		<h2 id="works">{page.worksTitle}</h2>
 		<ul class="rows">
-			{works.map((w) => (
-				<li class="item row" data-reveal>
-					<h3><span class="row-icon"><Icon name={w.icon} /></span><a href={w.url}>{text.works[w.id].name}</a></h3>
-					<p>{text.works[w.id].body}</p>
-					{"source" in w && <p class="links"><a href={w.source}>{page.source}</a></p>}
-				</li>
-			))}
+			{works.map((w) => {
+				const logo = logos[w.id];
+				const shot = shots[w.id];
+				const head = (
+					<h3>
+						<span class:list={["row-icon", { plate: logo.plate }]}><Image src={logo.src} alt="" width={40} height={40} /></span>
+						<a href={w.url}>{text.works[w.id].name}</a>
+					</h3>
+				);
+				const links = "source" in w && <p class="links"><a href={w.source}>{page.source}</a></p>;
+				if (!shot) {
+					return (
+						<li class="item row" data-reveal>
+							{head}
+							<p>{text.works[w.id].body}</p>
+							{links}
+						</li>
+					);
+				}
+				const src = shotSources[w.id];
+				return (
+					<li class="feature work" data-reveal>
+						<div class="feature-text">
+							{head}
+							<p>{text.works[w.id].body}</p>
+							{links}
+						</div>
+						<div class="shot">
+							<span class="shot-bar"><span class="shot-dots" aria-hidden="true"></span>{shot.label}</span>
+							<picture>
+								{src.dark && <source media="(prefers-color-scheme: dark)" type="image/avif" srcset={src.dark.avif} sizes={sizes} />}
+								{src.dark && <source media="(prefers-color-scheme: dark)" type="image/webp" srcset={src.dark.webp.srcSet.attribute} sizes={sizes} />}
+								<source type="image/avif" srcset={src.light.avif} sizes={sizes} />
+								<source type="image/webp" srcset={src.light.webp.srcSet.attribute} sizes={sizes} />
+								<img src={src.light.webp.src} alt={shot.alt} width={shot.src.width} height={shot.src.height} loading="lazy" decoding="async" />
+							</picture>
+						</div>
+					</li>
+				);
+			})}
 		</ul>
 		<p class="muted" data-reveal>{beforeUser}<a href={github.user.url}>{github.user.name}</a>{between}<a href={github.org.url}>{github.org.name}</a>{afterOrg}</p>
 	</section>
@@ -38,7 +144,7 @@ const [between, afterOrg] = rest.split("{org}");
 		<ul class="rows">
 			{oss.map((o) => (
 				<li class="item row" data-reveal>
-					<h3><span class="row-icon"><Icon name={o.icon} /></span>{text.oss[o.id].name}</h3>
+					<h3><span class="row-icon plate"><Image src={logos[o.id].src} alt="" width={40} height={40} /></span>{text.oss[o.id].name}</h3>
 					<p>{text.oss[o.id].body}</p>
 					<p class="links mono">{o.links.map((l, i) => (<>{i > 0 && " ・ "}<a href={l.url}>{l.label}</a></>))}</p>
 				</li>
