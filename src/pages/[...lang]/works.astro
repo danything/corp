@@ -1,4 +1,5 @@
 ---
+import Icon from "@components/Icon.astro";
 import { type Lang, langPaths, t } from "@i18n/translation";
 import Layout from "@layouts/Layout.astro";
 import { github, oss, works } from "@/config";
@@ -22,7 +23,7 @@ const [between, afterOrg] = rest.split("{org}");
 		<ul class="rows">
 			{works.map((w) => (
 				<li class="item row" data-reveal>
-					<h3><a href={w.url}>{text.works[w.id].name}</a></h3>
+					<h3><span class="row-icon"><Icon name={w.icon} /></span><a href={w.url}>{text.works[w.id].name}</a></h3>
 					<p>{text.works[w.id].body}</p>
 					{"source" in w && <p class="links"><a href={w.source}>{page.source}</a></p>}
 				</li>
@@ -37,7 +38,7 @@ const [between, afterOrg] = rest.split("{org}");
 		<ul class="rows">
 			{oss.map((o) => (
 				<li class="item row" data-reveal>
-					<h3>{text.oss[o.id].name}</h3>
+					<h3><span class="row-icon"><Icon name={o.icon} /></span>{text.oss[o.id].name}</h3>
 					<p>{text.oss[o.id].body}</p>
 					<p class="links mono">{o.links.map((l, i) => (<>{i > 0 && " ・ "}<a href={l.url}>{l.label}</a></>))}</p>
 				</li>

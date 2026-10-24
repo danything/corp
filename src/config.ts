@@ -51,21 +51,35 @@ export const services = [
 
 /** 制作実績。文言は languages の works */
 export const works = [
-	{ id: "denpa", url: "https://github.com/DAnything/denpa" },
-	{ id: "mogiri", url: "https://github.com/5ym/mogiri" },
+	{
+		id: "denpa",
+		icon: "radioTower",
+		url: "https://github.com/DAnything/denpa",
+	},
+	{ id: "mogiri", icon: "qrCode", url: "https://github.com/5ym/mogiri" },
 	{
 		id: "yuzuriha",
+		icon: "mapPinned",
 		url: "https://y.doany.io/",
 		source: "https://github.com/DAnything/yuzuriha",
 	},
-	{ id: "helmMosp", url: "https://github.com/DAnything/helm-mosp" },
-	{ id: "gitops", url: "https://github.com/danything/gitops" },
+	{
+		id: "helmMosp",
+		icon: "shipWheel",
+		url: "https://github.com/DAnything/helm-mosp",
+	},
+	{
+		id: "gitops",
+		icon: "gitBranch",
+		url: "https://github.com/danything/gitops",
+	},
 ] as const;
 
 /** OSS への貢献。文言は languages の oss。links はリポジトリ名などで、言語によらない */
 export const oss = [
 	{
 		id: "ffmpeg",
+		icon: "film",
 		links: [
 			{
 				label: "FFmpeg/FFmpeg#24067",
@@ -75,6 +89,7 @@ export const oss = [
 	},
 	{
 		id: "blades",
+		icon: "palette",
 		links: [
 			{
 				label: "anyblades/blades",
@@ -84,6 +99,7 @@ export const oss = [
 	},
 	{
 		id: "talos",
+		icon: "server",
 		links: [
 			{
 				label: "siderolabs/extensions#1238",
@@ -97,6 +113,7 @@ export const oss = [
 	},
 	{
 		id: "epgstation",
+		icon: "tv",
 		links: [
 			{
 				label: "l3tnun/EPGStation",
