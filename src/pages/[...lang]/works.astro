@@ -9,12 +9,12 @@ import epgstation from "@/assets/logos/epgstation.png";
 import ffmpeg from "@/assets/logos/ffmpeg.svg";
 import helm from "@/assets/logos/helm.svg";
 import kubernetes from "@/assets/logos/kubernetes.svg";
-import mogiriLogo from "@/assets/logos/mogiri.svg";
+import norenLogo from "@/assets/logos/noren.svg";
 import talos from "@/assets/logos/talos.svg";
 import yuzurihaLogo from "@/assets/logos/yuzuriha.svg";
 import denpaShot from "@/assets/works/denpa.webp";
-import mogiriDark from "@/assets/works/mogiri-dark.webp";
-import mogiriLight from "@/assets/works/mogiri-light.webp";
+import norenDark from "@/assets/works/noren-dark.webp";
+import norenLight from "@/assets/works/noren-light.webp";
 import yuzurihaShot from "@/assets/works/yuzuriha.webp";
 import { github, oss, works } from "@/config";
 
@@ -35,7 +35,7 @@ const [between, afterOrg] = rest.split("{org}");
 type Logo = { src: ImageMetadata; plate?: boolean };
 const logos: Record<string, Logo> = {
 	denpa: { src: denpaLogo },
-	mogiri: { src: mogiriLogo },
+	noren: { src: norenLogo },
 	yuzuriha: { src: yuzurihaLogo },
 	helmMosp: { src: helm, plate: true },
 	gitops: { src: kubernetes, plate: true },
@@ -52,11 +52,11 @@ const shots: Record<
 	{ src: ImageMetadata; dark?: ImageMetadata; label: string; alt: string }
 > = {
 	denpa: { src: denpaShot, label: "denpa", alt: page.shots.denpa },
-	mogiri: {
-		src: mogiriLight,
-		dark: mogiriDark,
-		label: "mogiri",
-		alt: page.shots.mogiri,
+	noren: {
+		src: norenLight,
+		dark: norenDark,
+		label: "noren",
+		alt: page.shots.noren,
 	},
 	yuzuriha: {
 		src: yuzurihaShot,
