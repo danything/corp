@@ -183,6 +183,7 @@ export const en: Translation = {
 		business: "Business",
 		license: "Secondhand dealer licence",
 		licenseValue: "Nagano Prefectural Public Safety Commission",
+		invoice: "Qualified invoice issuer number",
 		email: "Email",
 	},
 
@@ -260,6 +261,7 @@ export const en: Translation = {
 		noscript:
 			"This form uses JavaScript for a bot check. Without JavaScript, please send an email instead.",
 		privacy: "What you send is only used to reply to you.",
+		privacyLink: "Privacy policy",
 		errors: {
 			invalid: "Check the highlighted fields.",
 			turnstile:
@@ -292,5 +294,87 @@ export const en: Translation = {
 		copyright: "© Doa",
 		blog: "Blog",
 		social: "Social",
+		privacy: "Privacy policy",
+		tokushoho: "Specified Commercial Transactions Act notice",
+	},
+
+	privacy: {
+		title: "Privacy policy",
+		description: "How doany.io handles the personal information it receives.",
+		updated: "Established 24 October 2026",
+		lead: "This policy covers the personal information Doa receives on this site (doany.io). Doa's own services, such as Todoroku and worklog, have their own terms and privacy policies.",
+		sections: [
+			{
+				title: "What Doa receives",
+				body: [],
+				items: [
+					"What you enter in the contact form: your name, email address, company or organisation (optional) and message",
+					"The IP address the form was sent from",
+					"If you get in touch by email, that email and the address it came from",
+				],
+				links: [],
+			},
+			{
+				title: "What it's used for",
+				body: [
+					"Only to reply to you and for the conversation that follows. The IP address is only used to turn away repeated sends from the same address in a short time, and to tell spam apart.",
+				],
+				items: [],
+				links: [],
+			},
+			{
+				title: "Sharing",
+				body: [
+					"It isn't passed to anyone else, except with your consent or where the law requires it.",
+				],
+				items: [],
+				links: [],
+			},
+			{
+				title: "Outside services",
+				body: [
+					"Traffic to this site goes through Cloudflare. The contact form uses Cloudflare Turnstile as a bot check, which sends browser and device information and your IP address to Cloudflare, Inc. That information is handled under Cloudflare's privacy policy.",
+				],
+				items: [],
+				links: [
+					{
+						label: "Cloudflare's privacy policy",
+						url: "https://www.cloudflare.com/privacypolicy/",
+					},
+				],
+			},
+			{
+				title: "Keeping it",
+				body: [
+					"Messages arrive in a notification chat on a server Doa runs. They're kept only as long as the conversation needs, then deleted.",
+				],
+				items: [],
+				links: [],
+			},
+			{
+				title: "Cookies and analytics",
+				body: [
+					"This site doesn't use analytics, and Doa doesn't set cookies (Cloudflare Turnstile may use them to work). If you choose a colour scheme, only that choice is saved in your browser (localStorage).",
+				],
+				items: [],
+				links: [],
+			},
+			{
+				title: "Access, correction and deletion",
+				body: [
+					"If you ask, Doa will show, correct or delete the information it has received from you. Use the contact details below.",
+				],
+				items: [],
+				links: [],
+			},
+			{
+				title: "Changes",
+				body: ["Any change to this policy will be made on this page."],
+				items: [],
+				links: [],
+			},
+		],
+		contactTitle: "Contact",
+		contactBody: "Doa (owner: Ryuki Maruyama), Kisarazu, Chiba, Japan",
 	},
 };

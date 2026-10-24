@@ -1299,3 +1299,18 @@ main {
 .theme-switch[data-mode="dark"] .theme-icon[data-mode="dark"] {
 	display: block;
 }
+
+/* プライバシーポリシー。節は詰めて並べ、見出しは本文に近い大きさ */
+.policy section + section,
+.policy section {
+	margin-top: var(--doa-space-6);
+}
+
+.policy section > h2 {
+	font-size: var(--doa-text-lg);
+	margin-bottom: var(--doa-space-3);
+}
+
+.policy ul.body {
+	padding-left: 1.25rem;
+}

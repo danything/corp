@@ -80,7 +80,7 @@ const errorAttrs = Object.fromEntries(
 	<noscript><p class="status">{c.noscript} <a href={`mailto:${site.email}`}>{site.email}</a></p></noscript>
 
 	<button type="submit" data-sending={c.sending}>{c.submit}</button>
-	<p><small class="muted">{c.privacy}</small></p>
+	<p><small class="muted">{c.privacy} <a href={localeUrl("/privacy/", lang)}>{c.privacyLink}</a></small></p>
 </form>
 
 <script>

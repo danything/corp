@@ -1,6 +1,6 @@
 ---
 import { type Lang, localeUrl, t } from "@i18n/translation";
-import { github, site, socialLinks } from "@/config";
+import { github, services, site, socialLinks } from "@/config";
 
 interface Props {
 	lang: Lang;
@@ -19,5 +19,11 @@ const text = t(lang);
 			<li><a href={s.url} rel="me">{s.name}{s.name === "GitHub" ? ` (${github.user.name})` : ""}</a></li>
 		))}
 	</ul>
-	<p><a href={localeUrl("/company/", lang)}>{text.nav.company}</a> · {text.footer.copyright}</p>
+	<p>
+		<a href={localeUrl("/company/", lang)}>{text.nav.company}</a> ·
+		<a href={localeUrl("/privacy/", lang)}>{text.footer.privacy}</a> ·
+		{text.footer.tokushoho}:
+		{services.map((s, i) => (<>{i > 0 && "・"}<a href={new URL("/legal", s.url).href}>{text.services[s.id].name}</a></>))} ·
+		{text.footer.copyright}
+	</p>
 </footer>
