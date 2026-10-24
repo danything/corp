@@ -190,6 +190,7 @@ export const ja = {
 		business: "事業内容",
 		license: "古物商許可",
 		licenseValue: "長野県公安委員会",
+		invoice: "適格請求書発行事業者 登録番号",
 		email: "メール",
 	},
 
@@ -266,6 +267,7 @@ export const ja = {
 		noscript:
 			"このフォームはボット対策の確認に JavaScript を使います。JavaScript を使わない場合はメールで送ってください。",
 		privacy: "お送りいただいた内容は、返信のためだけに使います。",
+		privacyLink: "プライバシーポリシー",
 		errors: {
 			invalid: "入力を確認してください。",
 			turnstile:
@@ -299,5 +301,89 @@ export const ja = {
 		copyright: "© Doa",
 		blog: "ブログ",
 		social: "SNS",
+		privacy: "プライバシーポリシー",
+		/** 特定商取引法に基づく表記は、売っている自社サービスの側に置いてある */
+		tokushoho: "特定商取引法に基づく表記",
+	},
+
+	/** プライバシーポリシー (/privacy/)。sections の items は箇条書き、links はその節の後ろに付けるリンク */
+	privacy: {
+		title: "プライバシーポリシー",
+		description: "doany.io で受け取る個人情報の取り扱いです。",
+		updated: "2026年10月24日 制定",
+		lead: "Doa（以下「当方」）は、このサイト（doany.io）で受け取る個人情報を、次のとおり取り扱います。トドロク・worklog など自社サービスでの取り扱いは、各サービスの利用規約・プライバシーポリシーに定めています。",
+		sections: [
+			{
+				title: "受け取る情報",
+				body: [],
+				items: [
+					"お問い合わせフォームに入力された、お名前・メールアドレス・会社・団体名（任意）・お問い合わせ内容",
+					"フォームを送信したときの接続元の IP アドレス",
+					"メールでお問い合わせいただいた場合は、そのメールの内容と送信元のアドレス",
+				],
+				links: [],
+			},
+			{
+				title: "使う目的",
+				body: [
+					"お問い合わせへの返信と、その後のやり取りのためだけに使います。IP アドレスは、同じ接続元からの短い時間の続けての送信を断ることと、迷惑な送信を見分けることにだけ使います。",
+				],
+				items: [],
+				links: [],
+			},
+			{
+				title: "第三者への提供",
+				body: [
+					"ご本人の同意がある場合と、法令に基づく場合を除き、第三者には渡しません。",
+				],
+				items: [],
+				links: [],
+			},
+			{
+				title: "外部のサービス",
+				body: [
+					"このサイトの通信は Cloudflare を経由します。お問い合わせフォームのボット対策には Cloudflare Turnstile を使っていて、確認のためにブラウザや端末の情報と IP アドレスが Cloudflare, Inc. に送られます。これらの取り扱いは Cloudflare のプライバシーポリシーによります。",
+				],
+				items: [],
+				links: [
+					{
+						label: "Cloudflare のプライバシーポリシー",
+						url: "https://www.cloudflare.com/ja-jp/privacypolicy/",
+					},
+				],
+			},
+			{
+				title: "保管",
+				body: [
+					"お問い合わせの内容は、当方が管理するサーバーの通知用のチャットに届きます。やり取りに必要な間だけ保管し、不要になったものは削除します。",
+				],
+				items: [],
+				links: [],
+			},
+			{
+				title: "Cookie とアクセス解析",
+				body: [
+					"このサイトはアクセス解析を使っておらず、当方から Cookie は発行しません（Cloudflare Turnstile が動作のために使うことがあります）。表示の明暗を選んだときは、その選択だけをブラウザ（localStorage）に保存します。",
+				],
+				items: [],
+				links: [],
+			},
+			{
+				title: "開示・訂正・削除",
+				body: [
+					"ご本人から求めがあれば、受け取った情報の開示・訂正・削除に応じます。下の連絡先までお知らせください。",
+				],
+				items: [],
+				links: [],
+			},
+			{
+				title: "改定",
+				body: ["内容を変えるときは、このページを書き換えてお知らせします。"],
+				items: [],
+				links: [],
+			},
+		],
+		contactTitle: "お問い合わせ先",
+		contactBody: "Doa（代表 丸山 竜輝）・千葉県木更津市",
 	},
 };

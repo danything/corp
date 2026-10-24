@@ -62,6 +62,9 @@ const [ossBefore, ossAfter] = p.oss.split("{link}");
 		<dt>{c.license}</dt>
 		<dd><span lang="ja">長野県公安委員会 {site.kobutsuNumber}</span>{lang === "en" && ` (${c.licenseValue})`}</dd>
 
+		<dt>{c.invoice}</dt>
+		<dd><a href={`https://www.invoice-kohyo.nta.go.jp/regno-search/detail?selRegNo=${site.invoiceNumber.slice(1)}`}>{site.invoiceNumber}</a></dd>
+
 		<dt>{c.email}</dt>
 		<dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
 	</dl>

@@ -8,6 +8,8 @@ export const site = {
 	ogImage: "/static/images/og.png",
 	/** 古物商許可(表記はこのまま出す) */
 	kobutsuNumber: "第481012400049号",
+	/** 適格請求書発行事業者の登録番号 (国税庁の公表サイトで確かめられる。2025 年 1 月 1 日登録) */
+	invoiceNumber: "T3810315051206",
 	/** 開業(JSON-LD 用) */
 	foundingDate: "2018-10",
 	/** Cloudflare Turnstile の「doany.io」ウィジェット(公開値。yosegaki と同じ)。手元ではテスト用のキーに差し替えられる */

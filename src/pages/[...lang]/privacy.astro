@@ -1,0 +1,38 @@
+---
+import { type Lang, langPaths, t } from "@i18n/translation";
+import Layout from "@layouts/Layout.astro";
+import { site } from "@/config";
+
+// プライバシーポリシー(/privacy/ と /en/privacy/)。このサイトで受け取る情報だけを扱う(自社サービスは各サービスに)
+export const getStaticPaths = langPaths;
+
+const { lang } = Astro.props as { lang: Lang };
+const text = t(lang);
+const p = text.privacy;
+---
+
+<Layout title={p.title} description={p.description}>
+	<h1>{p.title}</h1>
+	<article class="policy">
+		<p class="muted">{p.updated}</p>
+		<p class="body">{p.lead}</p>
+
+		{p.sections.map((s, i) => (
+			<section aria-labelledby={`policy-${i + 1}`}>
+				<h2 id={`policy-${i + 1}`}>{i + 1}. {s.title}</h2>
+				{s.body.map((para) => <p class="body">{para}</p>)}
+				{s.items.length > 0 && (
+					<ul class="body">
+						{s.items.map((item) => <li>{item}</li>)}
+					</ul>
+				)}
+				{s.links.map((l) => <p class="body"><a href={l.url}>{l.label}</a></p>)}
+			</section>
+		))}
+
+		<section aria-labelledby="policy-contact">
+			<h2 id="policy-contact">{p.contactTitle}</h2>
+			<p class="body">{p.contactBody}<br /><a href={`mailto:${site.email}`}>{site.email}</a></p>
+		</section>
+	</article>
+</Layout>
