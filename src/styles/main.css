@@ -571,7 +571,7 @@ section > h2 {
 /* 名前・一文・ボタンが順にふわっと入り、画面の 2 枚が続く。場所はほんの少しだけ動かす (translate なので並びはずれない) */
 @media (prefers-reduced-motion: no-preference) {
 	.hero-text > *,
-	.shot,
+	.hero-shots .shot,
 	.hero-links {
 		animation: rise var(--doa-duration-reveal) var(--doa-ease) both;
 		animation-delay: calc(var(--i, 0) * 70ms);
@@ -641,6 +641,8 @@ section > h2 {
 
 .shot-back {
 	justify-self: end;
+	/* 同じ升に重ねる前の窓のほうが下まで長いので、伸ばさず絵の高さで止める */
+	align-self: start;
 }
 
 .shot-bar {
@@ -769,8 +771,42 @@ section > h2 {
 	transition: background-color var(--doa-duration) var(--doa-ease);
 }
 
-.item:hover {
+/*
+ * 見出しにリンクのある件は件全体を押せる (見出しのリンクの ::after を件いっぱいに広げる)。
+ * 件の中のほかのリンク (ソースなど) はその上に出して、別に押せるようにする
+ */
+.item,
+.feature {
+	position: relative;
+}
+
+.item h3 a::after,
+.feature-text h3 a::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+}
+
+.item .links a {
+	position: relative;
+	z-index: 1;
+}
+
+.item:has(h3 a):hover,
+.feature:hover {
 	background: var(--doa-item-hover);
+}
+
+.item:has(h3 a:focus-visible),
+.feature:has(h3 a:focus-visible) {
+	outline: 2px solid var(--pico-primary);
+	outline-offset: 2px;
+}
+
+.item h3 a:focus-visible,
+.feature-text h3 a:focus-visible {
+	outline: none;
 }
 
 .item h3 {
@@ -778,12 +814,14 @@ section > h2 {
 	line-height: 1.5;
 }
 
-.item h3 a {
+.item h3 a,
+.feature-text h3 a {
 	color: var(--doa-fg);
 	text-decoration: none;
 }
 
-.item h3 a:hover {
+.item h3 a:hover,
+.feature-text h3 a:hover {
 	color: var(--pico-primary);
 }
 
@@ -1049,4 +1087,59 @@ main {
 	[data-reveal] {
 		animation: none;
 	}
+}
+
+/*
+ * 事業内容の自社サービス。横長の件にして、左に説明、右にサービスの画面 (トップと同じ窓の枠) を置く。
+ * 狭い画面では画面を説明の下に回す
+ */
+.features {
+	display: grid;
+	gap: var(--doa-space-5);
+	margin: 0 0 var(--doa-space-5);
+	padding: 0;
+	list-style: none;
+}
+
+.feature {
+	display: grid;
+	gap: var(--doa-space-5);
+	align-items: center;
+	padding: var(--doa-space-6);
+	border-radius: var(--doa-item-radius);
+	background: var(--doa-item);
+	box-shadow: var(--doa-item-shadow);
+}
+
+@media (min-width: 860px) {
+	.feature {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+		gap: var(--doa-space-6);
+	}
+}
+
+.feature-text {
+	display: flex;
+	flex-direction: column;
+	gap: var(--doa-space-3);
+}
+
+.feature-text h3 {
+	font-size: var(--doa-text-xl);
+	line-height: 1.4;
+}
+
+.feature .shot {
+	grid-area: auto;
+	width: 100%;
+}
+
+.feature {
+	transition: background-color var(--doa-duration) var(--doa-ease);
+}
+
+/* 件全体がリンクなので、下の「サイトを開く」は押せる場所の目印だけ (リンクにはしない) */
+.feature-open {
+	color: var(--pico-primary);
+	font-size: var(--doa-text-sm);
 }

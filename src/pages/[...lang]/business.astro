@@ -1,7 +1,8 @@
 ---
+import ServiceFeatures from "@components/ServiceFeatures.astro";
 import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
 import Layout from "@layouts/Layout.astro";
-import { business, services } from "@/config";
+import { business } from "@/config";
 
 // 事業内容(/business/ と /en/business/)。事業ごとの節は #dev・#cars などで、トップから飛んでくる
 export const getStaticPaths = langPaths;
@@ -39,17 +40,7 @@ const [licenseBefore, licenseAfter] = page.licenseNote.split("{link}");
 				<p class="muted" data-reveal>{licenseBefore}<a href={localeUrl("/company/", lang)}>{page.licenseLink}</a>{licenseAfter}</p>
 			)}
 
-			{id === "services" && (
-				<ul class="cards">
-					{services.map((s) => (
-						<li class="item" data-reveal>
-							<h3><a href={s.url}>{text.services[s.id].name}</a></h3>
-							<p>{text.services[s.id].body}</p>
-							<p class="links"><a href={s.url}>{page.openSite} <span class="host">{new URL(s.url).host}</span> <span class="arrow" aria-hidden="true">→</span></a></p>
-						</li>
-					))}
-				</ul>
-			)}
+			{id === "services" && <ServiceFeatures lang={lang} />}
 		</section>
 	))}
 </Layout>

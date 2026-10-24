@@ -1,0 +1,66 @@
+---
+import { getImage } from "astro:assets";
+import { type Lang, t } from "@i18n/translation";
+import todoroku from "@/assets/hero/todoroku.webp";
+import worklogDark from "@/assets/hero/worklog-dark.webp";
+import worklogLight from "@/assets/hero/worklog-light.webp";
+import { services } from "@/config";
+
+/*
+ * 事業内容の自社サービス。1 件ずつ横長にして、説明の隣にトップと同じ画面 (1280×800 のトップページ) を置く。
+ * worklog は OS の明暗で画面を選び、トドロクは明るいほうしか無い
+ */
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const text = t(lang);
+const page = text.businessPage;
+
+const widths = [480, 720, 960, 1280];
+// 広い画面では件の右の列 (最大 36rem 前後)、狭い画面では幅いっぱい
+const sizes = "(min-width: 860px) 36rem, 90vw";
+
+async function sources(src: ImageMetadata) {
+	const [avif, webp] = await Promise.all(
+		(["avif", "webp"] as const).map((format) =>
+			getImage({ src, format, width: 960, widths, sizes }),
+		),
+	);
+	return { avif: avif.srcSet.attribute, webp };
+}
+
+const shots = {
+	todoroku: { light: await sources(todoroku), dark: undefined },
+	worklog: {
+		light: await sources(worklogLight),
+		dark: await sources(worklogDark),
+	},
+};
+---
+
+<ul class="features">
+	{services.map((s) => {
+		const shot = shots[s.id];
+		return (
+			<li class="feature" data-reveal>
+				<div class="feature-text">
+					<h3><a href={s.url}>{text.services[s.id].name}</a></h3>
+					<p>{text.services[s.id].body}</p>
+					<p class="feature-open" aria-hidden="true">{page.openSite} <span class="host">{new URL(s.url).host}</span> <span class="arrow">→</span></p>
+				</div>
+				<div class="shot">
+					<span class="shot-bar"><span class="shot-dots" aria-hidden="true"></span>{new URL(s.url).host}</span>
+					<picture>
+						{shot.dark && <source media="(prefers-color-scheme: dark)" type="image/avif" srcset={shot.dark.avif} sizes={sizes} />}
+						{shot.dark && <source media="(prefers-color-scheme: dark)" type="image/webp" srcset={shot.dark.webp.srcSet.attribute} sizes={sizes} />}
+						<source type="image/avif" srcset={shot.light.avif} sizes={sizes} />
+						<source type="image/webp" srcset={shot.light.webp.srcSet.attribute} sizes={sizes} />
+						<img src={shot.light.webp.src} alt={text.home.shots[s.id]} width={1280} height={800} loading="lazy" decoding="async" />
+					</picture>
+				</div>
+			</li>
+		);
+	})}
+</ul>
