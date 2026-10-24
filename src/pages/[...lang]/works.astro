@@ -1,9 +1,9 @@
 ---
 import { type Lang, langPaths, t } from "@i18n/translation";
 import Layout from "@layouts/Layout.astro";
-import { github, oss, services, works } from "@/config";
+import { github, oss, works } from "@/config";
 
-// サービス・実績(/works/ と /en/works/)
+// 実績(/works/ と /en/works/)。自社サービスは事業内容(/business/#services)に置く
 export const getStaticPaths = langPaths;
 
 const { lang } = Astro.props as { lang: Lang };
@@ -17,22 +17,8 @@ const [between, afterOrg] = rest.split("{org}");
 <Layout title={page.title} description={page.description}>
 	<h1>{page.title}</h1>
 
-	<section aria-labelledby="services">
-		<h2 id="services">{page.servicesTitle}</h2>
-		<p class="lead">{page.servicesLead}</p>
-		<ul class="cards">
-			{services.map((s) => (
-				<li class="item" data-reveal>
-					<h3><a href={s.url}>{text.services[s.id].name}</a></h3>
-					<p>{text.services[s.id].body}</p>
-					<p class="links"><a href={s.url}>{text.home.openSite} <span class="host">{new URL(s.url).host}</span> <span class="arrow" aria-hidden="true">→</span></a></p>
-				</li>
-			))}
-		</ul>
-	</section>
-
 	<section aria-labelledby="works">
-		<h2 id="works" data-reveal>{page.worksTitle}</h2>
+		<h2 id="works">{page.worksTitle}</h2>
 		<ul class="cards">
 			{works.map((w) => (
 				<li class="item" data-reveal>

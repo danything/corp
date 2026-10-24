@@ -2,9 +2,9 @@
 import HeroShots from "@components/HeroShots.astro";
 import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
 import Layout from "@layouts/Layout.astro";
-import { services, site } from "@/config";
+import { business, site } from "@/config";
 
-// トップ(/ と /en/)
+// トップ(/ と /en/)。要約だけを置き、詳しくは事業内容・実績・事業者情報の各ページに書く
 export const getStaticPaths = langPaths;
 
 const { lang } = Astro.props as { lang: Lang };
@@ -14,12 +14,11 @@ const text = t(lang);
 <Layout>
 	<section class="hero">
 		<div class="hero-text">
-			<p class="hero-meta">{text.home.meta}</p>
 			<h1>{site.name}</h1>
 			<p class="hero-lead">{text.home.lead}</p>
 			<div class="actions">
 				<a class="button" href={localeUrl("/contact/", lang)}>{text.home.ctaContact}</a>
-				<a class="button secondary" href={localeUrl("/works/", lang)}>{text.home.ctaWorks} <span class="arrow" aria-hidden="true">→</span></a>
+				<a class="button secondary" href={localeUrl("/business/", lang)}>{text.home.ctaBusiness} <span class="arrow" aria-hidden="true">→</span></a>
 			</div>
 		</div>
 		<HeroShots lang={lang} />
@@ -28,34 +27,13 @@ const text = t(lang);
 	<section aria-labelledby="business">
 		<h2 id="business" data-reveal>{text.home.businessTitle}</h2>
 		<ul class="cards">
-			{text.home.business.map((b) => (
+			{business.map((id) => (
 				<li class="item" data-reveal>
-					<h3>{b.title}</h3>
-					<p>{b.body}</p>
+					<h3><a href={localeUrl(`/business/#${id}`, lang)}>{text.business[id].title}</a></h3>
+					<p>{text.business[id].summary}</p>
 				</li>
 			))}
 		</ul>
-	</section>
-
-	<section aria-labelledby="services">
-		<h2 id="services" data-reveal>{text.home.servicesTitle}</h2>
-		<p class="lead" data-reveal>{text.home.servicesLead}</p>
-		<ul class="cards">
-			{services.map((s) => (
-				<li class="item" data-reveal>
-					<h3><a href={s.url}>{text.services[s.id].name}</a></h3>
-					<p>{text.services[s.id].body}</p>
-					<p class="links"><a href={s.url}>{text.home.openSite} <span class="host">{new URL(s.url).host}</span> <span class="arrow" aria-hidden="true">→</span></a></p>
-				</li>
-			))}
-		</ul>
-		<p data-reveal><a class="button secondary" href={localeUrl("/works/", lang)}>{text.home.worksLink} <span class="arrow" aria-hidden="true">→</span></a></p>
-	</section>
-
-	<section aria-labelledby="about" data-reveal>
-		<h2 id="about">{text.home.aboutTitle}</h2>
-		<p class="body">{text.home.aboutBody}</p>
-		<p><a class="button secondary" href={localeUrl("/company/#profile", lang)}>{text.home.aboutLink} <span class="arrow" aria-hidden="true">→</span></a></p>
 	</section>
 
 	<section aria-labelledby="contact" data-reveal>
