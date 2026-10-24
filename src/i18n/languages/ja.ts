@@ -17,11 +17,21 @@ export const ja = {
 	skipToContent: "本文へ移動",
 
 	home: {
-		lead: "Web システムの開発と、中古車・自動車の登録手続きの相談を受けている個人事業です。",
+		/** ページの題(<title>)でサイト名に添える */
+		title: "Web システムの開発と、中古車・登録手続きの相談",
+		lead: "業務システムや Web アプリを作っています。中古車の売り買いや、貨物登録などの手続きの相談にも乗ります。",
 		/** 名前の上に添える事実(所在地・開業) */
 		meta: "千葉県木更津市・2018年10月開業",
 		ctaContact: "お問い合わせ",
 		ctaWorks: "サービスと実績",
+		/** 頭の右に出す自社サービスの画面。alt は映っているものを書く */
+		shotsLabel: "自社サービス",
+		shots: {
+			todoroku:
+				"トドロクのトップページ。車両台帳に車名・型式などを入れている画面が映っている",
+			worklog:
+				"worklog のトップページ。Slack や GitHub のログから作った稼働表のサンプルが出ている",
+		},
 
 		businessTitle: "事業内容",
 		business: [
@@ -35,11 +45,11 @@ export const ja = {
 			},
 			{
 				title: "中古車の買取・販売の相談",
-				body: "古物商許可を持っていて、中古車の業者オークションに加盟しています。買取と販売の相談を受けます。",
+				body: "古物商許可を持っていて、中古車の業者オークションに加盟しています。買いたい・売りたい、どちらの相談でもどうぞ。",
 			},
 			{
 				title: "自動車の登録手続きの相談",
-				body: "貨物登録など、自動車の登録手続きの相談を受けます。",
+				body: "貨物登録など、自動車の登録手続きの相談に乗ります。",
 			},
 			{
 				title: "自社サービスの開発・運営",
@@ -48,8 +58,10 @@ export const ja = {
 		],
 
 		servicesTitle: "自社サービス",
-		servicesLead: "Doa で作り、運用とサポートもしているサービスです。",
+		servicesLead: "自分で作って、運用もサポートもしています。",
 		worksLink: "制作実績と OSS への貢献",
+		/** サービスの件の下に添えるリンク(ホスト名を後ろに付ける) */
+		openSite: "サイトを開く",
 
 		aboutTitle: "代表について",
 		aboutBody:
@@ -57,7 +69,7 @@ export const ja = {
 		aboutLink: "経歴はブログのプロフィールに書いています",
 
 		contactTitle: "お問い合わせ",
-		contactBody: "フォームかメールで受け付けています。",
+		contactBody: "フォームかメールでどうぞ。",
 	},
 
 	services: {
@@ -75,7 +87,7 @@ export const ja = {
 		title: "サービス・実績",
 		description: "Doa の自社サービス、制作実績、OSS への貢献です。",
 		servicesTitle: "自社サービス",
-		servicesLead: "Doa で作り、運用とサポートもしているサービスです。",
+		servicesLead: "自分で作って、運用もサポートもしています。",
 		worksTitle: "制作実績",
 		source: "ソース",
 		others:

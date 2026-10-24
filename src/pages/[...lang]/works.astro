@@ -25,6 +25,7 @@ const [between, afterOrg] = rest.split("{org}");
 				<li class="item" data-reveal>
 					<h3><a href={s.url}>{text.services[s.id].name}</a></h3>
 					<p>{text.services[s.id].body}</p>
+					<p class="links"><a href={s.url}>{text.home.openSite} <span class="host">{new URL(s.url).host}</span> <span class="arrow" aria-hidden="true">→</span></a></p>
 				</li>
 			))}
 		</ul>

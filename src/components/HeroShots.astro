@@ -1,0 +1,89 @@
+---
+import { getImage } from "astro:assets";
+import { type Lang, t } from "@i18n/translation";
+import todoroku from "@/assets/hero/todoroku.webp";
+import worklogDark from "@/assets/hero/worklog-dark.webp";
+import worklogLight from "@/assets/hero/worklog-light.webp";
+import { services } from "@/config";
+
+/*
+ * トップの頭の右 (狭い画面では下) に出す、自社サービスの画面。トップページを 1280×800 で撮ったもの
+ * (2 倍の解像度)。worklog は明暗があるので OS の設定で選び、トドロクは明るいほうしか無い。
+ * 前に重ねる worklog がページでいちばん大きい絵 (LCP) なので遅延させず先に取る。後ろのトドロクは遅延でよい
+ */
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const text = t(lang);
+
+const widths = [480, 720, 960, 1280];
+// 広い画面では列の 8 割 (最大 480px 前後)、狭い画面では幅の 8 割
+const sizes = "(min-width: 960px) 30rem, 80vw";
+
+async function sources(src: ImageMetadata) {
+	const [avif, webp] = await Promise.all(
+		(["avif", "webp"] as const).map((format) =>
+			getImage({ src, format, width: 960, widths, sizes }),
+		),
+	);
+	return { avif: avif.srcSet.attribute, webp };
+}
+
+const url = Object.fromEntries(services.map((s) => [s.id, s.url])) as Record<
+	(typeof services)[number]["id"],
+	string
+>;
+const host = (u: string) => new URL(u).host;
+
+const wLight = await sources(worklogLight);
+const wDark = await sources(worklogDark);
+const tk = await sources(todoroku);
+---
+
+<div class="hero-shots">
+	<a class="shot shot-front" href={url.worklog}>
+		<span class="shot-bar"><span class="shot-dots" aria-hidden="true"></span>{host(url.worklog)}</span>
+		<picture>
+			<source media="(prefers-color-scheme: dark)" type="image/avif" srcset={wDark.avif} sizes={sizes} />
+			<source media="(prefers-color-scheme: dark)" type="image/webp" srcset={wDark.webp.srcSet.attribute} sizes={sizes} />
+			<source type="image/avif" srcset={wLight.avif} sizes={sizes} />
+			<source type="image/webp" srcset={wLight.webp.srcSet.attribute} sizes={sizes} />
+			<img
+				src={wLight.webp.src}
+				alt={text.home.shots.worklog}
+				width={1280}
+				height={800}
+				fetchpriority="high"
+				decoding="async"
+			/>
+		</picture>
+	</a>
+	<a class="shot shot-back" href={url.todoroku}>
+		<span class="shot-bar"><span class="shot-dots" aria-hidden="true"></span>{host(url.todoroku)}</span>
+		<picture>
+			<source type="image/avif" srcset={tk.avif} sizes={sizes} />
+			<source type="image/webp" srcset={tk.webp.srcSet.attribute} sizes={sizes} />
+			<img
+				src={tk.webp.src}
+				alt={text.home.shots.todoroku}
+				width={1280}
+				height={800}
+				loading="lazy"
+				decoding="async"
+			/>
+		</picture>
+	</a>
+	<ul class="hero-links" aria-label={text.home.shotsLabel}>
+		{services.map((s) => (
+			<li>
+				<a class="button secondary" href={s.url}>
+					{text.services[s.id].name}
+					<span class="host">{host(s.url)}</span>
+					<span class="arrow" aria-hidden="true">→</span>
+				</a>
+			</li>
+		))}
+	</ul>
+</div>

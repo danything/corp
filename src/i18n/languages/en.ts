@@ -17,10 +17,18 @@ export const en: Translation = {
 	skipToContent: "Skip to content",
 
 	home: {
-		lead: "A one-person business that builds web systems and helps with used cars and vehicle registration.",
+		title: "Web systems, used cars and vehicle registration",
+		lead: "I build business systems and web apps. I can also help you buy or sell a used car, or sort out vehicle registration.",
 		meta: "Kisarazu, Chiba · Established October 2018",
 		ctaContact: "Contact",
 		ctaWorks: "Services and work",
+		shotsLabel: "Own services",
+		shots: {
+			todoroku:
+				"The Todoroku home page, showing the vehicle ledger form with the make, model and engine type filled in",
+			worklog:
+				"The worklog home page, with a sample timesheet built from Slack and GitHub logs",
+		},
 
 		businessTitle: "Business",
 		business: [
@@ -34,7 +42,7 @@ export const en: Translation = {
 			},
 			{
 				title: "Buying and selling used cars",
-				body: "Doa holds a secondhand dealer licence (kobutsusho kyoka) and is a member of used car dealer auctions. Ask about buying or selling a car.",
+				body: "Doa holds a secondhand dealer licence (kobutsusho kyoka) and is a member of used car dealer auctions. Get in touch if you want to buy or sell one.",
 			},
 			{
 				title: "Vehicle registration",
@@ -47,8 +55,9 @@ export const en: Translation = {
 		],
 
 		servicesTitle: "Own services",
-		servicesLead: "Doa builds these, and runs and supports them too.",
+		servicesLead: "I built these, and I run and support them too.",
 		worksLink: "Work and open source contributions",
+		openSite: "Open site",
 
 		aboutTitle: "About the owner",
 		aboutBody:
@@ -74,7 +83,7 @@ export const en: Translation = {
 		title: "Services & Work",
 		description: "Doa's own services, past work and open source contributions.",
 		servicesTitle: "Own services",
-		servicesLead: "Doa builds these, and runs and supports them too.",
+		servicesLead: "I built these, and I run and support them too.",
 		worksTitle: "Work",
 		source: "Source",
 		others:
