@@ -19,42 +19,42 @@ const [between, afterOrg] = rest.split("{org}");
 
 	<section aria-labelledby="services">
 		<h2 id="services">{page.servicesTitle}</h2>
-		<p>{page.servicesLead}</p>
-		<div class="cards">
+		<p class="lead">{page.servicesLead}</p>
+		<ul class="cards">
 			{services.map((s) => (
-				<article>
+				<li class="item" data-reveal>
 					<h3><a href={s.url}>{text.services[s.id].name}</a></h3>
 					<p>{text.services[s.id].body}</p>
-				</article>
+				</li>
 			))}
-		</div>
+		</ul>
 	</section>
 
 	<section aria-labelledby="works">
-		<h2 id="works">{page.worksTitle}</h2>
-		<div class="cards">
+		<h2 id="works" data-reveal>{page.worksTitle}</h2>
+		<ul class="cards">
 			{works.map((w) => (
-				<article>
+				<li class="item" data-reveal>
 					<h3><a href={w.url}>{text.works[w.id].name}</a></h3>
 					<p>{text.works[w.id].body}</p>
-					{"source" in w && <p><a href={w.source}>{page.source}</a></p>}
-				</article>
+					{"source" in w && <p class="links"><a href={w.source}>{page.source}</a></p>}
+				</li>
 			))}
-		</div>
-		<p>{beforeUser}<a href={github.user.url}>{github.user.name}</a>{between}<a href={github.org.url}>{github.org.name}</a>{afterOrg}</p>
+		</ul>
+		<p class="muted" data-reveal>{beforeUser}<a href={github.user.url}>{github.user.name}</a>{between}<a href={github.org.url}>{github.org.name}</a>{afterOrg}</p>
 	</section>
 
 	<section aria-labelledby="oss">
-		<h2 id="oss">{page.ossTitle}</h2>
-		<p>{page.ossLead}</p>
-		<div class="cards">
+		<h2 id="oss" data-reveal>{page.ossTitle}</h2>
+		<p class="lead" data-reveal>{page.ossLead}</p>
+		<ul class="cards">
 			{oss.map((o) => (
-				<article>
+				<li class="item" data-reveal>
 					<h3>{text.oss[o.id].name}</h3>
 					<p>{text.oss[o.id].body}</p>
-					<p>{o.links.map((l, i) => (<>{i > 0 && " · "}<a href={l.url}>{l.label}</a></>))}</p>
-				</article>
+					<p class="links mono">{o.links.map((l, i) => (<>{i > 0 && " ・ "}<a href={l.url}>{l.label}</a></>))}</p>
+				</li>
 			))}
-		</div>
+		</ul>
 	</section>
 </Layout>

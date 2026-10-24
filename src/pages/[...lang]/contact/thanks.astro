@@ -11,6 +11,6 @@ const th = t(lang).thanks;
 
 <Layout title={th.title} description={th.description} noindex>
 	<h1>{th.title}</h1>
-	<p role="status">{th.body}</p>
-	<p><a href={localeUrl("/", lang)}>{th.back}</a></p>
+	<p class="body" role="status">{th.body}</p>
+	<p><a class="button secondary" href={localeUrl("/", lang)}><span class="arrow back" aria-hidden="true">←</span> {th.back}</a></p>
 </Layout>

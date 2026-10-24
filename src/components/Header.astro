@@ -18,20 +18,24 @@ const links = [
 ];
 ---
 
-<header class="container">
-	<nav aria-label={text.nav.label}>
-		<ul>
-			<li><a class="brand" href={localeUrl("/", lang)} aria-current={current === "/" ? "page" : undefined}>{site.name}</a></li>
-		</ul>
-		<ul>
-			{links.map((l) => (
-				<li>
-					<a href={localeUrl(l.path, lang)} aria-current={current.startsWith(l.path) ? "page" : undefined}>{l.label}</a>
-				</li>
-			))}
-			<li><a href={site.blog}>{text.nav.blog}</a></li>
+<header class="site-header">
+	<nav class="bar wrap" aria-label={text.nav.label}>
+		<a class="brand" href={localeUrl("/", lang)} aria-current={current === "/" ? "page" : undefined}>{site.name}</a>
+		<ul class="nav-links">
+			{links.map((l) => {
+				const here = current.startsWith(l.path);
+				return (
+					<li>
+						<a class="nav-link" href={localeUrl(l.path, lang)} data-label={l.label} aria-current={here ? "page" : undefined}>
+							{l.label}
+							{here && <span class="nav-mark" aria-hidden="true" />}
+						</a>
+					</li>
+				);
+			})}
+			<li><a class="nav-link" href={site.blog} data-label={text.nav.blog}>{text.nav.blog}</a></li>
 			<li>
-				<a href={localeUrl(current, other)} hreflang={other} lang={other} aria-label={text.nav.switchLangLabel}>{text.nav.switchLang}</a>
+				<a class="nav-link" href={localeUrl(current, other)} hreflang={other} lang={other} data-label={text.nav.switchLang} aria-label={text.nav.switchLangLabel}>{text.nav.switchLang}</a>
 			</li>
 		</ul>
 	</nav>
