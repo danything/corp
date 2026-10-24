@@ -55,7 +55,7 @@ const text = t(lang);
 	<section aria-labelledby="about" data-reveal>
 		<h2 id="about">{text.home.aboutTitle}</h2>
 		<p class="body">{text.home.aboutBody}</p>
-		<p><a href={lang === "en" ? `${site.blog}/en/about/` : site.profile}>{text.home.aboutLink}</a></p>
+		<p><a class="button secondary" href={localeUrl("/company/#profile", lang)}>{text.home.aboutLink} <span class="arrow" aria-hidden="true">→</span></a></p>
 	</section>
 
 	<section aria-labelledby="contact" data-reveal>

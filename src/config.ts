@@ -5,8 +5,6 @@ export const site = {
 	url: "https://doany.io",
 	email: "info@doany.io",
 	blog: "https://b.doany.io",
-	/** ブログのプロフィール(経歴はこちらに書く) */
-	profile: "https://b.doany.io/about/",
 	ogImage: "/static/images/og.png",
 	/** 古物商許可(表記はこのまま出す) */
 	kobutsuNumber: "第481012400049号",
@@ -103,6 +101,32 @@ export const oss = [
 	},
 ] as const;
 
+/**
+ * 代表の経歴(/company/#profile)。from・to は "2020-01" か、年だけの "2016"。to が無いものは今も続いている。
+ * 始まった順に並べる。文言は languages の profile.career
+ */
+export const career = [
+	{ id: "kosen", from: "2016", to: "2018" },
+	{ id: "webProduction", from: "2017-11", to: "2018-10" },
+	{ id: "ses", from: "2018-10", to: "2019-12" },
+	{ id: "doa", from: "2018-10" },
+	{ id: "payment", from: "2020-01", to: "2023-05" },
+	{ id: "toyo", from: "2020", to: "2023" },
+	{ id: "prm", from: "2023-06", to: "2025-04" },
+	{ id: "autoParts", from: "2024-09" },
+	{ id: "transport", from: "2025-04", to: "2026-05" },
+] as const;
+
+/** 代表の資格・免許。取った順。文言は languages の profile.licenses */
+export const licenses = [
+	{ id: "motorcycle", date: "2016-09" },
+	{ id: "ordinary", date: "2019-04" },
+	{ id: "kobutsu", date: "2025-01" },
+	{ id: "medium", date: "2025-07" },
+] as const;
+
 export type ServiceId = (typeof services)[number]["id"];
 export type WorkId = (typeof works)[number]["id"];
 export type OssId = (typeof oss)[number]["id"];
+export type CareerId = (typeof career)[number]["id"];
+export type LicenseId = (typeof licenses)[number]["id"];

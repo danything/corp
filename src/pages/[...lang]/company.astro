@@ -1,13 +1,40 @@
 ---
-import { type Lang, langPaths, t } from "@i18n/translation";
+import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
 import Layout from "@layouts/Layout.astro";
-import { github, site, socialLinks } from "@/config";
+import { career, github, licenses, site, socialLinks } from "@/config";
 
-// 事業者情報(/company/ と /en/company/)
+// 事業者情報と代表のプロフィール(/company/ と /en/company/。プロフィールは #profile)
 export const getStaticPaths = langPaths;
 
 const { lang } = Astro.props as { lang: Lang };
-const c = t(lang).company;
+const text = t(lang);
+const c = text.company;
+const p = text.profile;
+
+const MONTHS = [
+	"Jan",
+	"Feb",
+	"Mar",
+	"Apr",
+	"May",
+	"Jun",
+	"Jul",
+	"Aug",
+	"Sep",
+	"Oct",
+	"Nov",
+	"Dec",
+];
+/** "2020-01" → 2020年1月 / Jan 2020。年だけ ("2016") ならそのまま年 */
+function formatYm(ym: string): string {
+	const [y, m] = ym.split("-");
+	if (!m) return lang === "en" ? y : `${y}年`;
+	return lang === "en"
+		? `${MONTHS[Number(m) - 1]} ${y}`
+		: `${y}年${Number(m)}月`;
+}
+const sep = lang === "en" ? " – " : "〜";
+const [ossBefore, ossAfter] = p.oss.split("{link}");
 ---
 
 <Layout title={c.title} description={c.description}>
@@ -48,4 +75,39 @@ const c = t(lang).company;
 			{socialLinks.filter((s) => s.name !== "GitHub").map((s, i) => (<>{i > 0 && " · "}<a href={s.url} rel="me">{s.name}</a></>))}
 		</dd>
 	</dl>
+
+	<section class="profile" aria-labelledby="profile">
+		<h2 id="profile">{p.title}</h2>
+		<p class="lead">{p.lead}</p>
+
+		<h3 id="career">{p.careerTitle}</h3>
+		<ol class="timeline" aria-labelledby="career">
+			{career.map((e) => (
+				<li>
+					<p class="period">
+						<time datetime={e.from}>{formatYm(e.from)}</time>{sep}{"to" in e ? <time datetime={e.to}>{formatYm(e.to)}</time> : <span>{p.present}</span>}
+					</p>
+					<div>
+						<p class="what">{p.career[e.id].title}</p>
+						{p.career[e.id].body && <p class="detail">{p.career[e.id].body}</p>}
+					</div>
+				</li>
+			))}
+		</ol>
+
+		<h3 id="licenses">{p.licensesTitle}</h3>
+		<ol class="timeline" aria-labelledby="licenses">
+			{licenses.map((l) => (
+				<li>
+					<p class="period"><time datetime={l.date}>{formatYm(l.date)}</time></p>
+					<div>
+						<p class="what">{p.licenses[l.id]}</p>
+						{l.id === "kobutsu" && <p class="detail"><span lang="ja">長野県公安委員会 {site.kobutsuNumber}</span>{lang === "en" && ` (${c.licenseValue})`}</p>}
+					</div>
+				</li>
+			))}
+		</ol>
+		<p class="body">{p.auction}</p>
+		<p class="body">{ossBefore}<a href={localeUrl("/works/#oss", lang)}>{p.ossLink}</a>{ossAfter}</p>
+	</section>
 </Layout>
