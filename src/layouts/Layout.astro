@@ -26,7 +26,7 @@ const lang = langFromPath(Astro.url.pathname);
 const text = t(lang);
 const pageTitle = title
 	? `${title} | ${site.name}`
-	: `${site.name} — ${text.home.lead}`;
+	: `${site.name} | ${text.home.lead}`;
 const metaDescription = description ?? text.siteDescription;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 // 日本語版と英語版は /en/ を除いて同じパス
@@ -99,7 +99,7 @@ const jsonLd =
 	<body>
 		<a class="skip" href="#main">{text.skipToContent}</a>
 		<Header lang={lang} />
-		<main id="main" class="container">
+		<main id="main" class="wrap">
 			<slot />
 		</main>
 		<Footer lang={lang} />

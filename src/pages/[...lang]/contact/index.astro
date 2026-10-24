@@ -14,7 +14,7 @@ const c = t(lang).contact;
 <Layout title={c.title} description={c.description}>
 	<script is:inline slot="head" src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 	<h1>{c.title}</h1>
-	<p>{c.lead}</p>
-	<p>{c.emailAlt} <a href={`mailto:${site.email}`}>{site.email}</a></p>
+	<p class="lead">{c.lead}</p>
+	<p class="body">{c.emailAlt} <a href={`mailto:${site.email}`}>{site.email}</a></p>
 	<ContactForm lang={lang} />
 </Layout>

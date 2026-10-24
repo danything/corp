@@ -1,35 +1,170 @@
 /*
+ * 見た目の決まりは denpa の docs/design.md と同じ (塗らない。囲みすぎない。浮かせすぎない。でも、ちゃんと伝わる)。
+ * トークンの名前と値も denpa の src/app.css にそろえ、接頭辞だけ --doa- にしてある。
+ *
  * Blades は使う部品だけを読む(xool・lgtm と同じ)。部品は layered/* なので @layer blades に入り、
  * 層に入れていないこのファイルの規則が詳細度に関係なく勝つ。
- * 順番は variables → layout → content → forms → components → utilities を崩さない。
- * 明暗は Blades の light-dark() に任せ、ここでは自前の色を持たない(--pico-* から引く)
+ * 順番は variables → layout → content → forms → utilities を崩さない。
+ * 明暗は OS の設定に従う。色はトークンごとに light-dark() で両方を書く (Blades の variables も同じ作り)
  */
 @import "@anyblades/blades/layered/variables";
 @import "@anyblades/blades/layered/layout/document";
-@import "@anyblades/blades/layered/layout/landmarks";
-@import "@anyblades/blades/layered/layout/container";
-@import "@anyblades/blades/layered/layout/section";
 @import "@anyblades/blades/layered/content/typography";
 @import "@anyblades/blades/layered/content/link";
 @import "@anyblades/blades/layered/content/button";
 @import "@anyblades/blades/layered/content/misc";
 @import "@anyblades/blades/layered/forms/basics";
-@import "@anyblades/blades/layered/components/card";
-@import "@anyblades/blades/layered/components/nav";
 @import "@anyblades/blades/layered/utilities";
 
+/* ---- トークン ---- */
 :root {
 	/* Web フォントは使わない。Windows は BIZ UDPGothic、mac はヒラギノ、ほかは OS の日本語フォント */
 	--pico-font-family-sans-serif:
 		"BIZ UDPGothic", "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", system-ui,
 		sans-serif;
-	--pico-line-height: 1.7;
+	--doa-font-mono:
+		ui-monospace, SFMono-Regular, "Cascadia Mono", Menlo, monospace;
+	--pico-font-family-monospace: var(--doa-font-mono);
+	/* Pico は画面の幅で字の大きさ (rem) を 100〜125% に変える。幅と字の段がずれないよう 17px に固定する */
+	--pico-font-size: 106.25%;
+	--pico-line-height: 1.75;
+
+	/* 角丸。ボタンと浮いた帯はカプセル、件は --doa-item-radius */
+	--doa-radius-sm: 0.375rem;
+	--doa-radius: 0.5rem;
+	--doa-radius-lg: 0.75rem;
+	--doa-radius-full: 999px;
+	--doa-item-radius: calc(var(--doa-radius) + 0.5rem);
+	--pico-border-radius: var(--doa-radius);
+
+	/* 余白は 4px 刻み */
+	--doa-space-1: 0.25rem;
+	--doa-space-2: 0.5rem;
+	--doa-space-3: 0.75rem;
+	--doa-space-4: 1rem;
+	--doa-space-5: 1.5rem;
+	--doa-space-6: 2rem;
+	--doa-gutter: 1rem;
+	--doa-width: 64rem;
+
+	/* 字の大きさと太さ。BIZ UDPゴシックは 400 と 700 だけ */
+	--doa-text-xs: 0.75rem;
+	--doa-text-sm: 0.875rem;
+	--doa-text-lg: 1.125rem;
+	--doa-text-xl: 1.5rem;
+	--doa-weight: 400;
+	--doa-weight-bold: 700;
+
+	/*
+	 * 動き (denpa の「動き」)。時間は 4 つ + ページの入り、曲線は 3 つ。画面ごとに数字を書かない。
+	 * - --doa-duration (120ms) … 色・地・影の移り変わり、押して縮む
+	 * - --doa-duration-enter (240ms) … 出てくる (件・ページの中身)
+	 * - --doa-duration-move (300ms) … 場所が動く (ナビの下線が滑る・縮んだボタンが戻る・明暗の切り替え)
+	 * - --doa-duration-exit (150ms) … 消える (前のページ)
+	 * - --doa-duration-reveal (480ms) … トップの名前と一文が入ってくるとき。ページ全体の入りなので件より長い
+	 */
+	--doa-duration: 120ms;
+	--doa-duration-enter: 240ms;
+	--doa-duration-move: 300ms;
+	--doa-duration-exit: 150ms;
+	--doa-duration-reveal: 480ms;
+	--doa-ease: cubic-bezier(0.2, 0, 0, 1);
+	--doa-ease-spring: linear(
+		0,
+		0.06 4%,
+		0.24 9%,
+		0.5 15%,
+		0.74 22%,
+		0.9 30%,
+		1.02 40%,
+		1.04 48%,
+		1.02 60%,
+		1 75%,
+		1
+	);
+	--doa-ease-exit: cubic-bezier(0.3, 0, 1, 1);
+	--pico-transition: var(--doa-duration) var(--doa-ease);
+
+	/*
+	 * 色。主の色は Blades の azure のまま。状態の色は赤 (送れなかった) だけ。
+	 * 層は地 (--doa-bg)・件の面 (--doa-item)・操作の層 (--doa-float と --doa-shadow-pop) の 3 段。
+	 * 暗いほうの地と面は denpa と同じ、ほぼ黒で青みをわずかに残した段
+	 */
+	--doa-bg: light-dark(#fff, #0b0c0f);
+	--doa-subtle: light-dark(#eff1f4, #1a1b20);
+	--doa-line: light-dark(#dfe3eb, #26282e);
+	--doa-line-strong: light-dark(#cfd5e2, #3a3d46);
+	--doa-pop: light-dark(#fff, #1f2026);
+	--doa-fg: light-dark(#232831, #dfe3eb);
+	/* 控えた字。地・件の面・指を乗せた件のどれの上でも 4.5:1 以上 */
+	--doa-muted: light-dark(#555e70, #9aa3b5);
+	/* 主の色を字にするとき (選んでいるナビ) */
+	--doa-primary-text: light-dark(#02659a, #01aaff);
+	--doa-item: light-dark(#fff, #16171c);
+	--doa-item-hover: light-dark(#f5f6f9, #1d1e24);
+	--doa-hover-soft: color-mix(in srgb, var(--doa-subtle) 55%, transparent);
+	/* 入力欄の面。線も凹みも無く、下を透かす薄い色 */
+	--doa-field: light-dark(rgb(0 37 92 / 0.07), rgb(211 220 255 / 0.1));
+	/* 操作の層の面。メニューの面を 92% 残して、下を流れる中身をうっすら見せる。ぼかさない */
+	--doa-float: color-mix(in srgb, var(--doa-pop) 92%, transparent);
+	--doa-err: #d93526;
+	--doa-err-text: light-dark(#9b2318, #f38f79);
+
+	--pico-background-color: var(--doa-bg);
+	--pico-color: var(--doa-fg);
+	--pico-muted-color: var(--doa-muted);
+	--pico-muted-border-color: var(--doa-line);
+	--pico-form-element-background-color: var(--doa-field);
+	--pico-form-element-active-background-color: var(--doa-field);
+	--pico-form-element-border-color: transparent;
+	--pico-form-element-active-border-color: transparent;
+	--pico-form-element-focus-color: transparent;
+	--pico-form-element-placeholder-color: var(--doa-muted);
+	--pico-del-color: var(--doa-err-text);
+}
+
+/* 影 (box-shadow の並び) は light-dark() で選べないので、暗いほうだけ書き直す */
+:root {
+	--doa-item-shadow:
+		0 1px 2px rgb(24 28 37 / 0.06), 0 2px 8px rgb(24 28 37 / 0.05);
+	--doa-shadow-pop:
+		0 4px 12px rgb(24 28 37 / 0.06), 0 16px 32px -8px rgb(24 28 37 / 0.14);
+}
+@media (prefers-color-scheme: dark) {
+	:root {
+		/* 黒い地では影が見えないので、件は地より一段明るい面だけで分ける */
+		--doa-item-shadow: none;
+		--doa-shadow-pop:
+			0 4px 12px rgb(0 0 0 / 0.3), 0 16px 40px -8px rgb(0 0 0 / 0.5);
+	}
+}
+@media (prefers-reduced-transparency: reduce) {
+	:root {
+		--doa-float: var(--doa-pop);
+	}
+}
+
+/* ---- 土台 ---- */
+html {
+	/* 浮いたヘッダーの下に飛んだ先が隠れないように */
+	scroll-padding-top: 5rem;
 }
 
 body {
 	/* 日本語を文節で折り返す */
 	word-break: auto-phrase;
 	line-break: strict;
+	background: var(--doa-bg);
+	color: var(--doa-fg);
+	/* OS の明暗が切り替わったら、地と字をなめらかに移す */
+	transition:
+		background-color var(--doa-duration-move) var(--doa-ease),
+		color var(--doa-duration-move) var(--doa-ease);
+}
+
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--doa-line-strong) transparent;
 }
 
 p,
@@ -38,109 +173,503 @@ dd {
 	text-wrap: pretty;
 }
 
-/* ---- 頭と足 ---- */
-body > header {
-	border-bottom: 1px solid var(--pico-muted-border-color);
-	padding-block: 0.25rem;
+h1,
+h2,
+h3 {
+	text-wrap: balance;
+	color: var(--doa-fg);
+	font-weight: var(--doa-weight-bold);
 }
 
-/* 狭い画面ではメニューを折り返す(Blades の nav は 1 行に並べる) */
-body > header nav {
-	flex-wrap: wrap;
+h1,
+h2,
+h3,
+p,
+ul,
+dl {
+	margin-bottom: 0;
 }
 
-body > header nav ul:last-of-type {
+.wrap {
+	width: min(100% - 2 * var(--doa-gutter), var(--doa-width));
+	margin-inline: auto;
+}
+
+.muted {
+	color: var(--doa-muted);
+}
+
+.mono {
+	font-family: var(--doa-font-mono);
+}
+
+/*
+ * キーボードで触っているところは、主の色の外側 2px の線。マウスで押したときは出さない。
+ * 字を打つ欄は押しても :focus-visible になるので、下の「入力欄」で同じ線を引く
+ */
+:where(a, button, summary, [tabindex]):focus-visible {
+	outline: 2px solid var(--pico-primary);
+	outline-offset: 2px;
+	box-shadow: none;
+}
+
+/* 本文へ移動のリンク。フォーカスしたときだけ、操作の層のカプセルで出す */
+.skip {
+	position: absolute;
+	top: -100px;
+	left: var(--doa-gutter);
+	z-index: 20;
+	padding: var(--doa-space-2) var(--doa-space-4);
+	border-radius: var(--doa-radius-full);
+	background: var(--doa-pop);
+	box-shadow: var(--doa-shadow-pop);
+	font-weight: var(--doa-weight-bold);
+}
+
+.skip:focus {
+	top: var(--doa-space-2);
+}
+
+/* ---- ヘッダー (操作の層) ---- */
+/*
+ * 上端では平ら、巻いて中身が裏に入ると浮く (面と影が巻いた量に合わせて出る。animation-timeline: scroll())。
+ * 知らないブラウザと動きを減らす設定では、いつも浮いた形。端から離した角の丸い帯
+ */
+.site-header {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	padding-top: var(--doa-space-2);
+	view-transition-name: site-header;
+}
+
+.bar {
+	display: flex;
 	flex-wrap: wrap;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: var(--doa-space-1) var(--doa-space-4);
+	padding: var(--doa-space-2) var(--doa-space-2) var(--doa-space-2)
+		var(--doa-space-4);
+	border-radius: var(--doa-radius-full);
+	background: var(--doa-float);
+	box-shadow: var(--doa-shadow-pop);
+}
+
+/* 帯は本文より左右に 1rem ずつ広げ、名前の字を本文の左端にそろえる */
+.bar.wrap {
+	width: min(100% - 1rem, var(--doa-width) + 2rem);
+}
+
+@supports (animation-timeline: scroll()) {
+	@media (prefers-reduced-motion: no-preference) {
+		.bar {
+			background: transparent;
+			box-shadow: none;
+			animation: header-float linear both;
+			animation-timeline: scroll(root block);
+			animation-range: 0 1.5rem;
+		}
+	}
+}
+
+@keyframes header-float {
+	from {
+		background: transparent;
+		box-shadow: none;
+	}
+	to {
+		background: var(--doa-float);
+		box-shadow: var(--doa-shadow-pop);
+	}
 }
 
 .brand {
 	font-size: 1.25rem;
-	font-weight: 700;
-	color: var(--pico-color);
+	font-weight: var(--doa-weight-bold);
+	letter-spacing: -0.01em;
+	color: var(--doa-fg);
+	text-decoration: none;
 }
 
-nav [aria-current="page"] {
-	text-decoration: underline;
-	text-underline-offset: 0.35em;
-}
-
-body > footer {
-	border-top: 1px solid var(--pico-muted-border-color);
-	color: var(--pico-muted-color);
-	font-size: 0.875rem;
-}
-
-body > footer ul {
+.nav-links {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.25rem 1rem;
+	align-items: center;
+	gap: 0;
+	margin: 0;
 	padding: 0;
 	list-style: none;
 }
 
-body > footer li {
+.nav-links li {
 	margin: 0;
 	list-style: none;
 }
 
-/* ---- 本文 ---- */
-main h1 {
-	font-size: 2rem;
+/*
+ * ナビの項目。地は塗らず、字は本文の色。選んでいる項目は主の色の太字と、字の幅いっぱいの下線。
+ * 太字にしても幅が変わらないよう、太字の幅を見えない字 (::before) で先に取っておく
+ */
+.nav-link {
+	position: relative;
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	padding: var(--doa-space-2) var(--doa-space-3);
+	border-radius: var(--doa-radius-full);
+	color: var(--doa-fg);
+	font-size: 0.9375rem;
+	line-height: 1.5;
+	text-decoration: none;
+	transition: background-color var(--doa-duration) var(--doa-ease);
 }
 
-.hero {
-	padding-block: 2rem 1rem;
+.nav-link::before {
+	content: attr(data-label);
+	/* 並びの基準線は見える字から採る (幅を取る字を後ろへ) */
+	order: 1;
+	height: 0;
+	overflow: hidden;
+	visibility: hidden;
+	font-weight: var(--doa-weight-bold);
 }
 
-.hero h1 {
-	font-size: clamp(2.5rem, 8vw, 4rem);
-	margin-bottom: 0.5rem;
+.nav-link:hover {
+	background: var(--doa-hover-soft);
+	color: var(--doa-fg);
 }
 
-.hero p {
-	font-size: 1.15rem;
+.nav-link[aria-current="page"] {
+	color: var(--doa-primary-text);
+	font-weight: var(--doa-weight-bold);
+}
+
+/* 選んでいる印。ページを移ると前の場所から滑る (view-transition-name。下の「ページの移り変わり」) */
+.nav-mark {
+	position: absolute;
+	inset-inline: var(--doa-space-3);
+	bottom: 0.3rem;
+	height: 2px;
+	border-radius: 1px;
+	background: var(--pico-primary);
+	view-transition-name: nav-mark;
+}
+
+/* 狭い画面では帯を貼り付けず (2 行になって中身を隠すので)、ナビを名前の下に並べる */
+@media (max-width: 639.98px) {
+	.site-header {
+		position: static;
+	}
+
+	.bar,
+	.bar.wrap {
+		width: min(100% - 2 * var(--doa-gutter), var(--doa-width));
+		padding-inline: 0;
+		background: transparent;
+		box-shadow: none;
+		animation: none;
+	}
+
+	.nav-links {
+		width: calc(100% + 2 * var(--doa-space-2));
+		margin-inline: calc(-1 * var(--doa-space-2));
+	}
+
+	.nav-link {
+		padding-inline: var(--doa-space-2);
+		font-size: var(--doa-text-sm);
+	}
+
+	.nav-mark {
+		inset-inline: var(--doa-space-2);
+	}
+}
+
+/* ---- 足 ---- */
+.site-footer {
+	margin-top: 6rem;
+	padding-block: var(--doa-space-6) var(--doa-space-6);
+	color: var(--doa-muted);
+	font-size: var(--doa-text-sm);
+}
+
+.site-footer ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--doa-space-1) var(--doa-space-4);
+	margin-bottom: var(--doa-space-3);
+	padding: 0;
+	list-style: none;
+}
+
+.site-footer li {
+	margin: 0;
+	list-style: none;
+}
+
+.site-footer ul a {
+	color: var(--doa-fg);
+	text-decoration: none;
+}
+
+.site-footer ul a:hover {
+	color: var(--pico-primary);
+	text-decoration: underline;
+}
+
+.site-footer p a {
+	color: var(--doa-muted);
+}
+
+/* ---- ボタン ---- */
+/*
+ * 主のボタン (a.button・送信) は操作の層の面と影のカプセルで、字は本文の色の太字。主の色では塗らない。
+ * 控え (.secondary) は平らで、乗せたら薄い地。押すと少し縮み (97%)、離すとばねで戻る
+ */
+:where(a.button, button) {
+	--pico-background-color: var(--doa-float);
+	--pico-border-color: transparent;
+	--pico-color: var(--doa-fg);
+	--pico-box-shadow: var(--doa-shadow-pop);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--doa-space-2);
+	min-height: 2.75rem;
+	padding: var(--doa-space-2) var(--doa-space-5);
+	border: 0;
+	border-radius: var(--doa-radius-full);
+	background-color: var(--pico-background-color);
+	box-shadow: var(--pico-box-shadow);
+	color: var(--pico-color);
+	font-weight: var(--doa-weight-bold);
+	text-decoration: none;
+	cursor: pointer;
+	transition:
+		background-color var(--doa-duration) var(--doa-ease),
+		box-shadow var(--doa-duration) var(--doa-ease),
+		color var(--doa-duration) var(--doa-ease),
+		scale var(--doa-duration-move) var(--doa-ease-spring);
+}
+
+:where(a.button, button):hover {
+	--pico-background-color: var(--doa-pop);
+	--pico-color: var(--doa-fg);
+}
+
+:where(a.button, button):active {
+	scale: 0.97;
+	transition: scale var(--doa-duration) var(--doa-ease);
+}
+
+:where(a.button, button).secondary {
+	--pico-background-color: transparent;
+	--pico-box-shadow: none;
+	font-weight: var(--doa-weight);
+}
+
+:where(a.button, button).secondary:hover {
+	--pico-background-color: var(--doa-hover-soft);
+}
+
+:where(a.button, button):disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
+/* 先へ進むリンクの矢印。乗せると少し右へ */
+.arrow {
+	display: inline-block;
+	transition: translate var(--doa-duration-move) var(--doa-ease-spring);
+}
+
+a:hover > .arrow {
+	translate: 0.2rem 0;
+}
+
+a:hover > .arrow.back {
+	translate: -0.2rem 0;
+}
+
+button[type="submit"] {
+	width: auto;
 }
 
 .actions {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.75rem;
+	gap: var(--doa-space-3);
 }
 
-/* カード(<article>)を並べる。狭い画面では 1 列 */
+/* ---- 本文 ---- */
+main {
+	padding-top: var(--doa-space-6);
+}
+
+main > h1,
+.page-title {
+	font-size: clamp(2rem, 6vw, 2.75rem);
+	line-height: 1.3;
+	letter-spacing: -0.01em;
+	margin-block: var(--doa-space-6) 2.5rem;
+}
+
+section + section {
+	margin-top: clamp(3.5rem, 8vw, 5.5rem);
+}
+
+section > h2 {
+	font-size: var(--doa-text-xl);
+	line-height: 1.4;
+	margin-bottom: var(--doa-space-4);
+}
+
+.lead {
+	color: var(--doa-muted);
+	margin-bottom: var(--doa-space-5);
+	max-width: 42rem;
+}
+
+.body {
+	max-width: 42rem;
+	margin-bottom: var(--doa-space-3);
+}
+
+/* トップの頭。名前を大きく、事実 (所在地・開業) を控えた字で上に添える */
+.hero {
+	padding-block: clamp(3rem, 12vw, 7rem) clamp(1rem, 4vw, 2.5rem);
+}
+
+.hero-meta {
+	color: var(--doa-muted);
+	font-size: var(--doa-text-sm);
+	margin-bottom: var(--doa-space-3);
+}
+
+.hero h1 {
+	font-size: clamp(3.5rem, 16vw, 7.5rem);
+	line-height: 1;
+	letter-spacing: -0.04em;
+	margin-bottom: var(--doa-space-5);
+}
+
+.hero-lead {
+	max-width: 36rem;
+	font-size: clamp(1.125rem, 2.6vw, 1.375rem);
+	line-height: 1.7;
+	margin-bottom: var(--doa-space-6);
+}
+
+/* 名前・一文・ボタンが順にふわっと入る。場所はほんの少しだけ動かす (transform なので並びはずれない) */
+@media (prefers-reduced-motion: no-preference) {
+	.hero > * {
+		animation: rise var(--doa-duration-reveal) var(--doa-ease) both;
+		animation-delay: calc(var(--i, 0) * 70ms);
+	}
+
+	.hero > :nth-child(2) {
+		--i: 1;
+	}
+
+	.hero > :nth-child(3) {
+		--i: 2;
+	}
+
+	.hero > :nth-child(4) {
+		--i: 3;
+	}
+}
+
+@keyframes rise {
+	from {
+		opacity: 0;
+		translate: 0 0.75rem;
+	}
+}
+
+/*
+ * 件の面。1 件が 2〜3 行ある並び (事業・サービス・実績・OSS)。透かさない面にごく薄い影 (暗いほうは地より一段明るい面だけ)。
+ * 縁と区切りの線は付けない。乗せたら面を一段変える
+ */
 .cards {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
-	gap: var(--pico-spacing);
-	margin-bottom: var(--pico-spacing);
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+	gap: var(--doa-space-3);
+	margin: 0 0 var(--doa-space-5);
+	padding: 0;
+	list-style: none;
 }
 
-.cards > article {
+.item {
+	display: flex;
+	flex-direction: column;
+	gap: var(--doa-space-2);
 	margin: 0;
+	padding: var(--doa-space-5);
+	border-radius: var(--doa-item-radius);
+	background: var(--doa-item);
+	box-shadow: var(--doa-item-shadow);
+	list-style: none;
+	transition: background-color var(--doa-duration) var(--doa-ease);
 }
 
-article h3 {
-	font-size: 1.1rem;
-	margin-bottom: 0.5rem;
+.item:hover {
+	background: var(--doa-item-hover);
 }
 
-article p:last-child {
-	margin-bottom: 0;
+.item h3 {
+	font-size: var(--doa-text-lg);
+	line-height: 1.5;
 }
 
-/* 事業者情報の表(<dl>)。広い画面では項目名と値を横に並べる */
+.item h3 a {
+	color: var(--doa-fg);
+	text-decoration: none;
+}
+
+.item h3 a:hover {
+	color: var(--pico-primary);
+}
+
+.item p {
+	font-size: 0.9375rem;
+}
+
+/* 件の下に添えるリンク (ソース・PR)。控えた字を「・」でつなぐ */
+.item .links {
+	margin-top: auto;
+	padding-top: var(--doa-space-2);
+	font-size: var(--doa-text-sm);
+	color: var(--doa-muted);
+}
+
+/* 巻いて見えてくる件はふわっと出る (animation-timeline: view())。知らないブラウザはそのまま見せる */
+@supports (animation-timeline: view()) {
+	@media (prefers-reduced-motion: no-preference) {
+		[data-reveal] {
+			animation: rise linear both;
+			animation-timeline: view();
+			animation-range: entry 0% entry 80%;
+		}
+	}
+}
+
+/* 事業者情報の表 (<dl>)。線は引かず、行の間の余白で分ける。広い画面では項目名と値を横に並べる */
 .facts {
 	display: grid;
-	gap: 0.25rem 1.5rem;
+	gap: var(--doa-space-1) var(--doa-space-6);
+	max-width: 48rem;
 }
 
 .facts dt {
-	color: var(--pico-muted-color);
-	font-weight: 700;
+	color: var(--doa-muted);
+	font-size: var(--doa-text-sm);
+	font-weight: var(--doa-weight);
 }
 
 .facts dd {
-	margin: 0 0 0.75rem;
+	margin: 0 0 var(--doa-space-4);
 }
 
 .facts dd ul {
@@ -148,27 +677,57 @@ article p:last-child {
 	padding-left: 1.25rem;
 }
 
+.facts dd li {
+	margin-bottom: var(--doa-space-1);
+}
+
 @media (min-width: 640px) {
 	.facts {
-		grid-template-columns: 10rem 1fr;
+		grid-template-columns: 9rem 1fr;
+	}
+
+	.facts dt {
+		padding-top: 0.15rem;
 	}
 
 	.facts dd {
-		margin-bottom: 0.5rem;
+		margin-bottom: var(--doa-space-4);
 	}
 }
 
-.muted {
-	color: var(--pico-muted-color);
-}
-
-/* ---- フォーム ---- */
+/* ---- 入力欄 ---- */
+/* 線も凹みの影も付けず、平らな面だけ。ラベルはいつも見せ、打っている間は外側の 2px の主の色の線 */
 .contact-form {
 	max-width: 40rem;
+	margin-top: var(--doa-space-6);
+}
+
+.contact-form label {
+	font-size: var(--doa-text-sm);
+	font-weight: var(--doa-weight-bold);
+	margin-bottom: var(--doa-space-1);
+}
+
+.contact-form label .muted {
+	font-weight: var(--doa-weight);
+}
+
+:where(input:not([type="checkbox"], [type="radio"]), textarea, select) {
+	border-radius: var(--doa-radius);
+	transition:
+		background-color var(--doa-duration) var(--doa-ease),
+		outline-color var(--doa-duration) var(--doa-ease);
+}
+
+:where(input:not([type="checkbox"], [type="radio"]), textarea, select):focus {
+	outline: 2px solid var(--pico-primary);
+	outline-offset: 2px;
 }
 
 .contact-form .field-error {
-	color: var(--pico-del-color);
+	color: var(--doa-err-text);
+	margin-top: calc(-1 * var(--doa-space-3));
+	margin-bottom: var(--doa-space-4);
 }
 
 /* 見えないボット除けの欄。display: none だと入れてくるボットが減るので、画面の外に出す */
@@ -180,29 +739,27 @@ article p:last-child {
 	overflow: hidden;
 }
 
+/* 送れなかったとき・JavaScript が無いときの一言。状態の色は字だけで、地はごく淡く */
 .status {
-	border-left: 4px solid var(--pico-del-color);
-	padding: 0.5rem 1rem;
-	background: var(--pico-card-sectioning-background-color);
+	margin-bottom: var(--doa-space-5);
+	padding: var(--doa-space-3) var(--doa-space-4);
+	border-radius: var(--doa-radius-lg);
+	background: color-mix(in srgb, var(--doa-err) 9%, var(--doa-bg));
+	color: var(--doa-err-text);
+}
+
+.status:focus {
+	outline: none;
+}
+
+.status:focus-visible {
+	outline: 2px solid var(--pico-primary);
+	outline-offset: 2px;
 }
 
 .cf-turnstile {
 	min-height: 65px;
-	margin-bottom: var(--pico-spacing);
-}
-
-/* 本文へ移動のリンク。フォーカスしたときだけ見せる */
-.skip {
-	position: absolute;
-	top: -100px;
-	left: 1rem;
-	z-index: 10;
-	padding: 0.5rem 1rem;
-	background: var(--pico-background-color);
-}
-
-.skip:focus {
-	top: 0.5rem;
+	margin-bottom: var(--doa-space-5);
 }
 
 /* 項目ごとのエラーは、その欄が aria-invalid="true" のときだけ見せる */
@@ -212,4 +769,66 @@ article p:last-child {
 
 [aria-invalid="true"] + .field-error {
 	display: block;
+}
+
+/* ---- ページの移り変わり ---- */
+/*
+ * 同じサイトの中でページを移ると、ヘッダーはそのまま、中身は前のが短く消えて次のがふわっと入る。
+ * ナビの下線は前の場所から滑る。JS は使わない (cross-document view transitions)。知らないブラウザはふつうに移る
+ */
+@media (prefers-reduced-motion: no-preference) {
+	@view-transition {
+		navigation: auto;
+	}
+}
+
+main {
+	view-transition-name: page;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation-duration: var(--doa-duration-enter);
+}
+
+::view-transition-old(page) {
+	animation: fade-out var(--doa-duration-exit) var(--doa-ease-exit) both;
+}
+
+::view-transition-new(page) {
+	animation: rise var(--doa-duration-reveal) var(--doa-ease) both;
+}
+
+::view-transition-group(nav-mark) {
+	animation-duration: var(--doa-duration-move);
+	animation-timing-function: var(--doa-ease-spring);
+}
+
+::view-transition-group(site-header) {
+	animation-duration: var(--doa-duration-move);
+}
+
+@keyframes fade-out {
+	to {
+		opacity: 0;
+	}
+}
+
+/*
+ * 動きを減らす設定の端末では、全部止める。移り変わりは時間のトークンを 0 に、
+ * 入ってくる動き・巻いて出る動きは外す (上の規則でも no-preference のときだけ付けている)。ファイルの最後に置く
+ */
+@media (prefers-reduced-motion: reduce) {
+	:root {
+		--doa-duration: 0s;
+		--doa-duration-enter: 0s;
+		--doa-duration-move: 0s;
+		--doa-duration-exit: 0s;
+		--doa-duration-reveal: 0s;
+	}
+
+	.hero > *,
+	[data-reveal] {
+		animation: none;
+	}
 }

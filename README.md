@@ -1,7 +1,8 @@
 # corp
 
 [doany.io](https://doany.io) — 屋号 Doa の事業者サイト。Astro で書き出した静的なページを、小さな Bun のサーバー (`server.ts`) が配信する。
-見た目は [Blades](https://blades.dev/) (Pico CSS の後継) の部品だけを読み、明暗は Blades の `light-dark()` に任せている。
+見た目は [Blades](https://blades.dev/) (Pico CSS の後継) の部品だけを読み、その上に denpa の [見た目の決まり](https://github.com/danything/denpa/blob/main/docs/design.md) (塗らない・層で浮かせる・動きは CSS だけ) をそのまま当てている。
+ページの移り変わりは cross-document view transitions、巻いて出る件とヘッダーの浮き方は scroll-driven animations で、JS は使わない。動きを減らす設定では全部止める。
 
 日本語は `/`、英語は `/en/` 以下 (ブログと同じ作り)。
 
@@ -15,7 +16,7 @@
 | `src/i18n/languages/`              | 文言 (`ja.ts`・`en.ts`)。英語版は日本語版と同じ形にする                                                       |
 | `src/config.ts`                    | 事業者の情報とリンク (サービス・実績・OSS・SNS)                                                               |
 | `src/components/ContactForm.astro` | 問い合わせフォーム。Turnstile のスクリプトは `/contact/` でだけ読む                                           |
-| `src/styles/main.css`              | Blades の部品の読み込みと、少しの自前の CSS                                                                   |
+| `src/styles/main.css`              | Blades の部品の読み込みと、トークン (`--doa-*`)・部品・動き                                                   |
 | `server.ts`                        | 配信サーバー。`server/` に中身 (`static.ts`・`contact.ts`・`contact-page.ts`・`markdown.ts`・`rate-limit.ts`) |
 | `tests/`                           | サーバーのテスト (`bun test`)                                                                                 |
 | `deploy/`                          | k8s のマニフェスト。Argo CD が同期する (`deploy/argocd.yaml`)                                                 |

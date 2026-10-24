@@ -12,52 +12,53 @@ const text = t(lang);
 
 <Layout>
 	<section class="hero">
+		<p class="hero-meta">{text.home.meta}</p>
 		<h1>{site.name}</h1>
-		<p>{text.home.lead}</p>
+		<p class="hero-lead">{text.home.lead}</p>
 		<div class="actions">
-			<a href={localeUrl("/contact/", lang)} role="button">{text.home.ctaContact}</a>
-			<a href={localeUrl("/works/", lang)} role="button" class="secondary outline">{text.home.ctaWorks}</a>
+			<a class="button" href={localeUrl("/contact/", lang)}>{text.home.ctaContact}</a>
+			<a class="button secondary" href={localeUrl("/works/", lang)}>{text.home.ctaWorks} <span class="arrow" aria-hidden="true">→</span></a>
 		</div>
 	</section>
 
 	<section aria-labelledby="business">
-		<h2 id="business">{text.home.businessTitle}</h2>
-		<div class="cards">
+		<h2 id="business" data-reveal>{text.home.businessTitle}</h2>
+		<ul class="cards">
 			{text.home.business.map((b) => (
-				<article>
+				<li class="item" data-reveal>
 					<h3>{b.title}</h3>
 					<p>{b.body}</p>
-				</article>
+				</li>
 			))}
-		</div>
+		</ul>
 	</section>
 
 	<section aria-labelledby="services">
-		<h2 id="services">{text.home.servicesTitle}</h2>
-		<p>{text.home.servicesLead}</p>
-		<div class="cards">
+		<h2 id="services" data-reveal>{text.home.servicesTitle}</h2>
+		<p class="lead" data-reveal>{text.home.servicesLead}</p>
+		<ul class="cards">
 			{services.map((s) => (
-				<article>
+				<li class="item" data-reveal>
 					<h3><a href={s.url}>{text.services[s.id].name}</a></h3>
 					<p>{text.services[s.id].body}</p>
-				</article>
+				</li>
 			))}
-		</div>
-		<p><a href={localeUrl("/works/", lang)}>{text.home.worksLink}</a></p>
+		</ul>
+		<p data-reveal><a class="button secondary" href={localeUrl("/works/", lang)}>{text.home.worksLink} <span class="arrow" aria-hidden="true">→</span></a></p>
 	</section>
 
-	<section aria-labelledby="about">
+	<section aria-labelledby="about" data-reveal>
 		<h2 id="about">{text.home.aboutTitle}</h2>
-		<p>{text.home.aboutBody}</p>
+		<p class="body">{text.home.aboutBody}</p>
 		<p><a href={lang === "en" ? `${site.blog}/en/about/` : site.profile}>{text.home.aboutLink}</a></p>
 	</section>
 
-	<section aria-labelledby="contact">
+	<section aria-labelledby="contact" data-reveal>
 		<h2 id="contact">{text.home.contactTitle}</h2>
-		<p>{text.home.contactBody}</p>
+		<p class="lead">{text.home.contactBody}</p>
 		<div class="actions">
-			<a href={localeUrl("/contact/", lang)} role="button">{text.home.ctaContact}</a>
-			<a href={`mailto:${site.email}`} role="button" class="secondary outline">{site.email}</a>
+			<a class="button" href={localeUrl("/contact/", lang)}>{text.home.ctaContact}</a>
+			<a class="button secondary" href={`mailto:${site.email}`}>{site.email}</a>
 		</div>
 	</section>
 </Layout>
