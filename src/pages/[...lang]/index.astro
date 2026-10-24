@@ -1,4 +1,5 @@
 ---
+import HeroShots from "@components/HeroShots.astro";
 import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
 import Layout from "@layouts/Layout.astro";
 import { services, site } from "@/config";
@@ -12,13 +13,16 @@ const text = t(lang);
 
 <Layout>
 	<section class="hero">
-		<p class="hero-meta">{text.home.meta}</p>
-		<h1>{site.name}</h1>
-		<p class="hero-lead">{text.home.lead}</p>
-		<div class="actions">
-			<a class="button" href={localeUrl("/contact/", lang)}>{text.home.ctaContact}</a>
-			<a class="button secondary" href={localeUrl("/works/", lang)}>{text.home.ctaWorks} <span class="arrow" aria-hidden="true">→</span></a>
+		<div class="hero-text">
+			<p class="hero-meta">{text.home.meta}</p>
+			<h1>{site.name}</h1>
+			<p class="hero-lead">{text.home.lead}</p>
+			<div class="actions">
+				<a class="button" href={localeUrl("/contact/", lang)}>{text.home.ctaContact}</a>
+				<a class="button secondary" href={localeUrl("/works/", lang)}>{text.home.ctaWorks} <span class="arrow" aria-hidden="true">→</span></a>
+			</div>
 		</div>
+		<HeroShots lang={lang} />
 	</section>
 
 	<section aria-labelledby="business">
@@ -41,6 +45,7 @@ const text = t(lang);
 				<li class="item" data-reveal>
 					<h3><a href={s.url}>{text.services[s.id].name}</a></h3>
 					<p>{text.services[s.id].body}</p>
+					<p class="links"><a href={s.url}>{text.home.openSite} <span class="host">{new URL(s.url).host}</span> <span class="arrow" aria-hidden="true">→</span></a></p>
 				</li>
 			))}
 		</ul>
