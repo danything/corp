@@ -1189,8 +1189,12 @@ main {
 	}
 }
 
-/* 行の名前の前に置くアイコンの台。名前と並べ、狭い画面でも同じ並び */
-.row > h3 {
+/*
+ * 名前の前に置くアイコン。アプリのアイコンは台ごとの絵なのでそのまま、ほかの物のロゴは白い台に載せる
+ * (ロゴの色は明暗どちらの背景でも白の上で見えるように作られている)
+ */
+.row > h3,
+.feature-text h3 {
 	display: flex;
 	align-items: center;
 	gap: var(--doa-space-3);
@@ -1202,12 +1206,32 @@ main {
 	place-items: center;
 	width: 2.5rem;
 	height: 2.5rem;
+	overflow: hidden;
 	border-radius: var(--doa-radius-lg);
-	background: var(--doa-subtle);
-	color: var(--pico-primary);
 }
 
-.row-icon .icon {
-	width: 1.375rem;
-	height: 1.375rem;
+.row-icon img {
+	width: 100%;
+	height: 100%;
+}
+
+.row-icon.plate {
+	padding: 0.375rem;
+	background: #fff;
+	box-shadow: 0 0 0 1px var(--doa-line);
+}
+
+.row-icon.plate img {
+	object-fit: contain;
+}
+
+/* 画面のある実績。件の中のソースのリンクは、件全体のリンクの上に出す */
+.feature-text .links {
+	font-size: var(--doa-text-sm);
+	color: var(--doa-muted);
+}
+
+.feature-text .links a {
+	position: relative;
+	z-index: 1;
 }

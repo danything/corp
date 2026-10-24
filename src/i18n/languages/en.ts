@@ -110,6 +110,14 @@ export const en: Translation = {
 		ossTitle: "Open source contributions",
 		ossLead:
 			"Fixes for bugs found in software Doa uses, sent upstream as pull requests.",
+		shots: {
+			denpa:
+				"The denpa recordings list, with recordings and reservations of made-up programmes, and a month calendar and filters on the right",
+			mogiri:
+				"The mogiri counter sales screen: cards for an admission ticket, a festival T-shirt (S, M, L) and yakisoba, each with quantity buttons",
+			yuzuriha:
+				"Yuzuriha: a satellite map of Japan with property counts grouped by area, and filters on the left",
+		},
 	},
 
 	works: {
