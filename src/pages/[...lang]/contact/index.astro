@@ -1,0 +1,20 @@
+---
+import ContactForm from "@components/ContactForm.astro";
+import { type Lang, langPaths, t } from "@i18n/translation";
+import Layout from "@layouts/Layout.astro";
+import { site } from "@/config";
+
+// お問い合わせ(/contact/ と /en/contact/)。Turnstile のスクリプトはこのページでだけ読む
+export const getStaticPaths = langPaths;
+
+const { lang } = Astro.props as { lang: Lang };
+const c = t(lang).contact;
+---
+
+<Layout title={c.title} description={c.description}>
+	<script is:inline slot="head" src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+	<h1>{c.title}</h1>
+	<p>{c.lead}</p>
+	<p>{c.emailAlt} <a href={`mailto:${site.email}`}>{site.email}</a></p>
+	<ContactForm lang={lang} />
+</Layout>

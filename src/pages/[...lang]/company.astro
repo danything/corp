@@ -1,0 +1,51 @@
+---
+import { type Lang, langPaths, t } from "@i18n/translation";
+import Layout from "@layouts/Layout.astro";
+import { github, site, socialLinks } from "@/config";
+
+// 事業者情報(/company/ と /en/company/)
+export const getStaticPaths = langPaths;
+
+const { lang } = Astro.props as { lang: Lang };
+const c = t(lang).company;
+---
+
+<Layout title={c.title} description={c.description}>
+	<h1>{c.title}</h1>
+	<dl class="facts">
+		<dt>{c.tradeName}</dt>
+		<dd>{site.name}</dd>
+
+		<dt>{c.representative}</dt>
+		<dd>{c.representativeName}</dd>
+
+		<dt>{c.location}</dt>
+		<dd>{c.locationValue}</dd>
+
+		<dt>{c.founded}</dt>
+		<dd>{c.foundedValue}</dd>
+
+		<dt>{c.business}</dt>
+		<dd>
+			<ul>
+				{c.businessItems.map((item) => <li>{item}</li>)}
+			</ul>
+		</dd>
+
+		<dt>{c.license}</dt>
+		<dd><span lang="ja">長野県公安委員会 {site.kobutsuNumber}</span>{lang === "en" && ` (${c.licenseValue})`}</dd>
+
+		<dt>{c.email}</dt>
+		<dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+
+		<dt>{c.github}</dt>
+		<dd>
+			<a href={github.org.url}>{github.org.name}</a> · <a href={github.user.url}>{github.user.name}</a>
+		</dd>
+
+		<dt>{c.social}</dt>
+		<dd>
+			{socialLinks.filter((s) => s.name !== "GitHub").map((s, i) => (<>{i > 0 && " · "}<a href={s.url} rel="me">{s.name}</a></>))}
+		</dd>
+	</dl>
+</Layout>

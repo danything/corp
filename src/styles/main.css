@@ -1,0 +1,215 @@
+/*
+ * Blades は使う部品だけを読む(xool・lgtm と同じ)。部品は layered/* なので @layer blades に入り、
+ * 層に入れていないこのファイルの規則が詳細度に関係なく勝つ。
+ * 順番は variables → layout → content → forms → components → utilities を崩さない。
+ * 明暗は Blades の light-dark() に任せ、ここでは自前の色を持たない(--pico-* から引く)
+ */
+@import "@anyblades/blades/layered/variables";
+@import "@anyblades/blades/layered/layout/document";
+@import "@anyblades/blades/layered/layout/landmarks";
+@import "@anyblades/blades/layered/layout/container";
+@import "@anyblades/blades/layered/layout/section";
+@import "@anyblades/blades/layered/content/typography";
+@import "@anyblades/blades/layered/content/link";
+@import "@anyblades/blades/layered/content/button";
+@import "@anyblades/blades/layered/content/misc";
+@import "@anyblades/blades/layered/forms/basics";
+@import "@anyblades/blades/layered/components/card";
+@import "@anyblades/blades/layered/components/nav";
+@import "@anyblades/blades/layered/utilities";
+
+:root {
+	/* Web フォントは使わない。Windows は BIZ UDPGothic、mac はヒラギノ、ほかは OS の日本語フォント */
+	--pico-font-family-sans-serif:
+		"BIZ UDPGothic", "Hiragino Sans", "Yu Gothic UI", "Noto Sans JP", system-ui,
+		sans-serif;
+	--pico-line-height: 1.7;
+}
+
+body {
+	/* 日本語を文節で折り返す */
+	word-break: auto-phrase;
+	line-break: strict;
+}
+
+p,
+li,
+dd {
+	text-wrap: pretty;
+}
+
+/* ---- 頭と足 ---- */
+body > header {
+	border-bottom: 1px solid var(--pico-muted-border-color);
+	padding-block: 0.25rem;
+}
+
+/* 狭い画面ではメニューを折り返す(Blades の nav は 1 行に並べる) */
+body > header nav {
+	flex-wrap: wrap;
+}
+
+body > header nav ul:last-of-type {
+	flex-wrap: wrap;
+}
+
+.brand {
+	font-size: 1.25rem;
+	font-weight: 700;
+	color: var(--pico-color);
+}
+
+nav [aria-current="page"] {
+	text-decoration: underline;
+	text-underline-offset: 0.35em;
+}
+
+body > footer {
+	border-top: 1px solid var(--pico-muted-border-color);
+	color: var(--pico-muted-color);
+	font-size: 0.875rem;
+}
+
+body > footer ul {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.25rem 1rem;
+	padding: 0;
+	list-style: none;
+}
+
+body > footer li {
+	margin: 0;
+	list-style: none;
+}
+
+/* ---- 本文 ---- */
+main h1 {
+	font-size: 2rem;
+}
+
+.hero {
+	padding-block: 2rem 1rem;
+}
+
+.hero h1 {
+	font-size: clamp(2.5rem, 8vw, 4rem);
+	margin-bottom: 0.5rem;
+}
+
+.hero p {
+	font-size: 1.15rem;
+}
+
+.actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+}
+
+/* カード(<article>)を並べる。狭い画面では 1 列 */
+.cards {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+	gap: var(--pico-spacing);
+	margin-bottom: var(--pico-spacing);
+}
+
+.cards > article {
+	margin: 0;
+}
+
+article h3 {
+	font-size: 1.1rem;
+	margin-bottom: 0.5rem;
+}
+
+article p:last-child {
+	margin-bottom: 0;
+}
+
+/* 事業者情報の表(<dl>)。広い画面では項目名と値を横に並べる */
+.facts {
+	display: grid;
+	gap: 0.25rem 1.5rem;
+}
+
+.facts dt {
+	color: var(--pico-muted-color);
+	font-weight: 700;
+}
+
+.facts dd {
+	margin: 0 0 0.75rem;
+}
+
+.facts dd ul {
+	margin: 0;
+	padding-left: 1.25rem;
+}
+
+@media (min-width: 640px) {
+	.facts {
+		grid-template-columns: 10rem 1fr;
+	}
+
+	.facts dd {
+		margin-bottom: 0.5rem;
+	}
+}
+
+.muted {
+	color: var(--pico-muted-color);
+}
+
+/* ---- フォーム ---- */
+.contact-form {
+	max-width: 40rem;
+}
+
+.contact-form .field-error {
+	color: var(--pico-del-color);
+}
+
+/* 見えないボット除けの欄。display: none だと入れてくるボットが減るので、画面の外に出す */
+.hp {
+	position: absolute;
+	left: -10000px;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+
+.status {
+	border-left: 4px solid var(--pico-del-color);
+	padding: 0.5rem 1rem;
+	background: var(--pico-card-sectioning-background-color);
+}
+
+.cf-turnstile {
+	min-height: 65px;
+	margin-bottom: var(--pico-spacing);
+}
+
+/* 本文へ移動のリンク。フォーカスしたときだけ見せる */
+.skip {
+	position: absolute;
+	top: -100px;
+	left: 1rem;
+	z-index: 10;
+	padding: 0.5rem 1rem;
+	background: var(--pico-background-color);
+}
+
+.skip:focus {
+	top: 0.5rem;
+}
+
+/* 項目ごとのエラーは、その欄が aria-invalid="true" のときだけ見せる */
+.field-error {
+	display: none;
+}
+
+[aria-invalid="true"] + .field-error {
+	display: block;
+}

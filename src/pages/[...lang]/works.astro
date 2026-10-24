@@ -1,0 +1,60 @@
+---
+import { type Lang, langPaths, t } from "@i18n/translation";
+import Layout from "@layouts/Layout.astro";
+import { github, oss, services, works } from "@/config";
+
+// サービス・実績(/works/ と /en/works/)
+export const getStaticPaths = langPaths;
+
+const { lang } = Astro.props as { lang: Lang };
+const text = t(lang);
+const page = text.worksPage;
+// {user}・{org} を GitHub へのリンクにする
+const [beforeUser, rest = ""] = page.others.split("{user}");
+const [between, afterOrg] = rest.split("{org}");
+---
+
+<Layout title={page.title} description={page.description}>
+	<h1>{page.title}</h1>
+
+	<section aria-labelledby="services">
+		<h2 id="services">{page.servicesTitle}</h2>
+		<p>{page.servicesLead}</p>
+		<div class="cards">
+			{services.map((s) => (
+				<article>
+					<h3><a href={s.url}>{text.services[s.id].name}</a></h3>
+					<p>{text.services[s.id].body}</p>
+				</article>
+			))}
+		</div>
+	</section>
+
+	<section aria-labelledby="works">
+		<h2 id="works">{page.worksTitle}</h2>
+		<div class="cards">
+			{works.map((w) => (
+				<article>
+					<h3><a href={w.url}>{text.works[w.id].name}</a></h3>
+					<p>{text.works[w.id].body}</p>
+					{"source" in w && <p><a href={w.source}>{page.source}</a></p>}
+				</article>
+			))}
+		</div>
+		<p>{beforeUser}<a href={github.user.url}>{github.user.name}</a>{between}<a href={github.org.url}>{github.org.name}</a>{afterOrg}</p>
+	</section>
+
+	<section aria-labelledby="oss">
+		<h2 id="oss">{page.ossTitle}</h2>
+		<p>{page.ossLead}</p>
+		<div class="cards">
+			{oss.map((o) => (
+				<article>
+					<h3>{text.oss[o.id].name}</h3>
+					<p>{text.oss[o.id].body}</p>
+					<p>{o.links.map((l, i) => (<>{i > 0 && " · "}<a href={l.url}>{l.label}</a></>))}</p>
+				</article>
+			))}
+		</div>
+	</section>
+</Layout>

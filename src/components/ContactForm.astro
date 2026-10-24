@@ -1,0 +1,80 @@
+---
+import { type Lang, localeUrl, t } from "@i18n/translation";
+import { site } from "@/config";
+
+// 問い合わせフォーム。送り先は server.ts の POST /api/contact。
+// JavaScript があれば fetch で送り(src/scripts/contact.ts)、無ければ普通のフォームの送信になる
+// (失敗したときはサーバーがこのページに入力とエラーを書き戻して返す。server/contact-page.ts)。
+// エラーの文言は data-msg-* に置き、ページの JavaScript とサーバーの両方がそこから取る
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const c = t(lang).contact;
+const fields = [
+	{
+		name: "name",
+		label: c.name,
+		type: "text",
+		autocomplete: "name",
+		required: true,
+		maxlength: 100,
+	},
+	{
+		name: "email",
+		label: c.email,
+		type: "email",
+		autocomplete: "email",
+		required: true,
+		maxlength: 254,
+	},
+	{
+		name: "company",
+		label: c.company,
+		type: "text",
+		autocomplete: "organization",
+		required: false,
+		maxlength: 100,
+	},
+] as const;
+const errorAttrs = Object.fromEntries(
+	Object.entries(c.errors).map(([code, msg]) => [`data-msg-${code}`, msg]),
+);
+---
+
+<form class="contact-form" method="post" action="/api/contact" data-contact data-thanks={localeUrl("/contact/thanks/", lang)}>
+	<div class="status" data-contact-status role="alert" tabindex="-1" hidden {...errorAttrs}></div>
+
+	<input type="hidden" name="lang" value={lang} />
+
+	{fields.map((f) => (
+		<label for={f.name}>
+			{f.label} <span class="muted">({f.required ? c.required : c.optional})</span>
+		</label>
+		<input id={f.name} name={f.name} type={f.type} autocomplete={f.autocomplete} required={f.required} maxlength={f.maxlength} />
+		<small id={`${f.name}-error`} class="field-error">{c.fieldErrors[f.name]}</small>
+	))}
+
+	<label for="message">
+		{c.message} <span class="muted">({c.required})</span>
+	</label>
+	<textarea id="message" name="message" rows="8" required maxlength="5000"></textarea>
+	<small id="message-error" class="field-error">{c.fieldErrors.message}</small>
+
+	{/* ボット除け。人には見えず、読み上げにも出ない。値が入っていたらサーバーは送ったふりをして捨てる */}
+	<div class="hp" aria-hidden="true">
+		<label for="website">{c.honeypot}</label>
+		<input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+	</div>
+
+	<div class="cf-turnstile" data-sitekey={site.turnstileSiteKey} data-language={lang} data-theme="auto" ></div>
+	<noscript><p class="status">{c.noscript} <a href={`mailto:${site.email}`}>{site.email}</a></p></noscript>
+
+	<button type="submit" data-sending={c.sending}>{c.submit}</button>
+	<p><small class="muted">{c.privacy}</small></p>
+</form>
+
+<script>
+	import "../scripts/contact";
+</script>

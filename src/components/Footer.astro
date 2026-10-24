@@ -1,0 +1,23 @@
+---
+import { type Lang, localeUrl, t } from "@i18n/translation";
+import { github, site, socialLinks } from "@/config";
+
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const text = t(lang);
+---
+
+<footer class="container">
+	<ul aria-label={text.footer.social}>
+		<li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+		<li><a href={site.blog}>{text.footer.blog}</a></li>
+		<li><a href={github.org.url}>GitHub ({github.org.name})</a></li>
+		{socialLinks.map((s) => (
+			<li><a href={s.url} rel="me">{s.name}{s.name === "GitHub" ? ` (${github.user.name})` : ""}</a></li>
+		))}
+	</ul>
+	<p><a href={localeUrl("/company/", lang)}>{text.nav.company}</a> · {text.footer.copyright}</p>
+</footer>

@@ -1,0 +1,38 @@
+---
+import { type Lang, localeUrl, stripLang, t } from "@i18n/translation";
+import { site } from "@/config";
+
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const text = t(lang);
+const current = stripLang(Astro.url.pathname);
+const other: Lang = lang === "en" ? "ja" : "en";
+
+const links = [
+	{ path: "/works/", label: text.nav.works },
+	{ path: "/company/", label: text.nav.company },
+	{ path: "/contact/", label: text.nav.contact },
+];
+---
+
+<header class="container">
+	<nav aria-label={text.nav.label}>
+		<ul>
+			<li><a class="brand" href={localeUrl("/", lang)} aria-current={current === "/" ? "page" : undefined}>{site.name}</a></li>
+		</ul>
+		<ul>
+			{links.map((l) => (
+				<li>
+					<a href={localeUrl(l.path, lang)} aria-current={current.startsWith(l.path) ? "page" : undefined}>{l.label}</a>
+				</li>
+			))}
+			<li><a href={site.blog}>{text.nav.blog}</a></li>
+			<li>
+				<a href={localeUrl(current, other)} hreflang={other} lang={other} aria-label={text.nav.switchLangLabel}>{text.nav.switchLang}</a>
+			</li>
+		</ul>
+	</nav>
+</header>

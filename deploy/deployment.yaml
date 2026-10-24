@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: corp
+  namespace: corp
+  annotations:
+    # 参照している Secret を Infisical operator が同期したら、自動でローリング再起動する
+    secrets.infisical.com/auto-reload: "true"
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # 新しい Pod が Ready になってから古い Pod を落とす
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: corp
+  template:
+    metadata:
+      labels:
+        app: corp
+    spec:
+      # Bun は root ではない uid (Dockerfile の USER と同じ) で、8080 番で待つ
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        runAsGroup: 65532
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: corp
+          image: ghcr.io/danything/corp:latest
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            # 問い合わせの送り先 (matrix-hookshot の汎用 webhook) と Turnstile のシークレット。
+            # Infisical の /corp/corp-secrets (secret.yaml)
+            - name: CONTACT_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: corp-secrets
+                  key: contact-webhook-url
+            - name: TURNSTILE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: corp-secrets
+                  key: turnstile-secret
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          # 止める前に少し待つ。Pod の終了と Service の宛先から外れるのが同時に進むので、待たないと
+          # 外れる前の数秒に来たリクエストが落ちる (ブログと同じ)。イメージ (distroless) に sleep の
+          # コマンドは無いので、kubelet が待つ sleep を使う
+          lifecycle:
+            preStop:
+              sleep:
+                seconds: 5

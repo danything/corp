@@ -1,0 +1,32 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>5ym/repo-config", "helpers:pinGitHubActionDigests"],
+  "argocd": {
+    "managerFilePatterns": ["/^deploy/.+\\.yaml$/"]
+  },
+  "packageRules": [
+    {
+      "description": "astro check が TypeScript 7 にまだ対応していない(「TypeScript 6 を入れて」とエラーになる)ので、対応するまで 6 までに留める",
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<7"
+    },
+    {
+      "description": "Dockerfile のイメージ(oven/bun)はダイジェストで固定する。ビルドに使うイメージが Renovate の PR を通してしか変わらないようにする",
+      "matchManagers": ["dockerfile"],
+      "pinDigests": true
+    },
+    {
+      "description": "Bun の版は package.json の packageManager(CI の setup-bun が読む)と Dockerfile の oven/bun の 2 か所にある。同じ PR で上げる",
+      "matchDepNames": ["bun", "oven/bun"],
+      "groupName": "bun",
+      "groupSlug": "bun"
+    },
+    {
+      "description": "@anyblades/blades はプレリリースに固定中で、規則がどの部品にあるかがまだ変わり得る。部品の間で規則が移ると build は通ったまま見た目だけ変わるので、自動では入れない。ほかの更新の自動マージを止めないよう、まとめの PR から外して別の PR にする。安定版に戻したらこの規則を消す",
+      "matchPackageNames": ["@anyblades/blades"],
+      "groupName": "@anyblades/blades",
+      "groupSlug": "blades",
+      "automerge": false
+    }
+  ]
+}

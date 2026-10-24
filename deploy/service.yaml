@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: corp
+  namespace: corp
+spec:
+  selector:
+    app: corp
+  ports:
+    - name: http
+      port: 80
+      # コンテナは 8080 番で待つ (HTTPRoute からは 80 番)
+      targetPort: 8080

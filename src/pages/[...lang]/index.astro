@@ -1,0 +1,63 @@
+---
+import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
+import Layout from "@layouts/Layout.astro";
+import { services, site } from "@/config";
+
+// トップ(/ と /en/)
+export const getStaticPaths = langPaths;
+
+const { lang } = Astro.props as { lang: Lang };
+const text = t(lang);
+---
+
+<Layout>
+	<section class="hero">
+		<h1>{site.name}</h1>
+		<p>{text.home.lead}</p>
+		<div class="actions">
+			<a href={localeUrl("/contact/", lang)} role="button">{text.home.ctaContact}</a>
+			<a href={localeUrl("/works/", lang)} role="button" class="secondary outline">{text.home.ctaWorks}</a>
+		</div>
+	</section>
+
+	<section aria-labelledby="business">
+		<h2 id="business">{text.home.businessTitle}</h2>
+		<div class="cards">
+			{text.home.business.map((b) => (
+				<article>
+					<h3>{b.title}</h3>
+					<p>{b.body}</p>
+				</article>
+			))}
+		</div>
+	</section>
+
+	<section aria-labelledby="services">
+		<h2 id="services">{text.home.servicesTitle}</h2>
+		<p>{text.home.servicesLead}</p>
+		<div class="cards">
+			{services.map((s) => (
+				<article>
+					<h3><a href={s.url}>{text.services[s.id].name}</a></h3>
+					<p>{text.services[s.id].body}</p>
+				</article>
+			))}
+		</div>
+		<p><a href={localeUrl("/works/", lang)}>{text.home.worksLink}</a></p>
+	</section>
+
+	<section aria-labelledby="about">
+		<h2 id="about">{text.home.aboutTitle}</h2>
+		<p>{text.home.aboutBody}</p>
+		<p><a href={lang === "en" ? `${site.blog}/en/about/` : site.profile}>{text.home.aboutLink}</a></p>
+	</section>
+
+	<section aria-labelledby="contact">
+		<h2 id="contact">{text.home.contactTitle}</h2>
+		<p>{text.home.contactBody}</p>
+		<div class="actions">
+			<a href={localeUrl("/contact/", lang)} role="button">{text.home.ctaContact}</a>
+			<a href={`mailto:${site.email}`} role="button" class="secondary outline">{site.email}</a>
+		</div>
+	</section>
+</Layout>

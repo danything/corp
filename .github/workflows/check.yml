@@ -1,0 +1,30 @@
+name: Check
+
+# PR で Biome・型チェック(astro check)・サーバーのテスト(bun test)・ビルドを通す
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version-file: package.json # packageManager の版(Dockerfile の oven/bun と同じ)
+      # astro は Node で動く。ランナーの既定の Node は版が古いことがある (astro 7.4.2 は 22.23.4 以上)
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.22.1
+          check-latest: true
+      - run: bun install --frozen-lockfile
+      # Biome の検査と型チェック(biome check . && astro check)
+      - run: bun run lint
+      # server.ts のテスト(tests/)
+      - run: bun test
+      - run: bun run build

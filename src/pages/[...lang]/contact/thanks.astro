@@ -1,0 +1,16 @@
+---
+import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
+import Layout from "@layouts/Layout.astro";
+
+// 送信完了(/contact/thanks/ と /en/contact/thanks/)。server.ts が送信に成功したらここへ送る
+export const getStaticPaths = langPaths;
+
+const { lang } = Astro.props as { lang: Lang };
+const th = t(lang).thanks;
+---
+
+<Layout title={th.title} description={th.description} noindex>
+	<h1>{th.title}</h1>
+	<p role="status">{th.body}</p>
+	<p><a href={localeUrl("/", lang)}>{th.back}</a></p>
+</Layout>

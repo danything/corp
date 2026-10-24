@@ -1,0 +1,25 @@
+# 公開経路。**Cilium Gateway (danything/gitops の bootstrap/gateway/) に付ける HTTPRoute。**
+# 証明書は Gateway 側のリスナーに cert-manager がワイルドカードで発行したものが付いているので、
+# ここでは指定しない。
+# doany.io (apex) はもとはブログ (danything/blog) で、ブログは b.doany.io へ移った。
+# 旧ブログの URL は server.ts が b.doany.io へ 301 で送る。
+# /.well-known/matrix/* は danything/gitops の apps/matrix/httproute.yaml (より長い一致) が Matrix へ向けるので、ここには来ない
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: corp
+  namespace: corp
+spec:
+  parentRefs:
+    - name: doany
+      namespace: kube-system
+      sectionName: https-apex
+  hostnames: ["doany.io"]
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: corp
+          port: 80

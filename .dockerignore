@@ -1,0 +1,20 @@
+# dependencies
+node_modules
+
+# build output
+dist
+build
+.astro
+
+# vcs / ci
+.git
+.github
+.vscode
+
+# infra (イメージのビルドには不要)
+deploy
+
+# misc
+.DS_Store
+*.log
+.env
