@@ -8,7 +8,8 @@ export const ja = {
 		label: "メイン",
 		home: "ホーム",
 		company: "事業者情報",
-		works: "サービス・実績",
+		business: "事業内容",
+		works: "実績",
 		blog: "ブログ",
 		contact: "お問い合わせ",
 		switchLang: "English",
@@ -20,10 +21,8 @@ export const ja = {
 		/** ページの題(<title>)でサイト名に添える */
 		title: "Web システムの開発と、中古車・登録手続きの相談",
 		lead: "業務システムや Web アプリを作っています。中古車の売り買いや、貨物登録などの手続きの相談にも乗ります。",
-		/** 名前の上に添える事実(所在地・開業) */
-		meta: "千葉県木更津市・2018年10月開業",
 		ctaContact: "お問い合わせ",
-		ctaWorks: "サービスと実績",
+		ctaBusiness: "事業内容",
 		/** 頭の右に出す自社サービスの画面。alt は映っているものを書く */
 		shotsLabel: "自社サービス",
 		shots: {
@@ -34,42 +33,65 @@ export const ja = {
 		},
 
 		businessTitle: "事業内容",
-		business: [
-			{
-				title: "Web システム・アプリの受託開発",
-				body: "業務システムや Web アプリを設計から作ります。言語は問いません。Kubernetes・IaC・クラウドでのインフラの構築と運用も引き受けます。",
-			},
-			{
-				title: "Web サイト・LP 制作",
-				body: "WordPress などでのサイトや LP の制作と改修です。",
-			},
-			{
-				title: "中古車の買取・販売の相談",
-				body: "古物商許可を持っていて、中古車の業者オークションに加盟しています。買いたい・売りたい、どちらの相談でもどうぞ。",
-			},
-			{
-				title: "自動車の登録手続きの相談",
-				body: "貨物登録など、自動車の登録手続きの相談に乗ります。",
-			},
-			{
-				title: "自社サービスの開発・運営",
-				body: "トドロクと worklog を作って、運営しています。",
-			},
-		],
-
-		servicesTitle: "自社サービス",
-		servicesLead: "自分で作って、運用もサポートもしています。",
-		worksLink: "制作実績と OSS への貢献",
-		/** サービスの件の下に添えるリンク(ホスト名を後ろに付ける) */
-		openSite: "サイトを開く",
-
-		aboutTitle: "代表について",
-		aboutBody:
-			"代表は丸山 竜輝です。決済代行や SaaS の開発をしてきた Web エンジニアで、自動車の陸送のドライバーをしていたこともあります。古物商許可を持っています。",
-		aboutLink: "代表のプロフィール",
 
 		contactTitle: "お問い合わせ",
-		contactBody: "フォームかメールでどうぞ。",
+		contactBody: "フォームかメールでお問い合わせください。",
+	},
+
+	/**
+	 * 事業内容。並びは config.ts の business。summary はトップと事業者情報の一覧に、body は /business/ に出す
+	 */
+	business: {
+		dev: {
+			title: "Web システム・アプリの受託開発",
+			summary: "業務システムや Web アプリを、設計からインフラまで作ります。",
+			body: "業務システムや Web アプリを、要件の整理から設計・実装・運用まで引き受けます。言語やフレームワークは問いません。動かす基盤（Kubernetes・IaC・クラウド）の構築と運用も含めて相談できます。",
+		},
+		web: {
+			title: "Web サイト・LP 制作",
+			summary: "WordPress などでのサイトや LP の制作と改修です。",
+			body: "WordPress などで、サイトや LP の新規制作と、いまあるサイトの改修を引き受けます。",
+		},
+		cars: {
+			title: "中古車の買取・販売の相談",
+			summary: "業者オークションを使って、中古車の売り買いを手伝います。",
+			body: "古物商許可を持ち、オートサーバーに加盟して業者オークションで中古車を売り買いしています。探している車の仕入れも、手持ちの車の売却も相談に乗ります。",
+		},
+		registration: {
+			title: "自動車の登録手続きの相談",
+			summary: "貨物登録など、自動車の登録手続きの相談に乗ります。",
+			body: "貨物登録など、自動車の登録・届出の手続きの相談に乗ります。書類をご自身で作る場合は、自社サービスのトドロクで車検証の情報から作れます。",
+		},
+		services: {
+			title: "自社サービスの開発・運営",
+			summary: "車両台帳のトドロクと、稼働表の worklog を運営しています。",
+			body: "自社で開発し、運営とサポートもしています。",
+		},
+	},
+
+	businessPage: {
+		title: "事業内容",
+		description:
+			"Doa の事業内容です。Web システム・アプリの受託開発、サイト制作、中古車と自動車の登録手続きの相談、自社サービスの運営。",
+		techTitle: "これまで使ってきた技術",
+		tech: [
+			{
+				label: "バックエンド",
+				value:
+					"PHP / Laravel、Java / Spring、C# / .NET、Go、Python、TypeScript / Bun",
+			},
+			{ label: "フロントエンド", value: "React / Next.js、Svelte / SvelteKit" },
+			{
+				label: "インフラ",
+				value:
+					"AWS（ECS・CloudFormation）、Kubernetes（Talos Linux・Argo CD）、Cloudflare、Pulumi",
+			},
+		],
+		worksLink: "制作実績",
+		licenseNote: "古物商許可の番号は{link}に載せています。",
+		licenseLink: "事業者情報",
+		/** サービスの件の下に添えるリンク(ホスト名を後ろに付ける) */
+		openSite: "サイトを開く",
 	},
 
 	services: {
@@ -84,10 +106,8 @@ export const ja = {
 	},
 
 	worksPage: {
-		title: "サービス・実績",
-		description: "Doa の自社サービス、制作実績、OSS への貢献です。",
-		servicesTitle: "自社サービス",
-		servicesLead: "自分で作って、運用もサポートもしています。",
+		title: "実績",
+		description: "Doa の制作実績と OSS への貢献です。",
 		worksTitle: "制作実績",
 		source: "ソース",
 		others:
@@ -151,18 +171,9 @@ export const ja = {
 		founded: "開業",
 		foundedValue: "2018年10月",
 		business: "事業内容",
-		businessItems: [
-			"Web システム・アプリの受託開発（言語は問いません。Kubernetes・IaC・クラウドでのインフラの構築と運用も）",
-			"Web サイト・LP 制作",
-			"中古車の買取・販売の相談",
-			"貨物登録など自動車の登録手続きの相談",
-			"自社サービスの開発・運営",
-		],
 		license: "古物商許可",
 		licenseValue: "長野県公安委員会",
 		email: "メール",
-		github: "GitHub",
-		social: "SNS",
 	},
 
 	/** 代表のプロフィール(/company/#profile)。並びと年月は config.ts の career・licenses */
@@ -216,17 +227,15 @@ export const ja = {
 			kobutsu: "古物商許可",
 			medium: "中型自動車第一種運転免許",
 		},
-		auction:
-			"オートサーバーに加盟していて、業者オークションで中古車を売り買いしています。",
 		oss: "OSS への貢献は{link}に載せています。",
-		ossLink: "サービス・実績",
+		ossLink: "実績",
 	},
 
 	contact: {
 		title: "お問い合わせ",
 		description:
 			"Doa への問い合わせのフォームです。開発の依頼と、中古車や登録手続きの相談を受け付けています。",
-		lead: "開発の依頼や、中古車・登録手続きの相談はここから送ってください。返信はメールでします。",
+		lead: "開発のご依頼や、中古車・登録手続きのご相談はこちらからお送りください。返信はメールでいたします。",
 		emailAlt: "メールでも受け付けています:",
 		name: "お名前",
 		email: "メールアドレス",
@@ -239,7 +248,7 @@ export const ja = {
 		sending: "送信しています…",
 		noscript:
 			"このフォームはボット対策の確認に JavaScript を使います。JavaScript を使わない場合はメールで送ってください。",
-		privacy: "送ってもらった内容は、返信のためだけに使います。",
+		privacy: "お送りいただいた内容は、返信のためだけに使います。",
 		errors: {
 			invalid: "入力を確認してください。",
 			turnstile:
@@ -255,17 +264,17 @@ export const ja = {
 			network: "通信に失敗しました。接続を確かめて、もう一度送ってください。",
 		},
 		fieldErrors: {
-			name: "お名前を 100 文字以内で入れてください。",
-			email: "メールアドレスを正しい形で入れてください。",
+			name: "お名前を 100 文字以内で入力してください。",
+			email: "メールアドレスを正しい形式で入力してください。",
 			company: "会社・団体名は 100 文字以内にしてください。",
-			message: "お問い合わせ内容を 5000 文字以内で入れてください。",
+			message: "お問い合わせ内容を 5000 文字以内で入力してください。",
 		},
 	},
 
 	thanks: {
 		title: "送信しました",
 		description: "お問い合わせを受け付けました。",
-		body: "受け付けました。内容を読んで、入力してもらったメールアドレスに返信します。",
+		body: "受け付けました。内容を確認し、ご入力いただいたメールアドレスに返信いたします。",
 		back: "ホームへ戻る",
 	},
 

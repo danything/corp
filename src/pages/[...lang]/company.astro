@@ -1,7 +1,7 @@
 ---
 import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
 import Layout from "@layouts/Layout.astro";
-import { career, github, licenses, site, socialLinks } from "@/config";
+import { business, career, licenses, site } from "@/config";
 
 // 事業者情報と代表のプロフィール(/company/ と /en/company/。プロフィールは #profile)
 export const getStaticPaths = langPaths;
@@ -55,7 +55,7 @@ const [ossBefore, ossAfter] = p.oss.split("{link}");
 		<dt>{c.business}</dt>
 		<dd>
 			<ul>
-				{c.businessItems.map((item) => <li>{item}</li>)}
+				{business.map((id) => <li><a href={localeUrl(`/business/#${id}`, lang)}>{text.business[id].title}</a></li>)}
 			</ul>
 		</dd>
 
@@ -64,16 +64,6 @@ const [ossBefore, ossAfter] = p.oss.split("{link}");
 
 		<dt>{c.email}</dt>
 		<dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
-
-		<dt>{c.github}</dt>
-		<dd>
-			<a href={github.org.url}>{github.org.name}</a> · <a href={github.user.url}>{github.user.name}</a>
-		</dd>
-
-		<dt>{c.social}</dt>
-		<dd>
-			{socialLinks.filter((s) => s.name !== "GitHub").map((s, i) => (<>{i > 0 && " · "}<a href={s.url} rel="me">{s.name}</a></>))}
-		</dd>
 	</dl>
 
 	<section class="profile" aria-labelledby="profile">
@@ -102,12 +92,10 @@ const [ossBefore, ossAfter] = p.oss.split("{link}");
 					<p class="period"><time datetime={l.date}>{formatYm(l.date)}</time></p>
 					<div>
 						<p class="what">{p.licenses[l.id]}</p>
-						{l.id === "kobutsu" && <p class="detail"><span lang="ja">長野県公安委員会 {site.kobutsuNumber}</span>{lang === "en" && ` (${c.licenseValue})`}</p>}
 					</div>
 				</li>
 			))}
 		</ol>
-		<p class="body">{p.auction}</p>
 		<p class="body">{ossBefore}<a href={localeUrl("/works/#oss", lang)}>{p.ossLink}</a>{ossAfter}</p>
 	</section>
 </Layout>

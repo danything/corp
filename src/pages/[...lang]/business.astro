@@ -1,0 +1,55 @@
+---
+import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
+import Layout from "@layouts/Layout.astro";
+import { business, services } from "@/config";
+
+// 事業内容(/business/ と /en/business/)。事業ごとの節は #dev・#cars などで、トップから飛んでくる
+export const getStaticPaths = langPaths;
+
+const { lang } = Astro.props as { lang: Lang };
+const text = t(lang);
+const page = text.businessPage;
+const [licenseBefore, licenseAfter] = page.licenseNote.split("{link}");
+---
+
+<Layout title={page.title} description={page.description}>
+	<h1>{page.title}</h1>
+
+	{business.map((id) => (
+		<section class="business" aria-labelledby={id}>
+			<h2 id={id} data-reveal>{text.business[id].title}</h2>
+			<p class="body" data-reveal>{text.business[id].body}</p>
+
+			{id === "dev" && (
+				<>
+					<h3 data-reveal>{page.techTitle}</h3>
+					<dl class="facts" data-reveal>
+						{page.tech.map((row) => (
+							<>
+								<dt>{row.label}</dt>
+								<dd>{row.value}</dd>
+							</>
+						))}
+					</dl>
+					<p data-reveal><a class="button secondary" href={localeUrl("/works/", lang)}>{page.worksLink} <span class="arrow" aria-hidden="true">→</span></a></p>
+				</>
+			)}
+
+			{id === "cars" && (
+				<p class="muted" data-reveal>{licenseBefore}<a href={localeUrl("/company/", lang)}>{page.licenseLink}</a>{licenseAfter}</p>
+			)}
+
+			{id === "services" && (
+				<ul class="cards">
+					{services.map((s) => (
+						<li class="item" data-reveal>
+							<h3><a href={s.url}>{text.services[s.id].name}</a></h3>
+							<p>{text.services[s.id].body}</p>
+							<p class="links"><a href={s.url}>{page.openSite} <span class="host">{new URL(s.url).host}</span> <span class="arrow" aria-hidden="true">→</span></a></p>
+						</li>
+					))}
+				</ul>
+			)}
+		</section>
+	))}
+</Layout>

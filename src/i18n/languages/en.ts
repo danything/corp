@@ -8,7 +8,8 @@ export const en: Translation = {
 		label: "Main",
 		home: "Home",
 		company: "Company",
-		works: "Services & Work",
+		business: "What we do",
+		works: "Work",
 		blog: "Blog",
 		contact: "Contact",
 		switchLang: "日本語",
@@ -18,10 +19,9 @@ export const en: Translation = {
 
 	home: {
 		title: "Web systems, used cars and vehicle registration",
-		lead: "I build business systems and web apps. I can also help you buy or sell a used car, or sort out vehicle registration.",
-		meta: "Kisarazu, Chiba · Established October 2018",
+		lead: "Doa builds business systems and web apps, and can also help you buy or sell a used car or sort out vehicle registration.",
 		ctaContact: "Contact",
-		ctaWorks: "Services and work",
+		ctaBusiness: "What we do",
 		shotsLabel: "Own services",
 		shots: {
 			todoroku:
@@ -30,42 +30,63 @@ export const en: Translation = {
 				"The worklog home page, with a sample timesheet built from Slack and GitHub logs",
 		},
 
-		businessTitle: "Business",
-		business: [
-			{
-				title: "Web systems and apps, built to order",
-				body: "Business systems and web apps, from design to code, in any language. Also the infrastructure they run on: Kubernetes, IaC and the cloud, set up and operated.",
-			},
-			{
-				title: "Websites and landing pages",
-				body: "New sites and landing pages, or changes to existing ones, on WordPress and similar.",
-			},
-			{
-				title: "Buying and selling used cars",
-				body: "Doa holds a secondhand dealer licence (kobutsusho kyoka) and is a member of used car dealer auctions. Get in touch if you want to buy or sell one.",
-			},
-			{
-				title: "Vehicle registration",
-				body: "Help with vehicle registration in Japan, such as cargo (commercial vehicle) registration.",
-			},
-			{
-				title: "Own services",
-				body: "Todoroku and worklog, built and run in-house.",
-			},
-		],
-
-		servicesTitle: "Own services",
-		servicesLead: "I built these, and I run and support them too.",
-		worksLink: "Work and open source contributions",
-		openSite: "Open site",
-
-		aboutTitle: "About the owner",
-		aboutBody:
-			"Doa is run by Ryuki Maruyama. He's a web engineer who has worked on payment processing and SaaS, and has also driven for a vehicle transport company. He holds a secondhand dealer licence.",
-		aboutLink: "Owner's profile",
+		businessTitle: "What we do",
 
 		contactTitle: "Contact",
 		contactBody: "Use the form, or send an email.",
+	},
+
+	business: {
+		dev: {
+			title: "Web systems and apps, built to order",
+			summary: "Business systems and web apps, from design to infrastructure.",
+			body: "Business systems and web apps, from sorting out requirements through design and code to running them. Any language or framework. The platform they run on (Kubernetes, IaC, the cloud) can be built and operated too.",
+		},
+		web: {
+			title: "Websites and landing pages",
+			summary: "New sites and landing pages, or changes to existing ones.",
+			body: "New sites and landing pages, or changes to existing ones, on WordPress and similar.",
+		},
+		cars: {
+			title: "Buying and selling used cars",
+			summary: "Help buying or selling a used car through dealer auctions.",
+			body: "Doa holds a secondhand dealer licence (kobutsusho kyoka) and is a member of AUTOSERVER, buying and selling used cars at dealer auctions. Get in touch whether you're looking for a car or want to sell one.",
+		},
+		registration: {
+			title: "Vehicle registration",
+			summary:
+				"Help with vehicle registration in Japan, such as cargo registration.",
+			body: "Help with vehicle registration and notifications in Japan, such as cargo (commercial vehicle) registration. If you'd rather do the paperwork yourself, Doa's own service Todoroku builds it from the vehicle inspection certificate.",
+		},
+		services: {
+			title: "Own services",
+			summary: "Todoroku for vehicle ledgers, and worklog for timesheets.",
+			body: "Built in-house, and run and supported by Doa.",
+		},
+	},
+
+	businessPage: {
+		title: "What we do",
+		description:
+			"What Doa does: web systems and apps built to order, websites, help with used cars and vehicle registration, and its own services.",
+		techTitle: "Technology used so far",
+		tech: [
+			{
+				label: "Backend",
+				value:
+					"PHP / Laravel, Java / Spring, C# / .NET, Go, Python, TypeScript / Bun",
+			},
+			{ label: "Frontend", value: "React / Next.js, Svelte / SvelteKit" },
+			{
+				label: "Infrastructure",
+				value:
+					"AWS (ECS, CloudFormation), Kubernetes (Talos Linux, Argo CD), Cloudflare, Pulumi",
+			},
+		],
+		worksLink: "Past work",
+		licenseNote: "The licence number is on the {link}.",
+		licenseLink: "company page",
+		openSite: "Open site",
 	},
 
 	services: {
@@ -80,10 +101,8 @@ export const en: Translation = {
 	},
 
 	worksPage: {
-		title: "Services & Work",
-		description: "Doa's own services, past work and open source contributions.",
-		servicesTitle: "Own services",
-		servicesLead: "I built these, and I run and support them too.",
+		title: "Work",
+		description: "Doa's past work and open source contributions.",
 		worksTitle: "Work",
 		source: "Source",
 		others:
@@ -147,18 +166,9 @@ export const en: Translation = {
 		founded: "Established",
 		foundedValue: "October 2018",
 		business: "Business",
-		businessItems: [
-			"Web systems and apps built to order, in any language, including the infrastructure (Kubernetes, IaC, cloud)",
-			"Websites and landing pages",
-			"Advice on buying and selling used cars",
-			"Advice on vehicle registration, such as cargo registration",
-			"Building and running Doa's own services",
-		],
 		license: "Secondhand dealer licence",
 		licenseValue: "Nagano Prefectural Public Safety Commission",
 		email: "Email",
-		github: "GitHub",
-		social: "Social",
 	},
 
 	profile: {
@@ -213,10 +223,8 @@ export const en: Translation = {
 			kobutsu: "Secondhand dealer licence",
 			medium: "Medium vehicle driving licence (class 1)",
 		},
-		auction:
-			"A member of AUTOSERVER, buying and selling used cars at dealer auctions.",
 		oss: "Open source contributions are on {link}.",
-		ossLink: "Services & Work",
+		ossLink: "Work",
 	},
 
 	contact: {

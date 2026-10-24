@@ -34,6 +34,15 @@ export const socialLinks = [
 	},
 ];
 
+/** 事業内容の並び(/business/ の #id にもなる)。文言は languages の business */
+export const business = [
+	"dev",
+	"web",
+	"cars",
+	"registration",
+	"services",
+] as const;
+
 /** 自社サービス(運用中のもの)。文言は languages の services */
 export const services = [
 	{ id: "todoroku", url: "https://tk.doany.io/" },

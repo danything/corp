@@ -10,16 +10,16 @@
 
 ## 構成
 
-|                                    |                                                                                                                                                |
-| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/pages/[...lang]/`             | ページ (`/`・`/works/`・`/company/` (代表のプロフィールは `#profile`)・`/contact/`・`/contact/thanks/`)。`getStaticPaths` で日本語と英語を作る |
-| `src/i18n/languages/`              | 文言 (`ja.ts`・`en.ts`)。英語版は日本語版と同じ形にする                                                                                        |
-| `src/config.ts`                    | 事業者の情報とリンク (サービス・実績・OSS・SNS)                                                                                                |
-| `src/components/ContactForm.astro` | 問い合わせフォーム。Turnstile のスクリプトは `/contact/` でだけ読む                                                                            |
-| `src/styles/main.css`              | Blades の部品の読み込みと、トークン (`--doa-*`)・部品・動き                                                                                    |
-| `server.ts`                        | 配信サーバー。`server/` に中身 (`static.ts`・`contact.ts`・`contact-page.ts`・`markdown.ts`・`rate-limit.ts`)                                  |
-| `tests/`                           | サーバーのテスト (`bun test`)                                                                                                                  |
-| `deploy/`                          | k8s のマニフェスト。Argo CD が同期する (`deploy/argocd.yaml`)                                                                                  |
+|                                    |                                                                                                                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `src/pages/[...lang]/`             | ページ (`/`・`/business/`・`/works/`・`/company/` (代表のプロフィールは `#profile`)・`/contact/`・`/contact/thanks/`)。`getStaticPaths` で日本語と英語を作る |
+| `src/i18n/languages/`              | 文言 (`ja.ts`・`en.ts`)。英語版は日本語版と同じ形にする                                                                                                      |
+| `src/config.ts`                    | 事業者の情報とリンク (サービス・実績・OSS・SNS)                                                                                                              |
+| `src/components/ContactForm.astro` | 問い合わせフォーム。Turnstile のスクリプトは `/contact/` でだけ読む                                                                                          |
+| `src/styles/main.css`              | Blades の部品の読み込みと、トークン (`--doa-*`)・部品・動き                                                                                                  |
+| `server.ts`                        | 配信サーバー。`server/` に中身 (`static.ts`・`contact.ts`・`contact-page.ts`・`markdown.ts`・`rate-limit.ts`)                                                |
+| `tests/`                           | サーバーのテスト (`bun test`)                                                                                                                                |
+| `deploy/`                          | k8s のマニフェスト。Argo CD が同期する (`deploy/argocd.yaml`)                                                                                                |
 
 ## サーバー
 
