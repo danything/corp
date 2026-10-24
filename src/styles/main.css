@@ -1143,3 +1143,48 @@ main {
 	color: var(--pico-primary);
 	font-size: var(--doa-text-sm);
 }
+
+/*
+ * 実績と OSS は横長の行で並べる。広い画面では左に名前、右に説明とリンクを置き、説明は読みやすい幅で折り返す
+ */
+.rows {
+	display: grid;
+	gap: var(--doa-space-3);
+	margin: 0 0 var(--doa-space-5);
+	padding: 0;
+	list-style: none;
+}
+
+.row {
+	display: grid;
+	gap: var(--doa-space-2) var(--doa-space-6);
+}
+
+.item.row > p:not(.links) {
+	font-size: 1rem;
+	line-height: 1.8;
+}
+
+@media (min-width: 760px) {
+	.row {
+		grid-template-columns: 13rem minmax(0, 46rem);
+		align-items: start;
+	}
+
+	.row > h3 {
+		grid-column: 1;
+		grid-row: 1;
+	}
+
+	.row > p:not(.links) {
+		grid-column: 2;
+		grid-row: 1;
+	}
+
+	.row > .links {
+		grid-column: 2;
+		grid-row: 2;
+		margin-top: 0;
+		padding-top: 0;
+	}
+}
