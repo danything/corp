@@ -3,7 +3,7 @@ import { type Lang, t } from "@i18n/translation";
 
 /*
  * 明暗の切り替え。押すたびに OS に合わせる → OS と逆 → OS と同じ → OS に合わせる と回る。
- * 選んだものは localStorage の theme に置き、<html data-theme> で Blades と main.css に効かせる
+ * 選んだものは localStorage の theme に置き、<html data-theme> で Blades と corp の CSS に効かせる
  * (描く前に戻すのは Layout.astro の head のスクリプト)。初めは OS に合わせるで描いておく
  * アイコンは Lucide (ISC) の sun-moon・sun・moon
  */
@@ -74,3 +74,43 @@ const text = t(lang).theme;
 		});
 	}
 </script>
+
+<style>
+/*
+ * ヘッダーの明暗の切り替え。今の状態のアイコンだけを出す。
+ * 並べ方と字は Header.astro の .nav-link のまま。地と字の色は乗せていないときだけ消し、乗せたら .nav-link の地にする
+ */
+.theme-switch {
+  flex-direction: row;
+  margin: 0;
+  border: 0;
+  cursor: pointer;
+}
+
+.theme-switch:not(:hover) {
+  background: transparent;
+  color: inherit;
+}
+
+.theme-switch::before {
+  content: none;
+}
+
+.theme-icon {
+  display: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.theme-switch:not([data-mode]) .theme-icon[data-mode="auto"],
+.theme-switch[data-mode="auto"] .theme-icon[data-mode="auto"],
+.theme-switch[data-mode="light"] .theme-icon[data-mode="light"],
+.theme-switch[data-mode="dark"] .theme-icon[data-mode="dark"] {
+  display: block;
+}
+</style>

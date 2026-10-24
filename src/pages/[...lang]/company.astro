@@ -1,6 +1,7 @@
 ---
-import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
 import Layout from "@layouts/Layout.astro";
+import Facts from "@components/Facts.astro";
+import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
 import { business, career, licenses, site } from "@/config";
 
 // 事業者情報と代表のプロフィール(/company/ と /en/company/。プロフィールは #profile)
@@ -39,7 +40,7 @@ const [ossBefore, ossAfter] = p.oss.split("{link}");
 
 <Layout title={c.title} description={c.description}>
 	<h1>{c.title}</h1>
-	<dl class="facts">
+	<Facts>
 		<dt>{c.tradeName}</dt>
 		<dd>{site.name}</dd>
 
@@ -67,7 +68,7 @@ const [ossBefore, ossAfter] = p.oss.split("{link}");
 
 		<dt>{c.email}</dt>
 		<dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
-	</dl>
+	</Facts>
 
 	<section class="profile" aria-labelledby="profile">
 		<h2 id="profile">{p.title}</h2>
@@ -102,3 +103,65 @@ const [ossBefore, ossAfter] = p.oss.split("{link}");
 		<p class="body">{ossBefore}<a href={localeUrl("/works/#oss", lang)}>{p.ossLink}</a>{ossAfter}</p>
 	</section>
 </Layout>
+
+<style>
+/* 代表のプロフィール (事業者情報の表の下) */
+.profile {
+  margin-top: clamp(3.5rem, 8vw, 5.5rem);
+}
+
+.profile h3 {
+  font-size: var(--doa-text-lg);
+  line-height: 1.5;
+  margin-block: var(--doa-space-6) var(--doa-space-4);
+}
+
+/*
+ * 経歴と資格の年表 (<ol>)。事業者情報の表と同じく、線も面も付けずに行の間の余白で分ける。
+ * 年月は控えた字。広い画面では年月と中身を横に並べる
+ */
+.timeline {
+  display: grid;
+  gap: var(--doa-space-5);
+  max-width: 48rem;
+  margin: 0 0 var(--doa-space-5);
+  padding: 0;
+  list-style: none;
+}
+
+.timeline li {
+  display: grid;
+  gap: var(--doa-space-1) var(--doa-space-6);
+  margin: 0;
+  list-style: none;
+}
+
+.timeline .period {
+  color: var(--doa-muted);
+  font-size: var(--doa-text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline time {
+  white-space: nowrap;
+}
+
+.timeline .what {
+  font-weight: var(--doa-weight-bold);
+}
+
+.timeline .detail {
+  margin-top: var(--doa-space-1);
+  font-size: 0.9375rem;
+}
+
+@media (min-width: 640px) {
+  .timeline li {
+    grid-template-columns: 11rem 1fr;
+  }
+
+  .timeline .period {
+    padding-top: 0.15rem;
+  }
+}
+</style>

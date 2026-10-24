@@ -1,6 +1,5 @@
 ---
-import { getImage } from "astro:assets";
-import ShotPicture from "@components/ShotPicture.astro";
+import Feature from "@components/Feature.astro";
 import { type Lang, t } from "@i18n/translation";
 import todoroku from "@/assets/hero/todoroku.webp";
 import worklogDark from "@/assets/hero/worklog-dark.webp";
@@ -19,43 +18,44 @@ const { lang } = Astro.props;
 const text = t(lang);
 const page = text.businessPage;
 
-const widths = [480, 720, 960, 1280];
 // 広い画面では件の右の列 (最大 36rem 前後)、狭い画面では幅いっぱい
 const sizes = "(min-width: 860px) 36rem, 90vw";
 
-async function sources(src: ImageMetadata) {
-	const [avif, webp] = await Promise.all(
-		(["avif", "webp"] as const).map((format) =>
-			getImage({ src, format, width: 960, widths, sizes }),
-		),
-	);
-	return { avif: avif.srcSet.attribute, webp };
-}
-
 const shots = {
-	todoroku: { light: await sources(todoroku), dark: undefined },
-	worklog: {
-		light: await sources(worklogLight),
-		dark: await sources(worklogDark),
-	},
+	todoroku: { src: todoroku, dark: undefined },
+	worklog: { src: worklogLight, dark: worklogDark },
 };
 ---
 
 <ul class="features">
-	{services.map((s) => {
-		const shot = shots[s.id];
-		return (
-			<li class="feature" data-reveal>
-				<div class="feature-text">
-					<h3><a href={s.url}>{text.services[s.id].name}</a></h3>
-					<p>{text.services[s.id].body}</p>
-					<p class="feature-open" aria-hidden="true">{page.openSite} <span class="host">{new URL(s.url).host}</span> <span class="arrow">→</span></p>
-				</div>
-				<div class="shot">
-					<span class="shot-bar"><span class="shot-dots" aria-hidden="true"></span>{new URL(s.url).host}</span>
-					<ShotPicture light={shot.light} dark={shot.dark} alt={text.home.shots[s.id]} sizes={sizes} width={1280} height={800} />
-				</div>
-			</li>
-		);
-	})}
+	{services.map((s) => (
+		<Feature
+			name={text.services[s.id].name}
+			href={s.url}
+			body={text.services[s.id].body}
+			open={page.openSite}
+			frame={{
+				label: new URL(s.url).host,
+				...shots[s.id],
+				alt: text.home.shots[s.id],
+				sizes,
+				width: 1280,
+				height: 800,
+			}}
+		/>
+	))}
 </ul>
+
+<style>
+/*
+ * 事業内容の自社サービス。横長の件 (Feature.astro) にして、左に説明、右にサービスの画面 (トップと同じ窓の枠) を置く。
+ * 狭い画面では画面を説明の下に回す
+ */
+.features {
+  display: grid;
+  gap: var(--doa-space-5);
+  margin: 0 0 var(--doa-space-5);
+  padding: 0;
+  list-style: none;
+}
+</style>

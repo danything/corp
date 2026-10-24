@@ -43,3 +43,162 @@ const links = [
 		</ul>
 	</nav>
 </header>
+
+<style>
+/* ---- ヘッダー (操作の層) ---- */
+/*
+ * 上端では平ら、巻いて中身が裏に入ると浮く (面と影が巻いた量に合わせて出る。animation-timeline: scroll())。
+ * 知らないブラウザと動きを減らす設定では、いつも浮いた形。端から離した角の丸い帯
+ */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding-top: var(--doa-space-2);
+  view-transition-name: site-header;
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--doa-space-1) var(--doa-space-4);
+  padding: var(--doa-space-2) var(--doa-space-2) var(--doa-space-2)
+    var(--doa-space-4);
+  border-radius: var(--doa-radius-full);
+  background: var(--doa-float);
+  box-shadow: var(--doa-shadow-pop);
+}
+
+/* 帯は本文より左右に 1rem ずつ広げ、名前の字を本文の左端にそろえる */
+.bar.wrap {
+  width: min(100% - 1rem, var(--doa-width) + 2rem);
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .bar {
+      background: transparent;
+      box-shadow: none;
+      animation: header-float linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 1.5rem;
+    }
+  }
+}
+
+@keyframes header-float {
+  from {
+    background: transparent;
+    box-shadow: none;
+  }
+  to {
+    background: var(--doa-float);
+    box-shadow: var(--doa-shadow-pop);
+  }
+}
+
+.brand {
+  font-size: 1.25rem;
+  font-weight: var(--doa-weight-bold);
+  letter-spacing: -0.01em;
+  color: var(--doa-fg);
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-links li {
+  margin: 0;
+  list-style: none;
+}
+
+/*
+ * ナビの項目。地は塗らず、字は本文の色。選んでいる項目は主の色の太字と、字の幅いっぱいの下線。
+ * 太字にしても幅が変わらないよう、太字の幅を見えない字 (::before) で先に取っておく
+ * 明暗の切り替え (ThemeSwitch) のボタンも .nav-link なので、子のコンポーネントにも届くよう :global() にする
+ */
+:global(.nav-link) {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--doa-space-2) var(--doa-space-3);
+  border-radius: var(--doa-radius-full);
+  color: var(--doa-fg);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  text-decoration: none;
+  transition: background-color var(--doa-duration) var(--doa-ease);
+}
+
+:global(.nav-link::before) {
+  content: attr(data-label);
+  /* 並びの基準線は見える字から採る (幅を取る字を後ろへ) */
+  order: 1;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  font-weight: var(--doa-weight-bold);
+}
+
+:global(.nav-link:hover) {
+  background: var(--doa-hover-soft);
+  color: var(--doa-fg);
+}
+
+:global(.nav-link[aria-current="page"]) {
+  color: var(--doa-primary-text);
+  font-weight: var(--doa-weight-bold);
+}
+
+/* 選んでいる印。ページを移ると前の場所から滑る (view-transition-name。main.css の「ページの移り変わり」) */
+.nav-mark {
+  position: absolute;
+  inset-inline: var(--doa-space-3);
+  bottom: 0.3rem;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--pico-primary);
+  view-transition-name: nav-mark;
+}
+
+/* 狭い画面では帯を貼り付けず (2 行になって中身を隠すので)、ナビを名前の下に並べる */
+@media (max-width: 639.98px) {
+  .site-header {
+    position: static;
+  }
+
+  .bar,
+  .bar.wrap {
+    width: min(100% - 2 * var(--doa-gutter), var(--doa-width));
+    padding-inline: 0;
+    background: transparent;
+    box-shadow: none;
+    animation: none;
+  }
+
+  .nav-links {
+    width: calc(100% + 2 * var(--doa-space-2));
+    margin-inline: calc(-1 * var(--doa-space-2));
+  }
+
+  :global(.nav-link) {
+    padding-inline: var(--doa-space-2);
+    font-size: var(--doa-text-sm);
+  }
+
+  .nav-mark {
+    inset-inline: var(--doa-space-2);
+  }
+}
+</style>

@@ -1,8 +1,8 @@
 ---
-import { getImage, Image } from "astro:assets";
-import ShotPicture from "@components/ShotPicture.astro";
-import { type Lang, langPaths, t } from "@i18n/translation";
 import Layout from "@layouts/Layout.astro";
+import Feature from "@components/Feature.astro";
+import Item from "@components/Item.astro";
+import { type Lang, langPaths, t } from "@i18n/translation";
 import blades from "@/assets/logos/blades.png";
 import denpaLogo from "@/assets/logos/denpa.svg";
 import epgstation from "@/assets/logos/epgstation.png";
@@ -65,28 +65,8 @@ const shots: Record<
 	},
 };
 
-const widths = [480, 720, 960, 1280];
 // 広い画面では件の右の列 (最大 36rem 前後)、狭い画面では幅いっぱい
 const sizes = "(min-width: 860px) 36rem, 90vw";
-async function sources(src: ImageMetadata) {
-	const [avif, webp] = await Promise.all(
-		(["avif", "webp"] as const).map((format) =>
-			getImage({ src, format, width: 960, widths, sizes }),
-		),
-	);
-	return { avif: avif.srcSet.attribute, webp };
-}
-const shotSources = Object.fromEntries(
-	await Promise.all(
-		Object.entries(shots).map(async ([id, s]) => [
-			id,
-			{
-				light: await sources(s.src),
-				dark: s.dark && (await sources(s.dark)),
-			},
-		]),
-	),
-);
 ---
 
 <Layout title={page.title} description={page.description}>
@@ -96,37 +76,29 @@ const shotSources = Object.fromEntries(
 		<h2 id="works">{page.worksTitle}</h2>
 		<ul class="rows">
 			{works.map((w) => {
-				const logo = logos[w.id];
 				const shot = shots[w.id];
-				const head = (
-					<h3>
-						<span class:list={["row-icon", { plate: logo.plate }]}><Image src={logo.src} alt="" width={40} height={40} /></span>
-						<a href={w.url}>{text.works[w.id].name}</a>
-					</h3>
-				);
-				const links = "source" in w && <p class="links"><a href={w.source}>{page.source}</a></p>;
-				if (!shot) {
-					return (
-						<li class="item row" data-reveal>
-							{head}
-							<p>{text.works[w.id].body}</p>
-							{links}
-						</li>
-					);
-				}
-				const src = shotSources[w.id];
-				return (
-					<li class="feature work" data-reveal>
-						<div class="feature-text">
-							{head}
-							<p>{text.works[w.id].body}</p>
-							{links}
-						</div>
-						<div class="shot">
-							<span class="shot-bar"><span class="shot-dots" aria-hidden="true"></span>{shot.label}</span>
-							<ShotPicture light={src.light} dark={src.dark} alt={shot.alt} sizes={sizes} width={shot.src.width} height={shot.src.height} />
-						</div>
-					</li>
+				const name = text.works[w.id].name;
+				const body = text.works[w.id].body;
+				const source = "source" in w ? { url: w.source, label: page.source } : undefined;
+				return shot ? (
+					<Feature
+						name={name}
+						href={w.url}
+						body={body}
+						logo={logos[w.id]}
+						source={source}
+						frame={{
+							label: shot.label,
+							src: shot.src,
+							dark: shot.dark,
+							alt: shot.alt,
+							sizes,
+							width: shot.src.width,
+							height: shot.src.height,
+						}}
+					/>
+				) : (
+					<Item name={name} href={w.url} body={body} logo={logos[w.id]} links={source && [source]} row />
 				);
 			})}
 		</ul>
@@ -138,12 +110,19 @@ const shotSources = Object.fromEntries(
 		<p class="lead" data-reveal>{page.ossLead}</p>
 		<ul class="rows">
 			{oss.map((o) => (
-				<li class="item row" data-reveal>
-					<h3><span class="row-icon plate"><Image src={logos[o.id].src} alt="" width={40} height={40} /></span>{text.oss[o.id].name}</h3>
-					<p>{text.oss[o.id].body}</p>
-					<p class="links mono">{o.links.map((l, i) => (<>{i > 0 && " ・ "}<a href={l.url}>{l.label}</a></>))}</p>
-				</li>
+				<Item name={text.oss[o.id].name} body={text.oss[o.id].body} logo={logos[o.id]} links={o.links} mono row />
 			))}
 		</ul>
 	</section>
 </Layout>
+
+<style>
+/* 実績と OSS の件 (Item.astro の行・Feature.astro) を縦に並べる */
+.rows {
+  display: grid;
+  gap: var(--doa-space-3);
+  margin: 0 0 var(--doa-space-5);
+  padding: 0;
+  list-style: none;
+}
+</style>

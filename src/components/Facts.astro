@@ -1,0 +1,51 @@
+---
+/*
+ * 事業者情報の表 (<dl>)。中身の <dt>・<dd> は使う側が slot に書く (事業者情報・事業内容の使う技術)。
+ * slot の中身は使う側の要素なので、scoped の印が付かない。中の要素は :global() で指す
+ */
+type Props = Record<`data-${string}`, unknown>;
+---
+
+<dl class="facts" {...Astro.props}><slot /></dl>
+
+<style>
+/* 線は引かず、行の間の余白で分ける。広い画面では項目名と値を横に並べる */
+.facts {
+  display: grid;
+  gap: var(--doa-space-1) var(--doa-space-6);
+  max-width: 48rem;
+}
+
+.facts :global(dt) {
+  color: var(--doa-muted);
+  font-size: var(--doa-text-sm);
+  font-weight: var(--doa-weight);
+}
+
+.facts :global(dd) {
+  margin: 0 0 var(--doa-space-4);
+}
+
+.facts :global(dd ul) {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.facts :global(dd li) {
+  margin-bottom: var(--doa-space-1);
+}
+
+@media (min-width: 640px) {
+  .facts {
+    grid-template-columns: 11rem 1fr;
+  }
+
+  .facts :global(dt) {
+    padding-top: 0.15rem;
+  }
+
+  .facts :global(dd) {
+    margin-bottom: var(--doa-space-4);
+  }
+}
+</style>
