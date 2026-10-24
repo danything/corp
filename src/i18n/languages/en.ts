@@ -17,6 +17,13 @@ export const en: Translation = {
 	},
 	skipToContent: "Skip to content",
 
+	theme: {
+		label: "Colour scheme",
+		auto: "match system",
+		light: "light",
+		dark: "dark",
+	},
+
 	home: {
 		title: "Web systems, used cars and vehicle registration",
 		lead: "Doa builds business systems and web apps, and can also help you buy or sell a used car or sort out vehicle registration.",

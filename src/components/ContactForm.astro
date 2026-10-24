@@ -69,6 +69,14 @@ const errorAttrs = Object.fromEntries(
 	</div>
 
 	<div class="cf-turnstile" data-sitekey={site.turnstileSiteKey} data-language={lang} data-theme="auto" ></div>
+	{/* 明暗を選んでいれば (ThemeSwitch)、ボット対策の枠もそれに揃える。選んでいなければ auto (OS) のまま */}
+	<script is:inline>
+		{
+			const t = document.documentElement.dataset.theme;
+			const box = document.querySelector(".cf-turnstile");
+			if (box && (t === "light" || t === "dark")) box.dataset.theme = t;
+		}
+	</script>
 	<noscript><p class="status">{c.noscript} <a href={`mailto:${site.email}`}>{site.email}</a></p></noscript>
 
 	<button type="submit" data-sending={c.sending}>{c.submit}</button>

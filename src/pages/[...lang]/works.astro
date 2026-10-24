@@ -1,5 +1,6 @@
 ---
 import { getImage, Image } from "astro:assets";
+import ShotPicture from "@components/ShotPicture.astro";
 import { type Lang, langPaths, t } from "@i18n/translation";
 import Layout from "@layouts/Layout.astro";
 import blades from "@/assets/logos/blades.png";
@@ -45,7 +46,7 @@ const logos: Record<string, Logo> = {
 };
 
 /** 画面を撮れるものは横長の件にして、説明の隣に画面を置く。label は窓の帯に出す名前。
- * dark があれば OS の設定が暗いときにそちらを出す */
+ * dark があれば、暗いとき (OS か ThemeSwitch) にそちらを出す */
 const shots: Record<
 	string,
 	{ src: ImageMetadata; dark?: ImageMetadata; label: string; alt: string }
@@ -123,13 +124,7 @@ const shotSources = Object.fromEntries(
 						</div>
 						<div class="shot">
 							<span class="shot-bar"><span class="shot-dots" aria-hidden="true"></span>{shot.label}</span>
-							<picture>
-								{src.dark && <source media="(prefers-color-scheme: dark)" type="image/avif" srcset={src.dark.avif} sizes={sizes} />}
-								{src.dark && <source media="(prefers-color-scheme: dark)" type="image/webp" srcset={src.dark.webp.srcSet.attribute} sizes={sizes} />}
-								<source type="image/avif" srcset={src.light.avif} sizes={sizes} />
-								<source type="image/webp" srcset={src.light.webp.srcSet.attribute} sizes={sizes} />
-								<img src={src.light.webp.src} alt={shot.alt} width={shot.src.width} height={shot.src.height} loading="lazy" decoding="async" />
-							</picture>
+							<ShotPicture light={src.light} dark={src.dark} alt={shot.alt} sizes={sizes} width={shot.src.width} height={shot.src.height} />
 						</div>
 					</li>
 				);

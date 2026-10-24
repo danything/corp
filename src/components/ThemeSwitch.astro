@@ -1,0 +1,76 @@
+---
+import { type Lang, t } from "@i18n/translation";
+
+/*
+ * 明暗の切り替え。押すたびに OS に合わせる → OS と逆 → OS と同じ → OS に合わせる と回る。
+ * 選んだものは localStorage の theme に置き、<html data-theme> で Blades と main.css に効かせる
+ * (描く前に戻すのは Layout.astro の head のスクリプト)。初めは OS に合わせるで描いておく
+ * アイコンは Lucide (ISC) の sun-moon・sun・moon
+ */
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const text = t(lang).theme;
+---
+
+<button
+	type="button"
+	class="nav-link theme-switch"
+	data-theme-switch
+	data-label-auto={`${text.label}: ${text.auto}`}
+	data-label-light={`${text.label}: ${text.light}`}
+	data-label-dark={`${text.label}: ${text.dark}`}
+	aria-label={`${text.label}: ${text.auto}`}
+	title={`${text.label}: ${text.auto}`}
+>
+	<svg class="theme-icon" data-mode="auto" viewBox="0 0 24 24" aria-hidden="true">
+		<path d="M12 2v2" /><path d="M14.837 16.385a6 6 0 1 1-7.223-7.222c.624-.147.97.66.715 1.248a4 4 0 0 0 5.26 5.259c.589-.255 1.396.09 1.248.715" /><path d="M16 12a4 4 0 0 0-4-4" /><path d="m19 5-1.256 1.256" /><path d="M20 12h2" />
+	</svg>
+	<svg class="theme-icon" data-mode="light" viewBox="0 0 24 24" aria-hidden="true">
+		<circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" />
+	</svg>
+	<svg class="theme-icon" data-mode="dark" viewBox="0 0 24 24" aria-hidden="true">
+		<path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
+	</svg>
+</button>
+
+<script>
+	type Mode = "auto" | "light" | "dark";
+
+	/** 回る順。OS に合わせるの次は OS と逆の明暗にして、1 回目の押下で必ず見た目が変わるようにする */
+	function order(): Mode[] {
+		const osDark = matchMedia("(prefers-color-scheme: dark)").matches;
+		return osDark ? ["auto", "light", "dark"] : ["auto", "dark", "light"];
+	}
+
+	function current(): Mode {
+		const t = document.documentElement.dataset.theme;
+		return t === "light" || t === "dark" ? t : "auto";
+	}
+
+	function show(button: HTMLElement, mode: Mode) {
+		button.dataset.mode = mode;
+		const label = button.dataset[`label${mode[0].toUpperCase()}${mode.slice(1)}`] ?? "";
+		button.setAttribute("aria-label", label);
+		button.title = label;
+	}
+
+	for (const button of document.querySelectorAll<HTMLElement>("[data-theme-switch]")) {
+		show(button, current());
+		button.addEventListener("click", () => {
+			const modes = order();
+			const next = modes[(modes.indexOf(current()) + 1) % modes.length];
+			if (next === "auto") delete document.documentElement.dataset.theme;
+			else document.documentElement.dataset.theme = next;
+			try {
+				if (next === "auto") localStorage.removeItem("theme");
+				else localStorage.setItem("theme", next);
+			} catch {
+				// 保存できない (プライベートブラウズなど) ときは、このページの間だけ効く
+			}
+			show(button, next);
+		});
+	}
+</script>

@@ -89,6 +89,13 @@ const jsonLd =
 		<meta name="twitter:card" content="summary_large_image" />
 
 		<meta name="color-scheme" content="light dark" />
+		{/* 選んだ明暗 (ThemeSwitch が localStorage に置く) を描く前に <html> へ移す。無ければ OS に従う */}
+		<script is:inline>
+			try {
+				const t = localStorage.getItem("theme");
+				if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+			} catch {}
+		</script>
 		<link rel="icon" href="/static/favicons/favicon-32x32.png" sizes="32x32" />
 		<link rel="icon" href="/static/favicons/favicon-16x16.png" sizes="16x16" />
 		<link rel="apple-touch-icon" href="/static/favicons/apple-touch-icon.png" sizes="180x180" />
