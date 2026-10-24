@@ -683,7 +683,7 @@ section > h2 {
 
 @media (min-width: 640px) {
 	.facts {
-		grid-template-columns: 9rem 1fr;
+		grid-template-columns: 11rem 1fr;
 	}
 
 	.facts dt {
@@ -692,6 +692,66 @@ section > h2 {
 
 	.facts dd {
 		margin-bottom: var(--doa-space-4);
+	}
+}
+
+/* 代表のプロフィール (事業者情報の表の下) */
+.facts + .profile {
+	margin-top: clamp(3.5rem, 8vw, 5.5rem);
+}
+
+.profile h3 {
+	font-size: var(--doa-text-lg);
+	line-height: 1.5;
+	margin-block: var(--doa-space-6) var(--doa-space-4);
+}
+
+/*
+ * 経歴と資格の年表 (<ol>)。事業者情報の表と同じく、線も面も付けずに行の間の余白で分ける。
+ * 年月は控えた字。広い画面では年月と中身を横に並べる
+ */
+.timeline {
+	display: grid;
+	gap: var(--doa-space-5);
+	max-width: 48rem;
+	margin: 0 0 var(--doa-space-5);
+	padding: 0;
+	list-style: none;
+}
+
+.timeline li {
+	display: grid;
+	gap: var(--doa-space-1) var(--doa-space-6);
+	margin: 0;
+	list-style: none;
+}
+
+.timeline .period {
+	color: var(--doa-muted);
+	font-size: var(--doa-text-sm);
+	font-variant-numeric: tabular-nums;
+}
+
+.timeline time {
+	white-space: nowrap;
+}
+
+.timeline .what {
+	font-weight: var(--doa-weight-bold);
+}
+
+.timeline .detail {
+	margin-top: var(--doa-space-1);
+	font-size: 0.9375rem;
+}
+
+@media (min-width: 640px) {
+	.timeline li {
+		grid-template-columns: 11rem 1fr;
+	}
+
+	.timeline .period {
+		padding-top: 0.15rem;
 	}
 }
 

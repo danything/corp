@@ -53,7 +53,7 @@ export const en: Translation = {
 		aboutTitle: "About the owner",
 		aboutBody:
 			"Doa is run by Ryuki Maruyama. He's a web engineer who has worked on payment processing and SaaS, and has also driven for a vehicle transport company. He holds a secondhand dealer licence.",
-		aboutLink: "His career history is on the blog",
+		aboutLink: "Owner's profile",
 
 		contactTitle: "Contact",
 		contactBody: "Use the form, or send an email.",
@@ -128,7 +128,8 @@ export const en: Translation = {
 
 	company: {
 		title: "Company",
-		description: "Doa's trade name, owner, location and licence.",
+		description:
+			"Doa's trade name, location and licence, and the owner's profile.",
 		tradeName: "Trade name",
 		representative: "Owner",
 		representativeName: "Ryuki Maruyama",
@@ -149,6 +150,64 @@ export const en: Translation = {
 		email: "Email",
 		github: "GitHub",
 		social: "Social",
+	},
+
+	profile: {
+		title: "Owner's profile",
+		lead: "Career and licences of Ryuki Maruyama, who runs Doa.",
+		careerTitle: "Career",
+		present: "present",
+		career: {
+			kosen: {
+				title:
+					"National Institute of Technology, Kisarazu College, Department of Information Engineering (left before graduating)",
+				body: "Worked part-time in PC sales while studying there (October 2016 to November 2017).",
+			},
+			webProduction: {
+				title: "Web production company",
+				body: "Client work, such as building WordPress media sites.",
+			},
+			ses: {
+				title: "IT staffing company",
+				body: "Placed at client companies, worked on e-commerce sites, business dashboards, a ticketing system and more, from sorting out requirements to code and infrastructure. PHP, Laravel, React, AWS ECS.",
+			},
+			doa: {
+				title: "Started Doa as a sole proprietorship",
+				body: "Development work for clients, and Doa's own services.",
+			},
+			payment: {
+				title: "Payment service provider",
+				body: "Ran infrastructure, operations and maintenance as an in-house systems engineer, then moved to the development team. Built the merchant console and payment widget (React), the settlement system (Spring), and payment plugins for EC-CUBE and WooCommerce.",
+			},
+			toyo: {
+				title:
+					"Toyo University, Faculty of Law, Department of Law, evening course (left before graduating)",
+				body: "",
+			},
+			prm: {
+				title: "PRM SaaS company",
+				body: "On a Scrum team: moved the database and backend from Amplify to MySQL and Laravel, split email delivery out into C# / .NET, and rebuilt the frontend in Next.js with full-text search in Go and OpenSearch. The team won a Findy Team+ Award 2024.",
+			},
+			autoParts: {
+				title: "Auto parts company",
+				body: "Started on its parts sales SaaS as a contractor, and joined as an employee in June 2026. Works on the API (Laravel), frontend (React, TypeScript), infrastructure (AWS CloudFormation) and data integration (Python).",
+			},
+			transport: {
+				title: "Vehicle transport company",
+				body: "Drove three-car carriers and safety loaders. Made regular runs bringing used cars for export into the yard, and trained new drivers on new Lexus deliveries.",
+			},
+		},
+		licensesTitle: "Licences",
+		licenses: {
+			motorcycle: "Ordinary motorcycle licence",
+			ordinary: "Ordinary vehicle driving licence (class 1)",
+			kobutsu: "Secondhand dealer licence",
+			medium: "Medium vehicle driving licence (class 1)",
+		},
+		auction:
+			"A member of AUTOSERVER, buying and selling used cars at dealer auctions.",
+		oss: "Open source contributions are on {link}.",
+		ossLink: "Services & Work",
 	},
 
 	contact: {

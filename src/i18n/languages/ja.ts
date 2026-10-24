@@ -54,7 +54,7 @@ export const ja = {
 		aboutTitle: "代表について",
 		aboutBody:
 			"代表は丸山 竜輝です。決済代行や SaaS の開発をしてきた Web エンジニアで、自動車の陸送のドライバーをしていたこともあります。古物商許可を持っています。",
-		aboutLink: "経歴はブログのプロフィールに書いています",
+		aboutLink: "代表のプロフィール",
 
 		contactTitle: "お問い合わせ",
 		contactBody: "フォームかメールで受け付けています。",
@@ -129,7 +129,8 @@ export const ja = {
 
 	company: {
 		title: "事業者情報",
-		description: "Doa の屋号・代表・所在地・古物商許可などです。",
+		description:
+			"Doa の屋号・所在地・古物商許可などと、代表のプロフィールです。",
 		tradeName: "屋号",
 		representative: "代表",
 		representativeName: "丸山 竜輝（まるやま りゅうき）",
@@ -150,6 +151,63 @@ export const ja = {
 		email: "メール",
 		github: "GitHub",
 		social: "SNS",
+	},
+
+	/** 代表のプロフィール(/company/#profile)。並びと年月は config.ts の career・licenses */
+	profile: {
+		title: "代表のプロフィール",
+		lead: "代表 丸山 竜輝の経歴と資格です。",
+		careerTitle: "経歴",
+		present: "現在",
+		career: {
+			kosen: {
+				title: "国立木更津工業高等専門学校 情報工学科（中退）",
+				body: "在学中に PC 販売のアルバイト（2016年10月〜2017年11月）。",
+			},
+			webProduction: {
+				title: "Web 制作会社",
+				body: "WordPress のメディアサイトの構築などの受託開発。",
+			},
+			ses: {
+				title: "SES 企業",
+				body: "出向先で EC サイト、業務向けのダッシュボード、チケット発行システムなどを、要件の整理から実装・インフラまで担当。PHP / Laravel / React / AWS ECS。",
+			},
+			doa: {
+				title: "Doa を個人事業として開業",
+				body: "受託開発と、自社サービスの開発・運営。",
+			},
+			payment: {
+				title: "決済代行会社",
+				body: "社内 SE としてインフラと運用保守を担当したあと、開発部へ。加盟店コンソールと決済ウィジェット（React）、精算システム（Spring）、EC-CUBE・WooCommerce 用の決済プラグインを開発。",
+			},
+			toyo: {
+				title: "東洋大学 法学部法律学科 イブニングコース（中退）",
+				body: "",
+			},
+			prm: {
+				title: "PRM SaaS の会社",
+				body: "スクラムチームで、DB とバックエンドの移行（Amplify から MySQL / Laravel へ）、メール配信の C# / .NET への切り出し、Next.js へのフロントエンドの作り直しと Go / OpenSearch での全文検索を担当。所属チームが Findy Team+ Award 2024 を受賞。",
+			},
+			autoParts: {
+				title: "自動車部品を扱う会社",
+				body: "部品販売 SaaS の開発を業務委託で始め、2026年6月から正社員。API（Laravel）、フロントエンド（React / TypeScript）、インフラ（AWS CloudFormation）、データ連携（Python）を担当。",
+			},
+			transport: {
+				title: "自動車の陸送会社",
+				body: "ドライバーとして、3台積載車とセーフティローダーで陸送。輸出向けの中古車をヤードへ定期的に搬入し、レクサスの新車の陸送では新人の指導も担当。",
+			},
+		},
+		licensesTitle: "資格・免許",
+		licenses: {
+			motorcycle: "普通自動二輪車免許",
+			ordinary: "普通自動車第一種運転免許",
+			kobutsu: "古物商許可",
+			medium: "中型自動車第一種運転免許",
+		},
+		auction:
+			"オートサーバーに加盟していて、業者オークションで中古車を売り買いしています。",
+		oss: "OSS への貢献は{link}に載せています。",
+		ossLink: "サービス・実績",
 	},
 
 	contact: {
