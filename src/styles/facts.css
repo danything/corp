@@ -1,0 +1,42 @@
+/*
+ * 事業者情報の表 (<dl>)。線は引かず、行の間の余白で分ける。広い画面では項目名と値を横に並べる。
+ * 事業者情報と事業内容 (使う技術) の 2 ページが読む
+ */
+.facts {
+  display: grid;
+  gap: var(--doa-space-1) var(--doa-space-6);
+  max-width: 48rem;
+}
+
+.facts dt {
+  color: var(--doa-muted);
+  font-size: var(--doa-text-sm);
+  font-weight: var(--doa-weight);
+}
+
+.facts dd {
+  margin: 0 0 var(--doa-space-4);
+}
+
+.facts dd ul {
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.facts dd li {
+  margin-bottom: var(--doa-space-1);
+}
+
+@media (min-width: 640px) {
+  .facts {
+    grid-template-columns: 11rem 1fr;
+  }
+
+  .facts dt {
+    padding-top: 0.15rem;
+  }
+
+  .facts dd {
+    margin-bottom: var(--doa-space-4);
+  }
+}

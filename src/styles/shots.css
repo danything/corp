@@ -1,0 +1,115 @@
+/*
+ * 自社サービスや実績の画面 (トップの頭・事業内容の自社サービス・実績)。ブラウザの窓に見立てた枠 (細い帯にホスト名) に入れる。
+ * 枠は件の面と同じ面に、操作の層の影。絵は 16:10 で場所を先に取っておく (読み込んでも並びがずれない)。
+ * 絵は ShotPicture が枠の中に描くので (scoped の <style> は子のコンポーネントに届かない)、枠を描くところがそれぞれ読む。
+ * トップの 2 枚の重ね方は HeroShots.astro にある
+ */
+.shot {
+  grid-area: 1 / 1;
+  display: block;
+  width: 82%;
+  overflow: hidden;
+  border-radius: var(--doa-radius-lg);
+  background: var(--doa-item);
+  box-shadow:
+    0 0 0 1px var(--doa-line),
+    var(--doa-shadow-pop);
+  color: var(--doa-muted);
+  text-decoration: none;
+  transition: box-shadow var(--doa-duration) var(--doa-ease);
+}
+
+.shot:hover {
+  box-shadow:
+    0 0 0 1px var(--doa-line-strong),
+    var(--doa-shadow-pop);
+}
+
+.shot-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--doa-space-3);
+  height: 1.75rem;
+  padding-inline: var(--doa-space-3);
+  background: var(--doa-subtle);
+  font-family: var(--doa-font-mono);
+  font-size: var(--doa-text-xs);
+  line-height: 1;
+}
+
+/* 窓の左上の 3 つの丸 */
+.shot-dots {
+  flex: none;
+  width: 0.375rem;
+  height: 0.375rem;
+  margin-right: 0.875rem;
+  border-radius: 50%;
+  background: var(--doa-line-strong);
+  box-shadow:
+    0.625rem 0 var(--doa-line-strong),
+    1.25rem 0 var(--doa-line-strong);
+}
+
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+}
+
+/*
+ * 巻くと、前の 1 枚が後ろの 1 枚より少しだけ速く上へ逃げる (奥行き)。animation-timeline: scroll() で、JS は使わない。
+ * 入ってくる動き (rise・translate) と並べて transform を動かす。知らないブラウザは止まったまま
+ */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .shot {
+      animation:
+        rise var(--doa-duration-reveal) var(--doa-ease) both,
+        drift linear both;
+      animation-delay: calc(var(--i, 0) * 70ms), 0s;
+      animation-timeline: auto, scroll(root block);
+      animation-range:
+        normal,
+        0 100vh;
+    }
+  }
+}
+
+@keyframes drift {
+  to {
+    transform: translateY(var(--drift, 0));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shot {
+    animation: none;
+  }
+}
+
+/*
+ * 明暗で出し分ける画面 (worklog・mogiri)。<picture> の media は OS しか見ないので、
+ * 明暗 2 枚を並べて置き、選んだ明暗 (data-theme) と OS の設定で片方を隠す
+ */
+.only-dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .only-dark {
+    display: block;
+  }
+
+  :root:not([data-theme="light"]) .only-light {
+    display: none;
+  }
+}
+
+:root[data-theme="dark"] .only-dark {
+  display: block;
+}
+
+:root[data-theme="dark"] .only-light {
+  display: none;
+}

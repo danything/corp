@@ -1,6 +1,6 @@
 ---
-import { type Lang, langPaths, t } from "@i18n/translation";
 import Layout from "@layouts/Layout.astro";
+import { type Lang, langPaths, t } from "@i18n/translation";
 import { site } from "@/config";
 
 // プライバシーポリシー(/privacy/ と /en/privacy/)。このサイトで受け取る情報だけを扱う(自社サービスは各サービスに)
@@ -36,3 +36,20 @@ const p = text.privacy;
 		</section>
 	</article>
 </Layout>
+
+<style>
+/* プライバシーポリシー。節は詰めて並べ、見出しは本文に近い大きさ */
+.policy section + section,
+.policy section {
+  margin-top: var(--doa-space-6);
+}
+
+.policy section > h2 {
+  font-size: var(--doa-text-lg);
+  margin-bottom: var(--doa-space-3);
+}
+
+.policy ul.body {
+  padding-left: 1.25rem;
+}
+</style>

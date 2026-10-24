@@ -1,4 +1,6 @@
 ---
+import "../styles/shots.css";
+import "../styles/items.css";
 import { getImage } from "astro:assets";
 import ShotPicture from "@components/ShotPicture.astro";
 import { type Lang, t } from "@i18n/translation";
@@ -59,3 +61,23 @@ const shots = {
 		);
 	})}
 </ul>
+
+<style>
+/*
+ * 事業内容の自社サービス。横長の件 (items.css の .feature) にして、左に説明、右にサービスの画面 (トップと同じ窓の枠) を置く。
+ * 狭い画面では画面を説明の下に回す
+ */
+.features {
+  display: grid;
+  gap: var(--doa-space-5);
+  margin: 0 0 var(--doa-space-5);
+  padding: 0;
+  list-style: none;
+}
+
+/* 件全体がリンクなので、下の「サイトを開く」は押せる場所の目印だけ (リンクにはしない) */
+.feature-open {
+  color: var(--pico-primary);
+  font-size: var(--doa-text-sm);
+}
+</style>

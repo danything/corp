@@ -1,7 +1,8 @@
 ---
+import Layout from "@layouts/Layout.astro";
+import "../../styles/items.css";
 import HeroShots from "@components/HeroShots.astro";
 import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
-import Layout from "@layouts/Layout.astro";
 import { business, site } from "@/config";
 
 // トップ(/ と /en/)。要約だけを置き、詳しくは事業内容・実績・事業者情報の各ページに書く
@@ -45,3 +46,79 @@ const text = t(lang);
 		</div>
 	</section>
 </Layout>
+
+<style>
+/*
+ * トップの頭。名前を大きく、事実 (所在地・開業) を控えた字で上に添える。
+ * 広い画面では右に自社サービスの画面を 2 枚重ねて置き、狭い画面では文の下に置く
+ */
+.hero {
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 3.5rem);
+  align-items: center;
+  padding-block: clamp(3rem, 12vw, 7rem) clamp(1rem, 4vw, 2.5rem);
+}
+
+@media (min-width: 960px) {
+  .hero {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    padding-top: clamp(3rem, 8vw, 5rem);
+  }
+}
+
+.hero h1 {
+  font-size: clamp(3.5rem, 16vw, 7.5rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-bottom: var(--doa-space-5);
+}
+
+.hero-lead {
+  max-width: 36rem;
+  font-size: clamp(1.125rem, 2.6vw, 1.375rem);
+  line-height: 1.7;
+  margin-bottom: var(--doa-space-6);
+}
+
+/* 名前・一文・ボタンが順にふわっと入り、画面の 2 枚が続く (HeroShots.astro)。場所はほんの少しだけ動かす (translate なので並びはずれない) */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-text > * {
+    animation: rise var(--doa-duration-reveal) var(--doa-ease) both;
+    animation-delay: calc(var(--i, 0) * 70ms);
+  }
+
+  .hero-text > :nth-child(2) {
+    --i: 1;
+  }
+
+  .hero-text > :nth-child(3) {
+    --i: 2;
+  }
+
+  .hero-text > :nth-child(4) {
+    --i: 3;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-text > * {
+    animation: none;
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--doa-space-3);
+}
+
+/* 事業の件 (items.css の .item) を、幅に合わせて何列かに並べる */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
+  gap: var(--doa-space-3);
+  margin: 0 0 var(--doa-space-5);
+  padding: 0;
+  list-style: none;
+}
+</style>

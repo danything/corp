@@ -1,4 +1,5 @@
 ---
+import "../styles/shots.css";
 import { getImage } from "astro:assets";
 import { type Lang, t } from "@i18n/translation";
 import todoroku from "@/assets/hero/todoroku.webp";
@@ -45,7 +46,7 @@ const tk = await sources(todoroku);
 <div class="hero-shots">
 	<a class="shot shot-front" href={url.worklog}>
 		<span class="shot-bar"><span class="shot-dots" aria-hidden="true"></span>{host(url.worklog)}</span>
-		{/* 明暗 2 枚。選んだ明暗で片方を隠す (main.css の .only-light・.only-dark) */}
+		{/* 明暗 2 枚。選んだ明暗で片方を隠す (shots.css の .only-light・.only-dark) */}
 		<picture class="only-light">
 			<source type="image/avif" srcset={wLight.avif} sizes={sizes} />
 			<source type="image/webp" srcset={wLight.webp.srcSet.attribute} sizes={sizes} />
@@ -98,3 +99,86 @@ const tk = await sources(todoroku);
 		))}
 	</ul>
 </div>
+
+<style>
+/*
+ * 自社サービスの画面を 2 枚、斜めにずらして重ねる。窓の枠は shots.css
+ */
+.hero-shots {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 40rem;
+}
+
+.shot-front {
+  z-index: 1;
+  justify-self: start;
+  margin-top: 20%;
+}
+
+.shot-back {
+  justify-self: end;
+  /* 同じ升に重ねる前の窓のほうが下まで長いので、伸ばさず絵の高さで止める */
+  align-self: start;
+}
+
+/* 画面の下に、同じサービスへの平らなリンクを並べる (控えのボタンと同じ。塗らず、乗せたら薄い地) */
+.hero-links {
+  grid-area: 2 / 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--doa-space-1) var(--doa-space-2);
+  margin: var(--doa-space-5) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hero-links li {
+  margin: 0;
+  list-style: none;
+}
+
+.hero-links a.button {
+  padding-inline: var(--doa-space-3);
+}
+
+/* トップの名前・一文・ボタン (index.astro) に続いて、画面の 2 枚とリンクがふわっと入る */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-shots .shot,
+  .hero-links {
+    animation: rise var(--doa-duration-reveal) var(--doa-ease) both;
+    animation-delay: calc(var(--i, 0) * 70ms);
+  }
+
+  .shot-back {
+    --i: 3;
+  }
+
+  .shot-front {
+    --i: 4;
+  }
+
+  .hero-links {
+    --i: 5;
+  }
+}
+
+/* 巻いたときに上へ逃げる量 (shots.css の drift)。前の 1 枚のほうを速く */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .shot-back {
+      --drift: -0.75rem;
+    }
+
+    .shot-front {
+      --drift: -2.25rem;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-links {
+    animation: none;
+  }
+}
+</style>

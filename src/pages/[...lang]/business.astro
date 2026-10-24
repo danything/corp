@@ -1,7 +1,8 @@
 ---
+import Layout from "@layouts/Layout.astro";
+import "../../styles/facts.css";
 import ServiceFeatures from "@components/ServiceFeatures.astro";
 import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
-import Layout from "@layouts/Layout.astro";
 import { business } from "@/config";
 
 // 事業内容(/business/ と /en/business/)。事業ごとの節は #dev・#cars などで、トップから飛んでくる
@@ -44,3 +45,12 @@ const [licenseBefore, licenseAfter] = page.licenseNote.split("{link}");
 		</section>
 	))}
 </Layout>
+
+<style>
+/* 事業ごとの小見出し (使う技術) */
+.business > h3 {
+  font-size: var(--doa-text-lg);
+  line-height: 1.5;
+  margin-block: var(--doa-space-6) var(--doa-space-4);
+}
+</style>

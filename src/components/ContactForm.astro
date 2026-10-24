@@ -1,4 +1,5 @@
 ---
+import "@anyblades/blades/layered/forms/basics";
 import { type Lang, localeUrl, t } from "@i18n/translation";
 import { site } from "@/config";
 
@@ -86,3 +87,86 @@ const errorAttrs = Object.fromEntries(
 <script>
 	import "../scripts/contact";
 </script>
+
+<style>
+/* ---- 入力欄 ---- */
+/* 線も凹みの影も付けず、平らな面だけ。ラベルはいつも見せ、打っている間は外側の 2px の主の色の線 */
+.contact-form {
+  max-width: 40rem;
+  margin-top: var(--doa-space-6);
+}
+
+.contact-form label {
+  font-size: var(--doa-text-sm);
+  font-weight: var(--doa-weight-bold);
+  margin-bottom: var(--doa-space-1);
+}
+
+.contact-form label .muted {
+  font-weight: var(--doa-weight);
+}
+
+:where(input:not([type="checkbox"], [type="radio"]), textarea, select) {
+  border-radius: var(--doa-radius);
+  transition:
+    background-color var(--doa-duration) var(--doa-ease),
+    outline-color var(--doa-duration) var(--doa-ease);
+}
+
+:where(input:not([type="checkbox"], [type="radio"]), textarea, select):focus {
+  outline: 2px solid var(--pico-primary);
+  outline-offset: 2px;
+}
+
+.contact-form .field-error {
+  color: var(--doa-err-text);
+  margin-top: calc(-1 * var(--doa-space-3));
+  margin-bottom: var(--doa-space-4);
+}
+
+/* 見えないボット除けの欄。display: none だと入れてくるボットが減るので、画面の外に出す */
+.hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* 送れなかったとき・JavaScript が無いときの一言。状態の色は字だけで、地はごく淡く */
+.status {
+  margin-bottom: var(--doa-space-5);
+  padding: var(--doa-space-3) var(--doa-space-4);
+  border-radius: var(--doa-radius-lg);
+  background: color-mix(in srgb, var(--doa-err) 9%, var(--doa-bg));
+  color: var(--doa-err-text);
+}
+
+.status:focus {
+  outline: none;
+}
+
+.status:focus-visible {
+  outline: 2px solid var(--pico-primary);
+  outline-offset: 2px;
+}
+
+.cf-turnstile {
+  min-height: 65px;
+  margin-bottom: var(--doa-space-5);
+}
+
+/* 項目ごとのエラーは、その欄が aria-invalid="true" のときだけ見せる */
+.field-error {
+  display: none;
+}
+
+[aria-invalid="true"] + .field-error {
+  display: block;
+}
+
+/* 送信のボタンは Blades の forms の幅いっぱいにせず、字の幅で */
+button[type="submit"] {
+  width: auto;
+}
+</style>
