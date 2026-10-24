@@ -1,4 +1,4 @@
 [fmt]
 # import を並べ替える (副作用だけの import は順を変えない)
 sortImports = true
-ignorePatterns = ["deploy/", "renovate.json"]
+ignorePatterns = ["deploy/"]
