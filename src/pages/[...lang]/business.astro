@@ -1,6 +1,6 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import "../../styles/facts.css";
+import Facts from "@components/Facts.astro";
 import ServiceFeatures from "@components/ServiceFeatures.astro";
 import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
 import { business } from "@/config";
@@ -25,14 +25,14 @@ const [licenseBefore, licenseAfter] = page.licenseNote.split("{link}");
 			{id === "dev" && (
 				<>
 					<h3 data-reveal>{page.techTitle}</h3>
-					<dl class="facts" data-reveal>
+					<Facts data-reveal>
 						{page.tech.map((row) => (
 							<>
 								<dt>{row.label}</dt>
 								<dd>{row.value}</dd>
 							</>
 						))}
-					</dl>
+					</Facts>
 					<p data-reveal><a class="button secondary" href={localeUrl("/works/", lang)}>{page.worksLink} <span class="arrow" aria-hidden="true">→</span></a></p>
 				</>
 			)}

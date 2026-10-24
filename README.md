@@ -16,8 +16,7 @@
 | `src/i18n/languages/`              | 文言 (`ja.ts`・`en.ts`)。英語版は日本語版と同じ形にする                                                                                                                   |
 | `src/config.ts`                    | 事業者の情報とリンク (サービス・実績・OSS・SNS)                                                                                                                           |
 | `src/components/ContactForm.astro` | 問い合わせフォーム。Turnstile のスクリプトは `/contact/` でだけ読む                                                                                                       |
-| `src/styles/main.css`              | 全ページの土台 (`Layout.astro` が読む)。全ページで使う Blades の部品・トークン (`--doa-*`)・地と字・ボタン・動き                                                          |
-| `src/styles/*.css`                 | 上のほか、いくつかの所で使う見た目 (`shots.css`・`items.css`・`facts.css`)。1 か所だけの見た目は各 `.astro` の `<style>`                                                  |
+| `src/styles/main.css`              | 全ページの土台 (`Layout.astro` が読む)。全ページで使う Blades の部品・トークン (`--doa-*`)・地と字・ボタン・動き。ほかの見た目は各 `.astro` の `<style>`                  |
 | `server.ts`                        | 配信サーバー。`server/` に中身 (`static.ts`・`contact.ts`・`contact-page.ts`・`markdown.ts`・`rate-limit.ts`)                                                             |
 | `tests/`                           | サーバーのテスト (`bun test`)                                                                                                                                             |
 | `deploy/`                          | k8s のマニフェスト。Argo CD が同期する (`deploy/argocd.yaml`)                                                                                                             |

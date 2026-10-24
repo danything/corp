@@ -1,6 +1,5 @@
 ---
-import "../styles/shots.css";
-import { getImage } from "astro:assets";
+import BrowserFrame from "@components/BrowserFrame.astro";
 import { type Lang, t } from "@i18n/translation";
 import todoroku from "@/assets/hero/todoroku.webp";
 import worklogDark from "@/assets/hero/worklog-dark.webp";
@@ -19,74 +18,39 @@ interface Props {
 const { lang } = Astro.props;
 const text = t(lang);
 
-const widths = [480, 720, 960, 1280];
 // 広い画面では列の 8 割 (最大 480px 前後)、狭い画面では幅の 8 割
 const sizes = "(min-width: 960px) 30rem, 80vw";
-
-async function sources(src: ImageMetadata) {
-	const [avif, webp] = await Promise.all(
-		(["avif", "webp"] as const).map((format) =>
-			getImage({ src, format, width: 960, widths, sizes }),
-		),
-	);
-	return { avif: avif.srcSet.attribute, webp };
-}
 
 const url = Object.fromEntries(services.map((s) => [s.id, s.url])) as Record<
 	(typeof services)[number]["id"],
 	string
 >;
 const host = (u: string) => new URL(u).host;
-
-const wLight = await sources(worklogLight);
-const wDark = await sources(worklogDark);
-const tk = await sources(todoroku);
 ---
 
 <div class="hero-shots">
-	<a class="shot shot-front" href={url.worklog}>
-		<span class="shot-bar"><span class="shot-dots" aria-hidden="true"></span>{host(url.worklog)}</span>
-		{/* 明暗 2 枚。選んだ明暗で片方を隠す (shots.css の .only-light・.only-dark) */}
-		<picture class="only-light">
-			<source type="image/avif" srcset={wLight.avif} sizes={sizes} />
-			<source type="image/webp" srcset={wLight.webp.srcSet.attribute} sizes={sizes} />
-			<img
-				src={wLight.webp.src}
-				alt={text.home.shots.worklog}
-				width={1280}
-				height={800}
-				fetchpriority="high"
-				decoding="async"
-			/>
-		</picture>
-		<picture class="only-dark">
-			<source type="image/avif" srcset={wDark.avif} sizes={sizes} />
-			<source type="image/webp" srcset={wDark.webp.srcSet.attribute} sizes={sizes} />
-			<img
-				src={wDark.webp.src}
-				alt={text.home.shots.worklog}
-				width={1280}
-				height={800}
-				fetchpriority="high"
-				decoding="async"
-			/>
-		</picture>
-	</a>
-	<a class="shot shot-back" href={url.todoroku}>
-		<span class="shot-bar"><span class="shot-dots" aria-hidden="true"></span>{host(url.todoroku)}</span>
-		<picture>
-			<source type="image/avif" srcset={tk.avif} sizes={sizes} />
-			<source type="image/webp" srcset={tk.webp.srcSet.attribute} sizes={sizes} />
-			<img
-				src={tk.webp.src}
-				alt={text.home.shots.todoroku}
-				width={1280}
-				height={800}
-				loading="lazy"
-				decoding="async"
-			/>
-		</picture>
-	</a>
+	<BrowserFrame
+		class="shot-front"
+		href={url.worklog}
+		label={host(url.worklog)}
+		src={worklogLight}
+		dark={worklogDark}
+		alt={text.home.shots.worklog}
+		sizes={sizes}
+		width={1280}
+		height={800}
+		priority
+	/>
+	<BrowserFrame
+		class="shot-back"
+		href={url.todoroku}
+		label={host(url.todoroku)}
+		src={todoroku}
+		alt={text.home.shots.todoroku}
+		sizes={sizes}
+		width={1280}
+		height={800}
+	/>
 	<ul class="hero-links" aria-label={text.home.shotsLabel}>
 		{services.map((s) => (
 			<li>
@@ -102,12 +66,18 @@ const tk = await sources(todoroku);
 
 <style>
 /*
- * 自社サービスの画面を 2 枚、斜めにずらして重ねる。窓の枠は shots.css
+ * 自社サービスの画面を 2 枚、斜めにずらして重ねる。窓の枠は BrowserFrame.astro で、
+ * ここで渡した class (shot-front・shot-back) と scoped の印が枠に付く
  */
 .hero-shots {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   max-width: 40rem;
+}
+
+.hero-shots .shot {
+  grid-area: 1 / 1;
+  width: 82%;
 }
 
 .shot-front {
@@ -163,7 +133,7 @@ const tk = await sources(todoroku);
   }
 }
 
-/* 巻いたときに上へ逃げる量 (shots.css の drift)。前の 1 枚のほうを速く */
+/* 巻いたときに上へ逃げる量 (BrowserFrame.astro の drift)。前の 1 枚のほうを速く */
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
     .shot-back {

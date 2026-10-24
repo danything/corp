@@ -1,0 +1,151 @@
+---
+import Logo from "@components/Logo.astro";
+
+/*
+ * 件 1 つ (<li>)。トップの事業 (幅に合わせて何列かに並ぶ) と、実績・OSS の行 (row。横長) に使う。
+ * href があれば見出しをリンクにして、件全体を押せるようにする。links は件の下に添えるリンク (ソース・PR)
+ */
+interface Props {
+	name: string;
+	href?: string;
+	body: string;
+	logo?: { src: ImageMetadata; plate?: boolean };
+	links?: readonly { url: string; label: string }[];
+	/** リンクの字を等幅にする (OSS の PR やリポジトリの名前) */
+	mono?: boolean;
+	/** 横長の行にする (実績・OSS) */
+	row?: boolean;
+}
+
+const { name, href, body, logo, links, mono, row } = Astro.props;
+---
+
+<li class:list={["item", { row }]} data-reveal>
+	<h3>{logo && <Logo src={logo.src} plate={logo.plate} />}{href ? <a href={href}>{name}</a> : name}</h3>
+	<p>{body}</p>
+	{links && links.length > 0 && (
+		<p class:list={["links", { mono }]}>{links.map((l, i) => (<>{i > 0 && " ・ "}<a href={l.url}>{l.label}</a></>))}</p>
+	)}
+</li>
+
+<style>
+/*
+ * 件の面。1 件が 2〜3 行ある並び (事業・実績・OSS)。透かさない面にごく薄い影 (暗いほうは地より一段明るい面だけ)。
+ * 縁と区切りの線は付けない。乗せたら面を一段変える
+ */
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--doa-space-2);
+  margin: 0;
+  padding: var(--doa-space-5);
+  border-radius: var(--doa-item-radius);
+  background: var(--doa-item);
+  box-shadow: var(--doa-item-shadow);
+  list-style: none;
+  transition: background-color var(--doa-duration) var(--doa-ease);
+}
+
+/*
+ * 見出しにリンクのある件は件全体を押せる (見出しのリンクの ::after を件いっぱいに広げる)。
+ * 件の中のほかのリンク (ソースなど) はその上に出して、別に押せるようにする
+ */
+.item {
+  position: relative;
+}
+
+.item h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.item .links a {
+  position: relative;
+  z-index: 1;
+}
+
+.item:has(h3 a):hover {
+  background: var(--doa-item-hover);
+}
+
+.item:has(h3 a:focus-visible) {
+  outline: 2px solid var(--pico-primary);
+  outline-offset: 2px;
+}
+
+.item h3 a:focus-visible {
+  outline: none;
+}
+
+.item h3 {
+  font-size: var(--doa-text-lg);
+  line-height: 1.5;
+}
+
+.item h3 a {
+  color: var(--doa-fg);
+  text-decoration: none;
+}
+
+.item h3 a:hover {
+  color: var(--pico-primary);
+}
+
+.item p {
+  font-size: 0.9375rem;
+}
+
+/* 件の下に添えるリンク (ソース・PR)。控えた字を「・」でつなぐ */
+.item .links {
+  margin-top: auto;
+  padding-top: var(--doa-space-2);
+  font-size: var(--doa-text-sm);
+  color: var(--doa-muted);
+}
+
+/*
+ * 実績と OSS は横長の行で並べる。広い画面では左に名前、右に説明とリンクを置き、説明は読みやすい幅で折り返す
+ */
+.row {
+  display: grid;
+  gap: var(--doa-space-2) var(--doa-space-6);
+}
+
+.item.row > p:not(.links) {
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+@media (min-width: 760px) {
+  .row {
+    grid-template-columns: 13rem minmax(0, 46rem);
+    align-items: start;
+  }
+
+  .row > h3 {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .row > p:not(.links) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .row > .links {
+    grid-column: 2;
+    grid-row: 2;
+    margin-top: 0;
+    padding-top: 0;
+  }
+}
+
+/* 名前の前にアイコン (Logo.astro) を置けるよう、見出しは横に並べる */
+.row > h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--doa-space-3);
+}
+</style>

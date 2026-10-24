@@ -1,7 +1,7 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import "../../styles/items.css";
 import HeroShots from "@components/HeroShots.astro";
+import Item from "@components/Item.astro";
 import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
 import { business, site } from "@/config";
 
@@ -29,10 +29,7 @@ const text = t(lang);
 		<h2 id="business" data-reveal>{text.home.businessTitle}</h2>
 		<ul class="cards">
 			{business.map((id) => (
-				<li class="item" data-reveal>
-					<h3><a href={localeUrl(`/business/#${id}`, lang)}>{text.business[id].title}</a></h3>
-					<p>{text.business[id].summary}</p>
-				</li>
+				<Item name={text.business[id].title} href={localeUrl(`/business/#${id}`, lang)} body={text.business[id].summary} />
 			))}
 		</ul>
 	</section>
@@ -112,7 +109,7 @@ const text = t(lang);
   gap: var(--doa-space-3);
 }
 
-/* 事業の件 (items.css の .item) を、幅に合わせて何列かに並べる */
+/* 事業の件 (Item.astro) を、幅に合わせて何列かに並べる */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));

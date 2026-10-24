@@ -1,0 +1,135 @@
+---
+import BrowserFrame from "@components/BrowserFrame.astro";
+import Logo from "@components/Logo.astro";
+
+/*
+ * 横長の件 (<li>)。左に説明、右に画面 (トップと同じ窓の枠。BrowserFrame) を置く。狭い画面では画面を説明の下に回す。
+ * 事業内容の自社サービス (ServiceFeatures) と、実績のうち画面を撮れるもの (works) に使う。
+ * 見出しのリンクで件全体を押せる。source は件の中のソースのリンク、open は下に添える「サイトを開く」の目印
+ */
+interface Props {
+	name: string;
+	href: string;
+	body: string;
+	logo?: { src: ImageMetadata; plate?: boolean };
+	source?: { url: string; label: string };
+	open?: string;
+	frame: {
+		label: string;
+		src: ImageMetadata;
+		dark?: ImageMetadata;
+		alt: string;
+		sizes: string;
+		width: number;
+		height: number;
+	};
+}
+
+const { name, href, body, logo, source, open, frame } = Astro.props;
+---
+
+<li class="feature" data-reveal>
+	<div class="feature-text">
+		<h3>{logo && <Logo src={logo.src} plate={logo.plate} />}<a href={href}>{name}</a></h3>
+		<p>{body}</p>
+		{source && <p class="links"><a href={source.url}>{source.label}</a></p>}
+		{open && <p class="feature-open" aria-hidden="true">{open} <span class="host">{new URL(href).host}</span> <span class="arrow">→</span></p>}
+	</div>
+	<BrowserFrame {...frame} />
+</li>
+
+<style>
+/* 件の面 (Item.astro と同じ)。透かさない面にごく薄い影。乗せたら面を一段変える */
+.feature {
+  display: grid;
+  gap: var(--doa-space-5);
+  align-items: center;
+  padding: var(--doa-space-6);
+  border-radius: var(--doa-item-radius);
+  background: var(--doa-item);
+  box-shadow: var(--doa-item-shadow);
+}
+
+@media (min-width: 860px) {
+  .feature {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    gap: var(--doa-space-6);
+  }
+}
+
+.feature-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--doa-space-3);
+}
+
+.feature-text h3 {
+  font-size: var(--doa-text-xl);
+  line-height: 1.4;
+}
+
+.feature {
+  transition: background-color var(--doa-duration) var(--doa-ease);
+}
+
+/*
+ * 見出しのリンクで件全体を押せる (見出しのリンクの ::after を件いっぱいに広げる)。
+ * 件の中のほかのリンク (ソース) はその上に出して、別に押せるようにする
+ */
+.feature {
+  position: relative;
+}
+
+.feature-text h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.feature:hover {
+  background: var(--doa-item-hover);
+}
+
+.feature:has(h3 a:focus-visible) {
+  outline: 2px solid var(--pico-primary);
+  outline-offset: 2px;
+}
+
+.feature-text h3 a:focus-visible {
+  outline: none;
+}
+
+.feature-text h3 a {
+  color: var(--doa-fg);
+  text-decoration: none;
+}
+
+.feature-text h3 a:hover {
+  color: var(--pico-primary);
+}
+
+/* 名前の前にアイコン (Logo.astro) を置けるよう、見出しは横に並べる */
+.feature-text h3 {
+  display: flex;
+  align-items: center;
+  gap: var(--doa-space-3);
+}
+
+/* 画面のある実績。件の中のソースのリンクは、件全体のリンクの上に出す */
+.feature-text .links {
+  font-size: var(--doa-text-sm);
+  color: var(--doa-muted);
+}
+
+.feature-text .links a {
+  position: relative;
+  z-index: 1;
+}
+
+/* 件全体がリンクなので、下の「サイトを開く」は押せる場所の目印だけ (リンクにはしない) */
+.feature-open {
+  color: var(--pico-primary);
+  font-size: var(--doa-text-sm);
+}
+</style>

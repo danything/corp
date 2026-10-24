@@ -3,8 +3,8 @@
  * トークンの名前と値も denpa の src/app.css にそろえ、接頭辞だけ --doa- にしてある。
  *
  * ここは全ページで読む土台 (Layout.astro が読む)。トークン・地と字・ボタン・本文の並び・動きを置く。
- * ヘッダー・足・フォームなど、1 つのコンポーネントやページだけの見た目はそれぞれの <style> (scoped) に書き、
- * いくつかで使う見た目 (窓の枠 shots.css・件の面 items.css・事業者情報の表 facts.css) は使うところが読む。
+ * ほかの見た目は、それを描くコンポーネントやページの <style> (scoped) に書く。いくつかの所で使う見た目は
+ * コンポーネントにする (窓の枠 BrowserFrame・件 Item と Feature・事業者情報の表 Facts など)。
  * ページは Layout を最初に import する。先に読んだ CSS が先に並ぶので、この土台がいちばん前 (いちばん弱い) になる。
  *
  * Blades は使う部品だけを、使う場所で読む (xool・lgtm・todoroku と同じ)。ここには全ページで使う部品だけを置き、
@@ -419,7 +419,7 @@ main {
 /*
  * 動きを減らす設定の端末では、全部止める。移り変わりは時間のトークンを 0 に、
  * 入ってくる動き・巻いて出る動きは外す (上の規則でも no-preference のときだけ付けている)。ファイルの最後に置く。
- * トップの頭 (index.astro・HeroShots.astro) と窓の枠 (shots.css) の動きも、それぞれの場所で同じく外す
+ * トップの頭 (index.astro・HeroShots.astro) と窓の枠 (BrowserFrame.astro) の動きも、それぞれの場所で同じく外す
  */
 @media (prefers-reduced-motion: reduce) {
   :root {

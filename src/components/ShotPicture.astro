@@ -1,36 +1,90 @@
 ---
-import "../styles/shots.css";
-/*
- * 窓の枠に入れる画面 1 つ。dark があれば明暗 2 枚を並べ、選んだ明暗で片方を隠す
- * (shots.css の .only-light・.only-dark。<picture> の media は OS しか見ないため)
- */
-type Sources = {
-	avif: string;
-	webp: { src: string; srcSet: { attribute: string } };
-};
+import { getImage } from "astro:assets";
 
+/*
+ * 窓の枠 (BrowserFrame) に入れる画面 1 つ。dark があれば明暗 2 枚を並べ、選んだ明暗で片方を隠す
+ * (下の .only-light・.only-dark。<picture> の media は OS しか見ないため)。
+ * priority を付けると遅延させず先に取る (トップの前の 1 枚。ページでいちばん大きい絵 (LCP))
+ */
 interface Props {
-	light: Sources;
-	dark?: Sources;
+	src: ImageMetadata;
+	dark?: ImageMetadata;
 	alt: string;
 	sizes: string;
 	width: number;
 	height: number;
+	priority?: boolean;
 }
 
-const { light, dark, alt, sizes, width, height } = Astro.props;
+const { src, dark, alt, sizes, width, height, priority } = Astro.props;
+
+const widths = [480, 720, 960, 1280];
+
+async function sources(image: ImageMetadata) {
+	const [avif, webp] = await Promise.all(
+		(["avif", "webp"] as const).map((format) =>
+			getImage({ src: image, format, width: 960, widths, sizes }),
+		),
+	);
+	return { avif: avif.srcSet.attribute, webp };
+}
+
 const pictures = dark
 	? [
-			{ src: light, class: "only-light" },
-			{ src: dark, class: "only-dark" },
+			{ src: await sources(src), class: "only-light" },
+			{ src: await sources(dark), class: "only-dark" },
 		]
-	: [{ src: light, class: undefined }];
+	: [{ src: await sources(src), class: undefined }];
 ---
 
 {pictures.map((p) => (
 	<picture class={p.class}>
 		<source type="image/avif" srcset={p.src.avif} sizes={sizes} />
 		<source type="image/webp" srcset={p.src.webp.srcSet.attribute} sizes={sizes} />
-		<img src={p.src.webp.src} alt={alt} width={width} height={height} loading="lazy" decoding="async" />
+		<img
+			src={p.src.webp.src}
+			alt={alt}
+			width={width}
+			height={height}
+			loading={priority ? undefined : "lazy"}
+			fetchpriority={priority ? "high" : undefined}
+			decoding="async"
+		/>
 	</picture>
 ))}
+
+<style>
+/* 絵は 16:10 で場所を先に取っておく (読み込んでも並びがずれない) */
+img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+}
+
+/*
+ * 明暗で出し分ける画面 (worklog・mogiri)。<picture> の media は OS しか見ないので、
+ * 明暗 2 枚を並べて置き、選んだ明暗 (<html> の data-theme) と OS の設定で片方を隠す
+ */
+.only-dark {
+  display: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :global(:root:not([data-theme="light"])) .only-dark {
+    display: block;
+  }
+
+  :global(:root:not([data-theme="light"])) .only-light {
+    display: none;
+  }
+}
+
+:global(:root[data-theme="dark"]) .only-dark {
+  display: block;
+}
+
+:global(:root[data-theme="dark"]) .only-light {
+  display: none;
+}
+</style>

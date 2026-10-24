@@ -1,6 +1,6 @@
 ---
 import Layout from "@layouts/Layout.astro";
-import "../../styles/facts.css";
+import Facts from "@components/Facts.astro";
 import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
 import { business, career, licenses, site } from "@/config";
 
@@ -40,7 +40,7 @@ const [ossBefore, ossAfter] = p.oss.split("{link}");
 
 <Layout title={c.title} description={c.description}>
 	<h1>{c.title}</h1>
-	<dl class="facts">
+	<Facts>
 		<dt>{c.tradeName}</dt>
 		<dd>{site.name}</dd>
 
@@ -68,7 +68,7 @@ const [ossBefore, ossAfter] = p.oss.split("{link}");
 
 		<dt>{c.email}</dt>
 		<dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
-	</dl>
+	</Facts>
 
 	<section class="profile" aria-labelledby="profile">
 		<h2 id="profile">{p.title}</h2>
@@ -106,7 +106,7 @@ const [ossBefore, ossAfter] = p.oss.split("{link}");
 
 <style>
 /* 代表のプロフィール (事業者情報の表の下) */
-.facts + .profile {
+.profile {
   margin-top: clamp(3.5rem, 8vw, 5.5rem);
 }
 

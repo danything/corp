@@ -1,13 +1,50 @@
+---
+import ShotPicture from "@components/ShotPicture.astro";
+
 /*
- * 自社サービスや実績の画面 (トップの頭・事業内容の自社サービス・実績)。ブラウザの窓に見立てた枠 (細い帯にホスト名) に入れる。
- * 枠は件の面と同じ面に、操作の層の影。絵は 16:10 で場所を先に取っておく (読み込んでも並びがずれない)。
- * 絵は ShotPicture が枠の中に描くので (scoped の <style> は子のコンポーネントに届かない)、枠を描くところがそれぞれ読む。
- * トップの 2 枚の重ね方は HeroShots.astro にある
+ * 自社サービスや実績の画面 (トップの頭・事業内容の自社サービス・実績)。ブラウザの窓に見立てた枠 (細い帯に label) に入れる。
+ * href があれば枠ごとリンクにする。置き方 (重ねる・ずらす) は使う側が class で決める
+ * (class と、使う側の scoped の印 data-astro-cid-* を枠に渡す)
  */
+interface Props {
+	label: string;
+	href?: string;
+	src: ImageMetadata;
+	dark?: ImageMetadata;
+	alt: string;
+	sizes: string;
+	width: number;
+	height: number;
+	priority?: boolean;
+	class?: string;
+	[attr: `data-${string}`]: unknown;
+}
+
+const {
+	label,
+	href,
+	src,
+	dark,
+	alt,
+	sizes,
+	width,
+	height,
+	priority,
+	class: className,
+	...attrs
+} = Astro.props;
+const Tag = href ? "a" : "div";
+---
+
+<Tag class:list={["shot", className]} href={href} {...attrs}>
+	<span class="shot-bar"><span class="shot-dots" aria-hidden="true"></span>{label}</span>
+	<ShotPicture src={src} dark={dark} alt={alt} sizes={sizes} width={width} height={height} priority={priority} />
+</Tag>
+
+<style>
+/* 枠は件の面と同じ面に、操作の層の影 */
 .shot {
-  grid-area: 1 / 1;
   display: block;
-  width: 82%;
   overflow: hidden;
   border-radius: var(--doa-radius-lg);
   background: var(--doa-item);
@@ -50,16 +87,10 @@
     1.25rem 0 var(--doa-line-strong);
 }
 
-.shot img {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 16 / 10;
-}
-
 /*
  * 巻くと、前の 1 枚が後ろの 1 枚より少しだけ速く上へ逃げる (奥行き)。animation-timeline: scroll() で、JS は使わない。
- * 入ってくる動き (rise・translate) と並べて transform を動かす。知らないブラウザは止まったまま
+ * 入ってくる動き (rise・translate) と並べて transform を動かす。知らないブラウザは止まったまま。
+ * 逃げる量 (--drift) と入る順 (--i) は使う側が決める
  */
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
@@ -87,29 +118,4 @@
     animation: none;
   }
 }
-
-/*
- * 明暗で出し分ける画面 (worklog・mogiri)。<picture> の media は OS しか見ないので、
- * 明暗 2 枚を並べて置き、選んだ明暗 (data-theme) と OS の設定で片方を隠す
- */
-.only-dark {
-  display: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .only-dark {
-    display: block;
-  }
-
-  :root:not([data-theme="light"]) .only-light {
-    display: none;
-  }
-}
-
-:root[data-theme="dark"] .only-dark {
-  display: block;
-}
-
-:root[data-theme="dark"] .only-light {
-  display: none;
-}
+</style>
