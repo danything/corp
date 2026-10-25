@@ -82,9 +82,16 @@ const text = t(lang).theme;
  */
 .theme-switch {
   flex-direction: row;
+  min-height: 0;
   margin: 0;
   border: 0;
+  /* 浮いたヘッダーの中なので、ボタンの土台 (main.css) の面と影を外して平らにする (浮いたものの上に浮かせない) */
+  box-shadow: none;
   cursor: pointer;
+}
+
+.theme-switch:hover {
+  background: var(--doa-hover-soft);
 }
 
 .theme-switch:not(:hover) {

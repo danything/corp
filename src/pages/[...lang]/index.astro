@@ -1,44 +1,67 @@
 ---
 import Layout from "@layouts/Layout.astro";
+import Bento from "@components/Bento.astro";
 import HeroShots from "@components/HeroShots.astro";
-import Item from "@components/Item.astro";
+import Process from "@components/Process.astro";
+import ServiceTour from "@components/ServiceTour.astro";
+import WorksSummary from "@components/WorksSummary.astro";
 import { type Lang, langPaths, localeUrl, t } from "@i18n/translation";
-import { business, site } from "@/config";
+import { site } from "@/config";
 
-// トップ(/ と /en/)。要約だけを置き、詳しくは事業内容・実績・事業者情報の各ページに書く
+// トップ(/ と /en/)。事業内容・自社サービス・実績の要約・進め方・お問い合わせを 1 ページに置く。
+// 実績の詳しくは /works/、事業者の情報は /company/
 export const getStaticPaths = langPaths;
 
 const { lang } = Astro.props as { lang: Lang };
 const text = t(lang);
+const home = text.home;
 ---
 
 <Layout>
 	<section class="hero">
+		<div class="glow" aria-hidden="true"></div>
 		<div class="hero-text">
+			<p class="facts">{home.facts.map((f, i) => <>{i > 0 && <span aria-hidden="true"> ・ </span>}<span>{f}</span></>)}</p>
 			<h1>{site.name}</h1>
-			<p class="hero-lead">{text.home.lead}</p>
+			<p class="hero-lead">{home.lead}</p>
 			<div class="actions">
-				<a class="button" href={localeUrl("/contact/", lang)}>{text.home.ctaContact}</a>
-				<a class="button secondary" href={localeUrl("/business/", lang)}>{text.home.ctaBusiness} <span class="arrow" aria-hidden="true">→</span></a>
+				<a class="button ring" href={localeUrl("/contact/", lang)}>{home.ctaContact}</a>
+				<a class="button secondary" href="#business">{home.ctaBusiness} <span class="arrow down" aria-hidden="true">↓</span></a>
 			</div>
 		</div>
 		<HeroShots lang={lang} />
 	</section>
 
 	<section aria-labelledby="business">
-		<h2 id="business" data-reveal>{text.home.businessTitle}</h2>
-		<ul class="cards">
-			{business.map((id) => (
-				<Item name={text.business[id].title} href={localeUrl(`/business/#${id}`, lang)} body={text.business[id].summary} />
-			))}
-		</ul>
+		<h2 id="business" data-reveal>{home.businessTitle}</h2>
+		<p class="lead" data-reveal>{home.businessLead}</p>
+		<Bento lang={lang} />
 	</section>
 
-	<section aria-labelledby="contact" data-reveal>
-		<h2 id="contact">{text.home.contactTitle}</h2>
-		<p class="lead">{text.home.contactBody}</p>
+	<section aria-labelledby="services">
+		<h2 id="services" data-reveal>{home.servicesTitle}</h2>
+		<p class="lead" data-reveal>{home.servicesLead}</p>
+		<ServiceTour lang={lang} />
+	</section>
+
+	<section aria-labelledby="works">
+		<h2 id="works" data-reveal>{home.worksTitle}</h2>
+		<p class="lead" data-reveal>{home.worksLead}</p>
+		<WorksSummary lang={lang} />
+		<p data-reveal><a class="button secondary" href={localeUrl("/works/", lang)}>{home.worksLink} <span class="arrow" aria-hidden="true">→</span></a></p>
+	</section>
+
+	<section aria-labelledby="process">
+		<h2 id="process" data-reveal>{home.processTitle}</h2>
+		<Process lang={lang} />
+	</section>
+
+	<section class="contact" aria-labelledby="contact" data-reveal>
+		<div class="glow" aria-hidden="true"></div>
+		<h2 id="contact">{home.contactTitle}</h2>
+		<p>{home.contactBody}</p>
 		<div class="actions">
-			<a class="button" href={localeUrl("/contact/", lang)}>{text.home.ctaContact}</a>
+			<a class="button ring" href={localeUrl("/contact/", lang)}>{home.ctaContact}</a>
 			<a class="button secondary" href={`mailto:${site.email}`}>{site.email}</a>
 		</div>
 	</section>
@@ -46,7 +69,7 @@ const text = t(lang);
 
 <style>
 /*
- * トップの頭。名前を大きく、事実 (所在地・開業) を控えた字で上に添える。
+ * トップの頭。事実 (所在地・開業・許可) を控えた字で上に添え、名前を大きく。
  * 広い画面では右に自社サービスの画面を 2 枚重ねて置き、狭い画面では文の下に置く
  */
 .hero {
@@ -63,6 +86,12 @@ const text = t(lang);
   }
 }
 
+.facts {
+  margin-bottom: var(--doa-space-4);
+  color: var(--doa-muted);
+  font-size: var(--doa-text-sm);
+}
+
 .hero h1 {
   font-size: clamp(3.5rem, 16vw, 7.5rem);
   line-height: 1;
@@ -77,7 +106,7 @@ const text = t(lang);
   margin-bottom: var(--doa-space-6);
 }
 
-/* 名前・一文・ボタンが順にふわっと入り、画面の 2 枚が続く (HeroShots.astro)。場所はほんの少しだけ動かす (translate なので並びはずれない) */
+/* 事実・名前・一文・ボタンが順にふわっと入り、画面の 2 枚が続く (HeroShots.astro)。translate なので並びはずれない */
 @media (prefers-reduced-motion: no-preference) {
   .hero-text > * {
     animation: rise var(--doa-duration-reveal) var(--doa-ease) both;
@@ -97,25 +126,108 @@ const text = t(lang);
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .hero-text > * {
-    animation: none;
-  }
-}
-
 .actions {
   display: flex;
   flex-wrap: wrap;
   gap: var(--doa-space-3);
 }
 
-/* 事業の件 (Item.astro) を、幅に合わせて何列かに並べる */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 19rem), 1fr));
-  gap: var(--doa-space-3);
-  margin: 0 0 var(--doa-space-5);
-  padding: 0;
-  list-style: none;
+/* 下の節へ送るリンクの矢印は、乗せると少し下へ */
+a:hover > .arrow.down {
+  translate: 0 0.2rem;
+}
+
+/*
+ * 主の色の淡い光。頭とお問い合わせの裏に敷く。ぼかし (filter) は使わず、ぼやけた円の gradient を重ねるだけ。
+ * 頭の光は巻くのに合わせて少し上へ流れる (transform だけ。止まっている間は何もしない)
+ */
+.glow {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      closest-side,
+      color-mix(in srgb, var(--pico-primary) 22%, transparent),
+      transparent
+    )
+      0 0 / 60% 70% no-repeat,
+    radial-gradient(
+      closest-side,
+      color-mix(in srgb, #8b5cf6 16%, transparent),
+      transparent
+    )
+      100% 30% / 55% 65% no-repeat,
+    radial-gradient(
+      closest-side,
+      color-mix(in srgb, #14b8a6 12%, transparent),
+      transparent
+    )
+      40% 100% / 50% 60% no-repeat;
+}
+
+/*
+ * 頭の光は画面の幅いっぱいに敷く。頭にも本文の箱にも位置の基準を持たせていないので、最初の画面 (初期包含ブロック) が基準になる。
+ * 幅は画面の幅 (スクロールバーを除く) で止まるので、横にはみ出さない
+ */
+.hero .glow {
+  top: 0;
+  right: 0;
+  left: 0;
+  height: min(56rem, 100svh + 8rem);
+  background-position:
+    12% 10%,
+    90% 25%,
+    45% 95%;
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero .glow {
+      animation: glow-drift linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 100vh;
+    }
+  }
+}
+
+@keyframes glow-drift {
+  to {
+    translate: 0 -6rem;
+    opacity: 0.4;
+  }
+}
+
+/* 節の見出しはトップでは一段大きく */
+section > h2 {
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  letter-spacing: -0.01em;
+  margin-bottom: var(--doa-space-3);
+}
+
+/* 締めのお問い合わせ。光を敷いた件の面に、真ん中そろえで置く */
+.contact {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  margin-bottom: var(--doa-space-6);
+  padding: clamp(2.5rem, 7vw, 4.5rem) var(--doa-space-5);
+  border-radius: calc(var(--doa-item-radius) + 0.5rem);
+  background: var(--doa-item);
+  box-shadow: var(--doa-item-shadow);
+  text-align: center;
+}
+
+.contact .glow {
+  inset: 0;
+}
+
+.contact p {
+  max-width: 36rem;
+  margin: 0 auto var(--doa-space-5);
+}
+
+.contact .actions {
+  justify-content: center;
 }
 </style>

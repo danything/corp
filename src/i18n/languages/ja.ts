@@ -28,6 +28,8 @@ export const ja = {
   home: {
     /** ページの題(<title>)でサイト名に添える */
     title: "Web システムの開発と、中古車・登録手続きの相談",
+    /** 名前の上に控えた字で添える事実 */
+    facts: ["千葉県木更津市", "2018年開業", "古物商許可・インボイス登録"],
     lead: "業務システムや Web アプリを作っています。中古車の売り買いや、貨物登録などの手続きの相談にも乗ります。",
     ctaContact: "お問い合わせ",
     ctaBusiness: "事業内容",
@@ -41,65 +43,113 @@ export const ja = {
     },
 
     businessTitle: "事業内容",
+    businessLead: "Web の開発と、自動車の売り買い・手続きの 2 本立てです。",
+    /** 事業の件の左上に添える分野 */
+    groups: { it: "IT", cars: "自動車" },
+    techTitle: "これまで使ってきた技術",
+    tech: [
+      "PHP / Laravel",
+      "Java / Spring",
+      "C# / .NET",
+      "Go",
+      "Python",
+      "TypeScript / Bun",
+      "React / Next.js",
+      "Svelte / SvelteKit",
+      "AWS",
+      "Kubernetes",
+      "Cloudflare",
+      "Pulumi",
+    ],
+    licenseNote: "古物商許可の番号は{link}に載せています。",
+    licenseLink: "事業者情報",
+    servicesLink: "サービスを見る",
+    /** 事業の件の中で動く小さな見本 (飾り。読み上げない) */
+    demo: {
+      deploy: [
+        "$ git push origin main",
+        "✓ リント・型チェック",
+        "✓ テスト 128 件",
+        "✓ イメージを作成 (distroless)",
+        "✓ ghcr.io へ公開",
+        "↻ Argo CD が同期",
+        "→ 公開しました",
+      ],
+      auction: { label: "落札", lot: "出品番号 40312" },
+      cert: [
+        { label: "車名", value: "トヨタ" },
+        { label: "型式", value: "3BF-GDH201V" },
+        { label: "用途", value: "貨物" },
+      ],
+    },
+
+    servicesTitle: "自社サービス",
+    servicesLead: "自社で開発し、運営とサポートもしています。",
+    /** サービスの件の下に添える目印 (ホスト名を後ろに付ける) */
+    openSite: "サイトを開く",
+
+    worksTitle: "実績",
+    worksLead:
+      "作ったものはほとんどソースごと公開しています。使っている OSS の不具合は、直して本家に送っています。",
+    /** 実績の数字。数は config.ts から数える */
+    stats: [
+      { id: "years", label: "開業から", unit: "年" },
+      { id: "works", label: "公開している制作物", unit: "件" },
+      { id: "oss", label: "変更が取り込まれた OSS", unit: "件" },
+      { id: "services", label: "運営中の自社サービス", unit: "件" },
+    ],
+    worksLink: "実績をすべて見る",
+
+    processTitle: "開発の進め方",
+    process: [
+      {
+        title: "ご相談",
+        body: "困っていることを、フォームかメールでそのまま送ってください。まだ固まっていない段階でも構いません。",
+      },
+      {
+        title: "お見積もり",
+        body: "作るものの範囲・期間・金額をまとめてお出しします。",
+      },
+      {
+        title: "開発",
+        body: "動く画面を早めにお見せしながら、少しずつ作ります。",
+      },
+      {
+        title: "運用",
+        body: "公開後の保守や、サーバー・インフラの運用も引き受けます。",
+      },
+    ],
 
     contactTitle: "お問い合わせ",
-    contactBody: "フォームかメールでお問い合わせください。",
+    contactBody:
+      "開発のご依頼も、中古車や登録手続きのご相談も、フォームかメールでどうぞ。",
   },
 
   /**
-   * 事業内容。並びは config.ts の business。summary はトップと事業者情報の一覧に、body は /business/ に出す
+   * 事業内容。並びは config.ts の business。トップの事業の件に出す (受託開発は body、ほかは summary)
    */
   business: {
     dev: {
       title: "Web システム・アプリの受託開発",
-      summary: "業務システムや Web アプリを、設計からインフラまで作ります。",
       body: "業務システムや Web アプリを、要件の整理から設計・実装・運用まで引き受けます。言語やフレームワークは問いません。動かす基盤（Kubernetes・IaC・クラウド）の構築と運用も含めて相談できます。",
     },
     web: {
       title: "Web サイト・LP 制作",
       summary: "WordPress などでのサイトや LP の制作と改修です。",
-      body: "WordPress などで、サイトや LP の新規制作と、いまあるサイトの改修を引き受けます。",
     },
     cars: {
       title: "中古車の買取・販売の相談",
-      summary: "業者オークションを使って、中古車の売り買いを手伝います。",
-      body: "古物商許可を持ち、オートサーバーに加盟して業者オークションで中古車を売り買いしています。探している車の仕入れも、手持ちの車の売却も相談に乗ります。",
+      summary:
+        "古物商許可を持ち、業者オークション（オートサーバー）で中古車の仕入れと売却を手伝います。",
     },
     registration: {
       title: "自動車の登録手続きの相談",
       summary: "貨物登録など、自動車の登録手続きの相談に乗ります。",
-      body: "貨物登録など、自動車の登録・届出の手続きの相談に乗ります。書類をご自身で作る場合は、自社サービスのトドロクで車検証の情報から作れます。",
     },
     services: {
       title: "自社サービスの開発・運営",
       summary: "車両台帳のトドロクと、稼働表の worklog を運営しています。",
-      body: "自社で開発し、運営とサポートもしています。",
     },
-  },
-
-  businessPage: {
-    title: "事業内容",
-    description:
-      "Doa の事業内容です。Web システム・アプリの受託開発、サイト制作、中古車と自動車の登録手続きの相談、自社サービスの運営。",
-    techTitle: "これまで使ってきた技術",
-    tech: [
-      {
-        label: "バックエンド",
-        value:
-          "PHP / Laravel、Java / Spring、C# / .NET、Go、Python、TypeScript / Bun",
-      },
-      { label: "フロントエンド", value: "React / Next.js、Svelte / SvelteKit" },
-      {
-        label: "インフラ",
-        value:
-          "AWS（ECS・CloudFormation）、Kubernetes（Talos Linux・Argo CD）、Cloudflare、Pulumi",
-      },
-    ],
-    worksLink: "制作実績",
-    licenseNote: "古物商許可の番号は{link}に載せています。",
-    licenseLink: "事業者情報",
-    /** サービスの件の下に添えるリンク(ホスト名を後ろに付ける) */
-    openSite: "サイトを開く",
   },
 
   services: {
