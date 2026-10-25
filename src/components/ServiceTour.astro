@@ -20,13 +20,18 @@ const { lang } = Astro.props;
 const text = t(lang);
 
 const sizes = "(min-width: 860px) 36rem, 90vw";
+// 2 件目から先の説明の timeline (前の画面を沈める) を外の箱まで見せる
+const scope = services
+	.slice(1)
+	.map((_, i) => `--step-${i + 2}`)
+	.join(", ");
 const shots = {
 	todoroku: { src: todoroku, dark: undefined },
 	worklog: { src: worklogLight, dark: worklogDark },
 };
 ---
 
-<div class="tour" style={`--count: ${services.length}`}>
+<div class="tour" style={`--count: ${services.length}; timeline-scope: ${scope}`}>
 	{services.map((s, i) => (
 		<>
 			<div class="step" style={`--row: ${i + 1}; view-timeline-name: --step-${i + 1}`} data-reveal>
@@ -54,8 +59,6 @@ const shots = {
 .tour {
   display: grid;
   gap: var(--doa-space-5);
-  /* 前の画面が沈むのは次の説明の巻き具合で決める。説明の timeline を外の箱まで見せる */
-  timeline-scope: --step-2, --step-3, --step-4;
 }
 
 .step {
@@ -135,7 +138,7 @@ const shots = {
       animation: none;
     }
 
-    /* 読んでいる説明だけをはっきり見せる */
+    /* 読んでいる説明だけをはっきり見せる。ほかの説明も 6 割は残し、読めないほど薄くしない */
     .step {
       animation: focus linear both;
       animation-timeline: view();
@@ -154,7 +157,7 @@ const shots = {
 @keyframes focus {
   0%,
   100% {
-    opacity: 0.3;
+    opacity: 0.6;
   }
   30%,
   70% {

@@ -33,7 +33,7 @@
   (`/posts/renewal/` → `https://b.doany.io/posts/renewal/`)。ページのパスに `/` が無ければ `/` 付きへ 301 (`/contact` → `/contact/`)。
   判定は起動時に読んだ `dist/` のファイルの一覧だけで決める。`/.well-known/matrix/*` は Gateway で Matrix へ向けているので来ない。
   **事業者サイトに足すページの名前は、ブログのパス (`/about/`・`/archive/`・`/posts/` など) とぶつけないこと** (ぶつけると旧ブログの URL が転送されなくなる)
-- **無くなったページの転送。** 事業内容 (`/business/`・`/en/business/`) はトップの節にしたので、ブログへ送る前にトップの `#business` へ 301 で送る (`server/static.ts` の `MOVED`)
+- **無くなったページの転送。** 事業内容 (`/business/`・`/en/business/`) はトップの節にしたので、ブログへ送る前にトップの `#business` へ 301 で送る (クエリは残す。`server/static.ts` の `MOVED`)
 - **`POST /api/contact`** — 問い合わせ。JSON かフォームの送信 (`application/x-www-form-urlencoded`) を受け、
   入力を確かめ (名前・メール・本文は必須、会社は任意)、見えない項目 (`website`) に値があればボットとみなして送ったふりをし、
   IP ごとに 1 時間 5 回まで (`CF-Connecting-IP`、無ければ `X-Forwarded-For`)、Turnstile のトークンを Cloudflare に確かめてから、

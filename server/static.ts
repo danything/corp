@@ -27,11 +27,13 @@ export async function listFiles(dir: string): Promise<Set<string>> {
 
 /**
  * corp の中で無くなったページの移り先。事業内容 (/business/) はトップの節にした。
- * ブログへ送る前に見る (送るとブログの 404 になる)。/ で終わる形と終わらない形の両方を受ける
+ * ブログへ送る前に見る (送るとブログの 404 になる)。/ で終わる形と終わらない形の両方を受け、クエリは残す。
+ * 移り先の # (節) は、元の URL の # より先に効く。旧 /business/#cars のような事業ごとのリンクも事業内容の節の頭に着く
+ * (# はサーバーに届かないので、元の # を引き継ぐ形にはできない)
  */
-export const MOVED: Readonly<Record<string, string>> = {
-  "/business/": "/#business",
-  "/en/business/": "/en/#business",
+export const MOVED: Readonly<Record<string, { path: string; hash: string }>> = {
+  "/business/": { path: "/", hash: "#business" },
+  "/en/business/": { path: "/en/", hash: "#business" },
 };
 
 export type Resolution =
@@ -61,7 +63,11 @@ export function resolvePath(
   }
   if (decoded !== undefined) {
     const moved = MOVED[decoded.endsWith("/") ? decoded : `${decoded}/`];
-    if (moved) return { kind: "redirect", location: moved };
+    if (moved)
+      return {
+        kind: "redirect",
+        location: `${moved.path}${search}${moved.hash}`,
+      };
     if (decoded.endsWith("/")) {
       if (files.has(`${decoded}index.html`))
         return { kind: "file", file: `${decoded}index.html` };

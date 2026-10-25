@@ -57,7 +57,7 @@ describe("resolvePath", () => {
     ).toEqual({ kind: "file", file: "/static/favicons/favicon-32x32.png" });
   });
 
-  test("無くなったページは移り先へ", () => {
+  test("無くなったページは移り先へ(クエリは残す)", () => {
     expect(resolvePath("/business/", "", files)).toEqual({
       kind: "redirect",
       location: "/#business",
@@ -65,6 +65,10 @@ describe("resolvePath", () => {
     expect(resolvePath("/en/business", "", files)).toEqual({
       kind: "redirect",
       location: "/en/#business",
+    });
+    expect(resolvePath("/business/", "?utm_source=x", files)).toEqual({
+      kind: "redirect",
+      location: "/?utm_source=x#business",
     });
   });
 

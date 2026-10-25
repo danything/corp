@@ -108,38 +108,48 @@ const logos = [
   font-weight: var(--doa-weight-bold);
 }
 
-@property --n {
+/* 数え上げる数。名前はページ全体に効くので、ほかの部品の --n (並びの番号) とぶつけない */
+@property --count {
   syntax: "<integer>";
   inherits: false;
   initial-value: 0;
 }
 
-/* 数え上げる間は、書いてある数字の代わりに counter() の数字を出す */
+/*
+ * 数え上げる間は、書いてある数字の代わりに counter() の数字を見せる。書いてある数字は見えなくするだけで残し
+ * (読み上げ・ページ内の検索はこちらを読む)、counter() の数字は読み上げない (content の代わりの文を空にする)
+ */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .num {
-      counter-reset: n var(--n);
+      counter-reset: n var(--count);
       animation: count linear both;
       animation-timeline: view();
       animation-range: entry 40% cover 45%;
+      position: relative;
     }
 
     .num > span {
-      display: none;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
 
     .num::after {
-      content: counter(n);
+      content: counter(n) / "";
     }
   }
 }
 
 @keyframes count {
   from {
-    --n: 0;
+    --count: 0;
   }
   to {
-    --n: var(--to);
+    --count: var(--to);
   }
 }
 

@@ -305,7 +305,7 @@ dl {
  * 回す面が大きいほど重い (GPU の無い端末では合成を CPU でやる) ので、正方形はボタンの幅ちょうど
  * (カプセルはボタンの幅を直径とする円に収まるので、回しても角が欠けない)。
  * 画面の外では止め (使う側の content-visibility: auto)、ソフトウェアで描いている端末 (<html data-lite>) では回さない。
- * 内側は ::after でボタンの面を敷き直し、字はその上に出る (isolation で層を閉じる)
+ * 内側は ::after でボタンの面を透かさない色で敷き直し (透かすと回る光が面に透ける)、字はその上に出る (isolation で層を閉じる)
  */
 a.button.ring {
   /* 主の操作の印は光にするので、影では浮かせない (1 つの意味に印は 1 つ。denpa の design.md 8 章) */
@@ -342,7 +342,13 @@ a.button.ring::after {
   z-index: -1;
   inset: 1.5px;
   border-radius: inherit;
-  background: var(--pico-background-color);
+  background: var(--doa-pop);
+  transition: background-color var(--doa-duration) var(--doa-ease);
+}
+
+/* 浮かせないので、乗せたときは面を一段変えて応える (件と同じ) */
+a.button.ring:hover::after {
+  background: var(--doa-item-hover);
 }
 
 @media (prefers-reduced-motion: no-preference) {

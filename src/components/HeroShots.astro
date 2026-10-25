@@ -9,7 +9,7 @@ import { services } from "@/config";
 /*
  * トップの頭の右 (狭い画面では下) に出す、自社サービスの画面。トップページを 1280×800 で撮ったもの
  * (2 倍の解像度)。worklog は明暗があるので選んだ明暗 (OS か ThemeSwitch) で出し分け、トドロクは明るいほうしか無い。
- * 前に重ねる worklog がページでいちばん大きい絵 (LCP) なので遅延させず先に取る。後ろのトドロクは遅延でよい
+ * 前に重ねる worklog がページでいちばん大きい絵 (LCP) なので優先して取る (明暗 2 枚のうち見える側だけ。ShotPicture.astro)。後ろのトドロクは遅延でよい
  */
 interface Props {
 	lang: Lang;
