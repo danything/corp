@@ -29,7 +29,7 @@ export const en: Translation = {
     facts: [
       "Kisarazu, Chiba",
       "Founded 2018",
-      "Licensed secondhand dealer, registered invoice issuer",
+      "Licensed secondhand dealer, qualified invoice issuer (Japan)",
     ],
     lead: "Doa builds business systems and web apps, and can also help you buy or sell a used car or sort out vehicle registration.",
     ctaContact: "Contact",
@@ -44,7 +44,7 @@ export const en: Translation = {
 
     businessTitle: "What we do",
     businessLead:
-      "Two lines of work: building for the web, and buying, selling and registering cars.",
+      "Two lines of work: building for the web, and help with buying, selling and registering cars.",
     groups: { it: "IT", cars: "Cars" },
     techTitle: "Technology used so far",
     tech: [
@@ -77,7 +77,7 @@ export const en: Translation = {
       auction: { label: "Hammer price", lot: "Lot 40312" },
       cert: [
         { label: "Make", value: "Toyota" },
-        { label: "Model", value: "3BF-GDH201V" },
+        { label: "Model code", value: "3DF-GDH201V" },
         { label: "Use", value: "Cargo" },
       ],
     },
@@ -88,12 +88,16 @@ export const en: Translation = {
 
     worksTitle: "Work",
     worksLead:
-      "Most of what Doa builds is public, source and all. Bugs found in the open source it relies on get fixed and sent upstream.",
+      "Most of what Doa builds for itself is public, source and all. Bugs found in the open source it relies on have been fixed and sent upstream.",
     stats: [
       { id: "years", label: "In business for", unit: "years" },
       { id: "works", label: "Public projects", unit: "" },
-      { id: "oss", label: "Open source projects with merged fixes", unit: "" },
-      { id: "services", label: "Own services running", unit: "" },
+      {
+        id: "oss",
+        label: "Open source projects with merged changes",
+        unit: "",
+      },
+      { id: "services", label: "In-house services running", unit: "" },
     ],
     worksLink: "See all work",
 
@@ -101,11 +105,11 @@ export const en: Translation = {
     process: [
       {
         title: "Talk",
-        body: "Send what's bothering you through the form or by email, as it is. It's fine if nothing is decided yet.",
+        body: "Describe the problem through the form or by email, as it stands. It's fine if nothing is decided yet.",
       },
       {
         title: "Quote",
-        body: "You get the scope, schedule and price in one place.",
+        body: "You get the scope, schedule and price together in one quote.",
       },
       {
         title: "Build",
@@ -113,7 +117,7 @@ export const en: Translation = {
       },
       {
         title: "Run",
-        body: "Maintenance after launch, and running the servers and infrastructure, can be handled too.",
+        body: "After launch, maintenance and running the servers and infrastructure can be arranged too.",
       },
     ],
 
@@ -134,7 +138,7 @@ export const en: Translation = {
     cars: {
       title: "Buying and selling used cars",
       summary:
-        "A licensed dealer buying and selling at dealer auctions (AUTOSERVER). Looking for a car, or selling one?",
+        "Doa is a licensed secondhand dealer and buys and sells at dealer auctions (AUTOSERVER), whether you're looking for a car or selling one.",
     },
     registration: {
       title: "Vehicle registration",

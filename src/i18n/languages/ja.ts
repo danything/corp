@@ -43,7 +43,8 @@ export const ja = {
     },
 
     businessTitle: "事業内容",
-    businessLead: "Web の開発と、自動車の売り買い・手続きの 2 本立てです。",
+    businessLead:
+      "Web の開発と、自動車の売り買い・手続きの相談の 2 本立てです。",
     /** 事業の件の左上に添える分野 */
     groups: { it: "IT", cars: "自動車" },
     techTitle: "これまで使ってきた技術",
@@ -71,14 +72,14 @@ export const ja = {
         "✓ リント・型チェック",
         "✓ テスト 128 件",
         "✓ イメージを作成 (distroless)",
-        "✓ ghcr.io へ公開",
+        "✓ ghcr.io に登録",
         "↻ Argo CD が同期",
-        "→ 公開しました",
+        "→ 反映しました",
       ],
       auction: { label: "落札", lot: "出品番号 40312" },
       cert: [
         { label: "車名", value: "トヨタ" },
-        { label: "型式", value: "3BF-GDH201V" },
+        { label: "型式", value: "3DF-GDH201V" },
         { label: "用途", value: "貨物" },
       ],
     },
@@ -90,7 +91,7 @@ export const ja = {
 
     worksTitle: "実績",
     worksLead:
-      "作ったものはほとんどソースごと公開しています。使っている OSS の不具合は、直して本家に送っています。",
+      "自社で作ったものは、ほとんどソースごと公開しています。使っている OSS の不具合は、直して本家に送ってきました。",
     /** 実績の数字。数は config.ts から数える */
     stats: [
       { id: "years", label: "開業から", unit: "年" },
@@ -116,7 +117,7 @@ export const ja = {
       },
       {
         title: "運用",
-        body: "公開後の保守や、サーバー・インフラの運用も引き受けます。",
+        body: "公開後の保守や、サーバー・インフラの運用も相談できます。",
       },
     ],
 
