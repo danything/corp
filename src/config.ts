@@ -36,7 +36,7 @@ export const socialLinks = [
   },
 ];
 
-/** 事業内容の並び(/business/ の #id にもなる)。文言は languages の business */
+/** 事業内容の並び(トップの事業の件の #id にもなる)。文言は languages の business */
 export const business = [
   "dev",
   "web",

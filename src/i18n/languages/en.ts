@@ -26,6 +26,11 @@ export const en: Translation = {
 
   home: {
     title: "Web systems, used cars and vehicle registration",
+    facts: [
+      "Kisarazu, Chiba",
+      "Founded 2018",
+      "Licensed secondhand dealer, qualified invoice issuer (Japan)",
+    ],
     lead: "Doa builds business systems and web apps, and can also help you buy or sell a used car or sort out vehicle registration.",
     ctaContact: "Contact",
     ctaBusiness: "What we do",
@@ -38,62 +43,112 @@ export const en: Translation = {
     },
 
     businessTitle: "What we do",
+    businessLead:
+      "Two lines of work: building for the web, and help with buying, selling and registering cars.",
+    groups: { it: "IT", cars: "Cars" },
+    techTitle: "Technology used so far",
+    tech: [
+      "PHP / Laravel",
+      "Java / Spring",
+      "C# / .NET",
+      "Go",
+      "Python",
+      "TypeScript / Bun",
+      "React / Next.js",
+      "Svelte / SvelteKit",
+      "AWS",
+      "Kubernetes",
+      "Cloudflare",
+      "Pulumi",
+    ],
+    licenseNote: "The licence number is on the {link}.",
+    licenseLink: "company page",
+    servicesLink: "See the services",
+    demo: {
+      deploy: [
+        "$ git push origin main",
+        "✓ lint, type check",
+        "✓ 128 tests",
+        "✓ image built (distroless)",
+        "✓ pushed to ghcr.io",
+        "↻ Argo CD syncing",
+        "→ deployed",
+      ],
+      auction: { label: "Hammer price", lot: "Lot 40312" },
+      cert: [
+        { label: "Make", value: "Toyota" },
+        { label: "Model code", value: "3DF-GDH201V" },
+        { label: "Use", value: "Cargo" },
+      ],
+    },
+
+    servicesTitle: "Own services",
+    servicesLead: "Built in-house, and run and supported by Doa.",
+    openSite: "Open site",
+
+    worksTitle: "Work",
+    worksLead:
+      "Most of what Doa builds for itself is public, source and all. Bugs found in the open source it relies on have been fixed and sent upstream.",
+    stats: [
+      { id: "years", label: "In business for", unit: "years" },
+      { id: "works", label: "Public projects", unit: "" },
+      {
+        id: "oss",
+        label: "Open source projects with merged changes",
+        unit: "",
+      },
+      { id: "services", label: "In-house services running", unit: "" },
+    ],
+    worksLink: "See all work",
+
+    processTitle: "How development works",
+    process: [
+      {
+        title: "Talk",
+        body: "Describe the problem through the form or by email, as it stands. It's fine if nothing is decided yet.",
+      },
+      {
+        title: "Quote",
+        body: "You get the scope, schedule and price together in one quote.",
+      },
+      {
+        title: "Build",
+        body: "Built a little at a time, with working screens shown early.",
+      },
+      {
+        title: "Run",
+        body: "After launch, maintenance and running the servers and infrastructure can be arranged too.",
+      },
+    ],
 
     contactTitle: "Contact",
-    contactBody: "Use the form, or send an email.",
+    contactBody:
+      "For development work, used cars or vehicle registration, use the form or send an email.",
   },
 
   business: {
     dev: {
       title: "Web systems and apps, built to order",
-      summary: "Business systems and web apps, from design to infrastructure.",
       body: "Business systems and web apps, from sorting out requirements through design and code to running them. Any language or framework. The platform they run on (Kubernetes, IaC, the cloud) can be built and operated too.",
     },
     web: {
       title: "Websites and landing pages",
       summary: "New sites and landing pages, or changes to existing ones.",
-      body: "New sites and landing pages, or changes to existing ones, on WordPress and similar.",
     },
     cars: {
       title: "Buying and selling used cars",
-      summary: "Help buying or selling a used car through dealer auctions.",
-      body: "Doa holds a secondhand dealer licence (kobutsusho kyoka) and is a member of AUTOSERVER, buying and selling used cars at dealer auctions. Get in touch whether you're looking for a car or want to sell one.",
+      summary:
+        "Doa is a licensed secondhand dealer and buys and sells at dealer auctions (AUTOSERVER), whether you're looking for a car or selling one.",
     },
     registration: {
       title: "Vehicle registration",
       summary:
         "Help with vehicle registration in Japan, such as cargo registration.",
-      body: "Help with vehicle registration and notifications in Japan, such as cargo (commercial vehicle) registration. If you'd rather do the paperwork yourself, Doa's own service Todoroku builds it from the vehicle inspection certificate.",
     },
     services: {
       title: "Own services",
       summary: "Todoroku for vehicle ledgers, and worklog for timesheets.",
-      body: "Built in-house, and run and supported by Doa.",
     },
-  },
-
-  businessPage: {
-    title: "What we do",
-    description:
-      "What Doa does: web systems and apps built to order, websites, help with used cars and vehicle registration, and its own services.",
-    techTitle: "Technology used so far",
-    tech: [
-      {
-        label: "Backend",
-        value:
-          "PHP / Laravel, Java / Spring, C# / .NET, Go, Python, TypeScript / Bun",
-      },
-      { label: "Frontend", value: "React / Next.js, Svelte / SvelteKit" },
-      {
-        label: "Infrastructure",
-        value:
-          "AWS (ECS, CloudFormation), Kubernetes (Talos Linux, Argo CD), Cloudflare, Pulumi",
-      },
-    ],
-    worksLink: "Past work",
-    licenseNote: "The licence number is on the {link}.",
-    licenseLink: "company page",
-    openSite: "Open site",
   },
 
   services: {

@@ -158,6 +158,26 @@ const host = (u: string) => new URL(u).host;
   }
 }
 
+/*
+ * 広い画面では 2 枚を奥へ少し傾けて置き、巻くと起き上がって正面を向く (transform だけを scroll() で動かす)
+ */
+@supports (animation-timeline: scroll()) {
+  @media (min-width: 960px) and (prefers-reduced-motion: no-preference) {
+    .hero-shots {
+      transform: perspective(1600px) rotateY(-14deg) rotateX(6deg);
+      animation: stand-up linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 70vh;
+    }
+  }
+}
+
+@keyframes stand-up {
+  to {
+    transform: perspective(1600px) rotateY(0) rotateX(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-links {
     animation: none;

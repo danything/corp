@@ -1,0 +1,160 @@
+---
+import { type Lang, t } from "@i18n/translation";
+
+/*
+ * トップの開発の進め方。番号付きの 4 段を横に並べ (狭い画面では縦)、段をつなぐ線が巻くのに合わせて伸びる
+ * (線は scale だけを動かす。view() で、JS は使わない)
+ */
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const steps = t(lang).home.process;
+---
+
+<ol class="process">
+	{steps.map((s, i) => (
+		<li data-reveal style={`--n: ${i}`}>
+			<span class="dot" aria-hidden="true">{String(i + 1).padStart(2, "0")}</span>
+			<h3>{s.title}</h3>
+			<p>{s.body}</p>
+		</li>
+	))}
+</ol>
+
+<style>
+.process {
+  --dot: 2.5rem;
+  view-timeline-name: --process;
+  position: relative;
+  display: grid;
+  gap: var(--doa-space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* 段をつなぐ線。狭い画面は番号の列を縦に、広い画面は番号の段を横に通す */
+.process::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--dot) / 2);
+  bottom: calc(var(--dot) / 2);
+  left: calc(var(--dot) / 2 - 1px);
+  width: 2px;
+  border-radius: 1px;
+  background: linear-gradient(
+    to bottom,
+    var(--pico-primary),
+    color-mix(in srgb, var(--pico-primary) 25%, transparent)
+  );
+  transform-origin: top;
+}
+
+.process li {
+  position: relative;
+  display: grid;
+  align-content: start;
+  grid-template-columns: var(--dot) 1fr;
+  gap: var(--doa-space-1) var(--doa-space-4);
+  margin: 0;
+  list-style: none;
+}
+
+.process li > :not(.dot) {
+  grid-column: 2;
+}
+
+.dot {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: var(--dot);
+  height: var(--dot);
+  border-radius: 50%;
+  background: var(--doa-pop);
+  box-shadow: var(--doa-shadow-pop);
+  color: var(--doa-primary-text);
+  font-family: var(--doa-font-mono);
+  font-size: var(--doa-text-sm);
+  font-weight: var(--doa-weight-bold);
+}
+
+.process h3 {
+  margin-top: 0;
+  font-size: var(--doa-text-lg);
+  line-height: var(--dot);
+}
+
+.process p {
+  color: var(--doa-muted);
+  font-size: 0.9375rem;
+}
+
+@media (min-width: 860px) {
+  .process {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .process::before {
+    top: calc(var(--dot) / 2 - 1px);
+    bottom: auto;
+    left: calc(var(--dot) / 2);
+    right: calc(25% - var(--dot) / 2);
+    width: auto;
+    height: 2px;
+    background: linear-gradient(
+      to right,
+      var(--pico-primary),
+      color-mix(in srgb, var(--pico-primary) 25%, transparent)
+    );
+    transform-origin: left;
+  }
+
+  .process li {
+    grid-template-columns: 1fr;
+    gap: var(--doa-space-3);
+  }
+
+  .process li > :not(.dot) {
+    grid-column: 1;
+  }
+
+  .dot {
+    grid-row: auto;
+  }
+
+  .process h3 {
+    line-height: 1.5;
+  }
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .process::before {
+      animation: draw-y linear both;
+      animation-timeline: --process;
+      animation-range: entry 50% cover 60%;
+    }
+
+    @media (min-width: 860px) {
+      .process::before {
+        animation-name: draw-x;
+      }
+    }
+  }
+}
+
+@keyframes draw-y {
+  from {
+    scale: 1 0;
+  }
+}
+
+@keyframes draw-x {
+  from {
+    scale: 0 1;
+  }
+}
+</style>

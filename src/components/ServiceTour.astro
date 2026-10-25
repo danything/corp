@@ -1,0 +1,164 @@
+---
+import BrowserFrame from "@components/BrowserFrame.astro";
+import { type Lang, t } from "@i18n/translation";
+import todoroku from "@/assets/hero/todoroku.webp";
+import worklogDark from "@/assets/hero/worklog-dark.webp";
+import worklogLight from "@/assets/hero/worklog-light.webp";
+import { services } from "@/config";
+
+/*
+ * トップの自社サービス。左に 1 件ずつ説明を縦に並べ、右の画面は貼り付けて重ねる。
+ * 巻いて次の説明に入ると、次の画面が下から来て前の画面に重なり、前の画面は少し沈む。
+ * 重ねるのは position: sticky、沈むのは次の説明の view-timeline で、JS は使わない。
+ * 狭い画面では説明の下に画面を置くだけ。worklog は選んだ明暗で画面を出し分ける
+ */
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const text = t(lang);
+
+const sizes = "(min-width: 860px) 36rem, 90vw";
+const shots = {
+	todoroku: { src: todoroku, dark: undefined },
+	worklog: { src: worklogLight, dark: worklogDark },
+};
+---
+
+<div class="tour" style={`--count: ${services.length}`}>
+	{services.map((s, i) => (
+		<>
+			<div class="step" style={`--row: ${i + 1}; view-timeline-name: --step-${i + 1}`} data-reveal>
+				<p class="index" aria-hidden="true">{String(i + 1).padStart(2, "0")}</p>
+				<h3><a href={s.url}>{text.services[s.id].name}</a></h3>
+				<p>{text.services[s.id].body}</p>
+				<p class="open" aria-hidden="true">{text.home.openSite} <span class="host">{new URL(s.url).host}</span> <span class="arrow">→</span></p>
+			</div>
+			<BrowserFrame
+				class="tour-shot"
+				style={`--row: ${i + 1}; --next: --step-${i + 2}`}
+				href={s.url}
+				label={new URL(s.url).host}
+				{...shots[s.id]}
+				alt={text.home.shots[s.id]}
+				sizes={sizes}
+				width={1280}
+				height={800}
+			/>
+		</>
+	))}
+</div>
+
+<style>
+.tour {
+  display: grid;
+  gap: var(--doa-space-5);
+  /* 前の画面が沈むのは次の説明の巻き具合で決める。説明の timeline を外の箱まで見せる */
+  timeline-scope: --step-2, --step-3, --step-4;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--doa-space-3);
+}
+
+.step h3 {
+  margin-top: 0;
+  font-size: var(--doa-text-xl);
+  line-height: 1.4;
+}
+
+.step h3 a {
+  color: var(--doa-fg);
+  text-decoration: none;
+}
+
+.step h3 a:hover {
+  color: var(--pico-primary);
+}
+
+.index {
+  color: var(--doa-primary-text);
+  font-family: var(--doa-font-mono);
+  font-size: var(--doa-text-sm);
+  font-weight: var(--doa-weight-bold);
+}
+
+.open {
+  color: var(--pico-primary);
+  font-size: var(--doa-text-sm);
+}
+
+/*
+ * 広い画面: 2 列。説明は 1 件が画面の高さほどの行。画面は自分の行から最後の行まで伸ばした升に置いて貼り付ける
+ * (貼り付く範囲は升の中なので、前の画面は最後まで残り、後の画面がその上に重なる)
+ */
+@media (min-width: 860px) {
+  .tour {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    grid-template-rows: repeat(var(--count), auto);
+    gap: 0 var(--doa-space-6);
+  }
+
+  .step {
+    grid-column: 1;
+    grid-row: var(--row);
+    justify-content: center;
+    min-height: 60vh;
+  }
+
+  .tour .tour-shot {
+    position: sticky;
+    top: max(5rem, 50vh - 11rem);
+    grid-column: 2;
+    grid-row: var(--row) / -1;
+    align-self: start;
+    margin-top: max(0px, 30vh - 11rem);
+  }
+}
+
+/*
+ * 次の説明が入ってくるのに合わせて、前の画面を少し小さく暗くする。transform と透明度だけを動かす。
+ * 覆いは疑似要素で、前に重ねる (画面の上に地の色を重ねて沈める)
+ */
+@supports (animation-timeline: view()) {
+  @media (min-width: 860px) and (prefers-reduced-motion: no-preference) {
+    .tour .tour-shot {
+      animation: recede linear both;
+      animation-timeline: var(--next);
+      animation-range: entry 0% contain 0%;
+    }
+
+    .tour .tour-shot:last-child {
+      animation: none;
+    }
+
+    /* 読んでいる説明だけをはっきり見せる */
+    .step {
+      animation: focus linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+  }
+}
+
+@keyframes recede {
+  to {
+    opacity: 0.35;
+    scale: 0.92;
+  }
+}
+
+@keyframes focus {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  30%,
+  70% {
+    opacity: 1;
+  }
+}
+</style>

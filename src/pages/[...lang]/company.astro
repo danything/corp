@@ -56,7 +56,7 @@ const [ossBefore, ossAfter] = p.oss.split("{link}");
 		<dt>{c.business}</dt>
 		<dd>
 			<ul>
-				{business.map((id) => <li><a href={localeUrl(`/business/#${id}`, lang)}>{text.business[id].title}</a></li>)}
+				{business.map((id) => <li><a href={localeUrl(`/#${id}`, lang)}>{text.business[id].title}</a></li>)}
 			</ul>
 		</dd>
 

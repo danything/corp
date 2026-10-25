@@ -25,6 +25,15 @@ export async function listFiles(dir: string): Promise<Set<string>> {
   return files;
 }
 
+/**
+ * corp の中で無くなったページの移り先。事業内容 (/business/) はトップの節にした。
+ * ブログへ送る前に見る (送るとブログの 404 になる)。/ で終わる形と終わらない形の両方を受ける
+ */
+export const MOVED: Readonly<Record<string, string>> = {
+  "/business/": "/#business",
+  "/en/business/": "/en/#business",
+};
+
 export type Resolution =
   { kind: "file"; file: string } | { kind: "redirect"; location: string };
 
@@ -34,6 +43,7 @@ export type Resolution =
  * - "/contact/" → /contact/index.html
  * - "/contact"  → "/contact/" へ 301(ページがあるとき)
  * - "/favicon.png" のようなファイルはそのまま
+ * - 無くなったページ (MOVED) は移り先へ 301
  * - どれでもなければ旧ブログの URL とみなして b.doany.io の同じパス(とクエリ)へ 301
  *
  * pathname は URL オブジェクトのもの(パーセントエンコードされたまま)を渡す
@@ -50,6 +60,8 @@ export function resolvePath(
     // 壊れたエンコードはファイルとしては探さず、そのまま転送する
   }
   if (decoded !== undefined) {
+    const moved = MOVED[decoded.endsWith("/") ? decoded : `${decoded}/`];
+    if (moved) return { kind: "redirect", location: moved };
     if (decoded.endsWith("/")) {
       if (files.has(`${decoded}index.html`))
         return { kind: "file", file: `${decoded}index.html` };

@@ -1,0 +1,185 @@
+---
+import Logo from "@components/Logo.astro";
+import { type Lang, localeUrl, t } from "@i18n/translation";
+import blades from "@/assets/logos/blades.png";
+import denpa from "@/assets/logos/denpa.svg";
+import epgstation from "@/assets/logos/epgstation.png";
+import ffmpeg from "@/assets/logos/ffmpeg.svg";
+import helm from "@/assets/logos/helm.svg";
+import kubernetes from "@/assets/logos/kubernetes.svg";
+import noren from "@/assets/logos/noren.svg";
+import talos from "@/assets/logos/talos.svg";
+import yuzuriha from "@/assets/logos/yuzuriha.svg";
+import { oss, services, site, works } from "@/config";
+
+/*
+ * トップの実績。数字の帯と、制作物・OSS のアイコンの並び。詳しくは /works/ に置く。
+ * 数字は巻いて見えてくるのに合わせて 0 から数え上がる (@property の整数を view() で動かし、counter() で出す)。
+ * 知らないブラウザと動きを減らす設定では、はじめから数字を出す
+ */
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const text = t(lang);
+const home = text.home;
+
+// 開業からの年数は、書き出した日で数える (満年数)
+const [fy, fm] = site.foundingDate.split("-").map(Number) as [number, number];
+const now = new Date();
+const years = Math.floor(
+	(now.getFullYear() * 12 + now.getMonth() + 1 - (fy * 12 + fm)) / 12,
+);
+const values: Record<string, number> = {
+	years,
+	works: works.length,
+	oss: oss.length,
+	services: services.length,
+};
+
+const logos = [
+	{ id: "denpa", name: text.works.denpa.name, logo: { src: denpa }, href: "/works/#works" },
+	{ id: "noren", name: text.works.noren.name, logo: { src: noren }, href: "/works/#works" },
+	{ id: "yuzuriha", name: text.works.yuzuriha.name, logo: { src: yuzuriha }, href: "/works/#works" },
+	{ id: "helmMosp", name: text.works.helmMosp.name, logo: { src: helm, plate: true }, href: "/works/#works" },
+	{ id: "gitops", name: text.works.gitops.name, logo: { src: kubernetes, plate: true }, href: "/works/#works" },
+	{ id: "ffmpeg", name: text.oss.ffmpeg.name, logo: { src: ffmpeg, plate: true }, href: "/works/#oss" },
+	{ id: "blades", name: text.oss.blades.name, logo: { src: blades, plate: true }, href: "/works/#oss" },
+	{ id: "talos", name: text.oss.talos.name, logo: { src: talos, plate: true }, href: "/works/#oss" },
+	{ id: "epgstation", name: text.oss.epgstation.name, logo: { src: epgstation, plate: true }, href: "/works/#oss" },
+];
+---
+
+<dl class="stats">
+	{home.stats.map((s) => (
+		<div class="stat" data-reveal>
+			<dt>{s.label}</dt>
+			<dd><span class="num" style={`--to: ${values[s.id]}`}><span>{values[s.id]}</span></span>{s.unit && <span class="unit">{s.unit}</span>}</dd>
+		</div>
+	))}
+</dl>
+
+<ul class="logos">
+	{logos.map((l) => (
+		<li data-reveal>
+			<a href={localeUrl(l.href, lang)}><Logo src={l.logo.src} plate={l.logo.plate} />{l.name}</a>
+		</li>
+	))}
+</ul>
+
+<style>
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+  gap: var(--doa-space-5) var(--doa-space-4);
+  margin: 0 0 var(--doa-space-6);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--doa-space-1);
+}
+
+.stat dt {
+  color: var(--doa-muted);
+  font-size: var(--doa-text-sm);
+  font-weight: var(--doa-weight);
+}
+
+.stat dd {
+  display: flex;
+  align-items: baseline;
+  gap: var(--doa-space-1);
+  margin: 0;
+}
+
+.num {
+  font-size: clamp(2.75rem, 7vw, 3.75rem);
+  font-weight: var(--doa-weight-bold);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.unit {
+  color: var(--doa-muted);
+  font-weight: var(--doa-weight-bold);
+}
+
+@property --n {
+  syntax: "<integer>";
+  inherits: false;
+  initial-value: 0;
+}
+
+/* 数え上げる間は、書いてある数字の代わりに counter() の数字を出す */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .num {
+      counter-reset: n var(--n);
+      animation: count linear both;
+      animation-timeline: view();
+      animation-range: entry 40% cover 45%;
+    }
+
+    .num > span {
+      display: none;
+    }
+
+    .num::after {
+      content: counter(n);
+    }
+  }
+}
+
+@keyframes count {
+  from {
+    --n: 0;
+  }
+  to {
+    --n: var(--to);
+  }
+}
+
+/* 制作物と OSS のアイコンの並び。地は塗らず、乗せたら薄い地 */
+.logos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 10.5rem), 1fr));
+  gap: var(--doa-space-1) var(--doa-space-3);
+  margin: 0 0 var(--doa-space-5);
+  padding: 0;
+  list-style: none;
+}
+
+.logos li {
+  margin: 0;
+  list-style: none;
+}
+
+.logos a {
+  display: flex;
+  align-items: center;
+  gap: var(--doa-space-3);
+  padding: var(--doa-space-2);
+  border-radius: var(--doa-item-radius);
+  color: var(--doa-fg);
+  font-weight: var(--doa-weight-bold);
+  text-decoration: none;
+  transition: background-color var(--doa-duration) var(--doa-ease);
+}
+
+.logos a:hover {
+  background: var(--doa-hover-soft);
+}
+
+/* アイコンは乗せると少し持ち上がる */
+.logos a :global(.row-icon) {
+  transition: translate var(--doa-duration-move) var(--doa-ease-spring);
+}
+
+.logos a:hover :global(.row-icon) {
+  translate: 0 -0.15rem;
+}
+</style>

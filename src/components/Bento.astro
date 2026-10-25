@@ -1,0 +1,542 @@
+---
+import { type Lang, localeUrl, t } from "@i18n/translation";
+
+/*
+ * トップの事業内容。大きさの違う件を詰めて並べる (ベント)。IT の 3 件と自動車の 2 件で、
+ * 受託開発をいちばん大きくする。件の中には、その仕事を思わせる小さな見本を置いて CSS だけで動かす
+ * (読み上げない飾り)。各件の id (#dev・#cars など) は事業者情報のページから飛んでくる先
+ */
+interface Props {
+	lang: Lang;
+}
+
+const { lang } = Astro.props;
+const text = t(lang);
+const home = text.home;
+const b = text.business;
+const [licenseBefore, licenseAfter] = home.licenseNote.split("{link}");
+---
+
+<ul class="bento">
+	<li class="tile dev" id="dev" data-reveal>
+		<p class="group">{home.groups.it}</p>
+		<h3>{b.dev.title}</h3>
+		<p>{b.dev.body}</p>
+		<div class="term" aria-hidden="true">
+			{home.demo.deploy.map((line, i) => <span class:list={["line", { ok: i === home.demo.deploy.length - 1 }]} style={`--n: ${i}`}>{line}</span>)}
+			<span class="caret"></span>
+		</div>
+		<h4>{home.techTitle}</h4>
+		<ul class="chips">
+			{home.tech.map((name) => <li>{name}</li>)}
+		</ul>
+	</li>
+
+	<li class="tile web" id="web" data-reveal>
+		<p class="group">{home.groups.it}</p>
+		<h3>{b.web.title}</h3>
+		<p>{b.web.summary}</p>
+		<div class="wire" aria-hidden="true">
+			<span class="w-bar"></span>
+			<span class="w-hero"></span>
+			<span class="w-line"></span>
+			<span class="w-line short"></span>
+			<span class="w-btn"></span>
+		</div>
+	</li>
+
+	<li class="tile services" id="services-tile" data-reveal>
+		<p class="group">{home.groups.it}</p>
+		<h3><a href="#services">{b.services.title}</a></h3>
+		<p>{b.services.summary}</p>
+		<p class="more" aria-hidden="true">{home.servicesLink} <span class="arrow down">↓</span></p>
+	</li>
+
+	<li class="tile cars" id="cars" data-reveal>
+		<p class="group">{home.groups.cars}</p>
+		<h3>{b.cars.title}</h3>
+		<p>{b.cars.summary}</p>
+		<div class="auction" aria-hidden="true">
+			<span class="lot">{home.demo.auction.lot}</span>
+			<span class="price"><span class="roll"><span>¥980,000</span><span>¥1,120,000</span><span>¥1,280,000</span></span></span>
+			<span class="sold">{home.demo.auction.label}</span>
+		</div>
+		<p class="note">{licenseBefore}<a href={localeUrl("/company/", lang)}>{home.licenseLink}</a>{licenseAfter}</p>
+	</li>
+
+	<li class="tile registration" id="registration" data-reveal>
+		<p class="group">{home.groups.cars}</p>
+		<h3>{b.registration.title}</h3>
+		<p>{b.registration.summary}</p>
+		<dl class="cert" aria-hidden="true">
+			{home.demo.cert.map((row, i) => (
+				<div style={`--n: ${i}`}><dt>{row.label}</dt><dd><span>{row.value}</span></dd></div>
+			))}
+		</dl>
+	</li>
+</ul>
+
+<style>
+/*
+ * 広い画面は 4 列で、受託開発が左に 2×2。右は上の段に IT の 2 件、下の段に自動車の 2 件。
+ * 中くらいの画面は 2 列 (受託開発は 2 列ぶち抜き)、狭い画面は 1 列
+ */
+.bento {
+  display: grid;
+  gap: var(--doa-space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .bento {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dev {
+    grid-column: span 2;
+  }
+}
+
+@media (min-width: 1000px) {
+  .bento {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-areas:
+      "dev dev web services"
+      "dev dev cars registration";
+  }
+
+  .dev {
+    grid-area: dev;
+  }
+
+  .web {
+    grid-area: web;
+  }
+
+  .services {
+    grid-area: services;
+  }
+
+  .cars {
+    grid-area: cars;
+  }
+
+  .registration {
+    grid-area: registration;
+  }
+}
+
+/* 件の面 (Item.astro と同じ)。乗せると縁に主の色の光が差す (透明度だけを動かす) */
+.tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--doa-space-2);
+  margin: 0;
+  padding: var(--doa-space-5);
+  border-radius: var(--doa-item-radius);
+  background: var(--doa-item);
+  box-shadow: var(--doa-item-shadow);
+  list-style: none;
+}
+
+.tile::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    var(--pico-primary),
+    transparent 45%,
+    transparent 70%,
+    color-mix(in srgb, var(--pico-primary) 60%, transparent)
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--doa-duration-move) var(--doa-ease);
+}
+
+.tile:hover::before,
+.tile:focus-within::before {
+  opacity: 1;
+}
+
+.tile h3 {
+  margin-top: 0;
+  font-size: var(--doa-text-lg);
+  line-height: 1.5;
+}
+
+.dev h3 {
+  font-size: var(--doa-text-xl);
+  line-height: 1.4;
+}
+
+.tile p {
+  font-size: 0.9375rem;
+}
+
+.tile h4 {
+  margin: auto 0 0;
+  padding-top: var(--doa-space-3);
+  color: var(--doa-muted);
+  font-size: var(--doa-text-sm);
+  font-weight: var(--doa-weight-bold);
+}
+
+/* 分野 (IT・自動車)。控えた字の小さな見出し */
+.tile .group {
+  color: var(--doa-primary-text);
+  font-family: var(--doa-font-mono);
+  font-size: var(--doa-text-xs);
+  font-weight: var(--doa-weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.tile .note {
+  margin-top: auto;
+  color: var(--doa-muted);
+  font-size: var(--doa-text-sm);
+}
+
+/* 自社サービスの件は件全体で下の「自社サービス」へ飛ぶ (Item.astro と同じ作り) */
+.services h3 a {
+  color: var(--doa-fg);
+  text-decoration: none;
+}
+
+.services h3 a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.services h3 a:focus-visible {
+  outline: none;
+}
+
+.services:has(h3 a:focus-visible) {
+  outline: 2px solid var(--pico-primary);
+  outline-offset: 2px;
+}
+
+.services:hover {
+  background: var(--doa-item-hover);
+}
+
+.tile .more {
+  margin-top: auto;
+  color: var(--doa-primary-text);
+  font-size: var(--doa-text-sm);
+  font-weight: var(--doa-weight-bold);
+}
+
+.arrow.down {
+  transition: translate var(--doa-duration-move) var(--doa-ease-spring);
+}
+
+.services:hover .arrow.down {
+  translate: 0 0.2rem;
+}
+
+/* 使ってきた技術。淡い地のカプセルに、控えた等幅の字 */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--doa-space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chips li {
+  margin: 0;
+  padding: 0.15rem 0.65rem;
+  border-radius: var(--doa-radius-full);
+  background: var(--doa-subtle);
+  color: var(--doa-muted);
+  font-family: var(--doa-font-mono);
+  font-size: var(--doa-text-sm);
+  list-style: none;
+}
+
+/* ---- 小さな見本 ---- */
+/*
+ * 件が巻いて見えてくるのに合わせて、見本が組み上がる (件の view-timeline。止まっている間は何も動かない)。
+ * 動かすのは透明度と transform だけ (描き直しが要らず、合成だけで済む)。
+ * 素の姿は組み上がった後なので、知らないブラウザと動きを減らす設定では、はじめから出そろって見える
+ */
+.tile {
+  view-timeline-name: --tile;
+}
+
+/* 受託開発: 端末にデプロイのログが 1 行ずつ出る。端末はテーマにかかわらず暗い */
+.term {
+  display: grid;
+  gap: 0.15rem;
+  margin-block: var(--doa-space-3) 0;
+  padding: var(--doa-space-4);
+  border-radius: var(--doa-radius-lg);
+  background: #0d1016;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.06);
+  color: #c9d1d9;
+  font-family: var(--doa-font-mono);
+  font-size: var(--doa-text-sm);
+  line-height: 1.6;
+}
+
+.term .ok {
+  color: #56d364;
+}
+
+.caret {
+  width: 0.55em;
+  height: 1.1em;
+  background: #c9d1d9;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .term .line {
+      animation: type-line linear both;
+      animation-timeline: --tile;
+      animation-range: cover calc(8% + var(--n) * 3.5%) cover
+        calc(11% + var(--n) * 3.5%);
+    }
+  }
+}
+
+@keyframes type-line {
+  from {
+    opacity: 0;
+    translate: -0.25rem 0;
+  }
+}
+
+/* サイト制作: 小さな窓に、ページの塊が上から順に組み上がる */
+.wire {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: auto;
+  padding: var(--doa-space-3);
+  border-radius: var(--doa-radius-lg);
+  background: var(--doa-subtle);
+}
+
+.wire > span {
+  display: block;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--doa-line-strong);
+  transform-origin: left;
+}
+
+.wire .w-bar {
+  height: 0.35rem;
+  width: 40%;
+}
+
+.wire .w-hero {
+  height: 2.25rem;
+  border-radius: var(--doa-radius);
+  background: linear-gradient(
+    120deg,
+    color-mix(in srgb, var(--pico-primary) 45%, transparent),
+    color-mix(in srgb, var(--pico-primary) 12%, transparent)
+  );
+}
+
+.wire .short {
+  width: 65%;
+}
+
+.wire .w-btn {
+  width: 30%;
+  height: 0.75rem;
+  background: var(--pico-primary);
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .wire > span {
+      animation: build var(--doa-ease) both;
+      animation-timeline: --tile;
+      animation-range: cover calc(15% + var(--n) * 5%) cover
+        calc(25% + var(--n) * 5%);
+    }
+
+    .wire > :nth-child(2) {
+      --n: 1;
+    }
+
+    .wire > :nth-child(3) {
+      --n: 2;
+    }
+
+    .wire > :nth-child(4) {
+      --n: 3;
+    }
+
+    .wire > :nth-child(5) {
+      --n: 4;
+    }
+  }
+}
+
+@keyframes build {
+  from {
+    opacity: 0;
+    scale: 0 1;
+  }
+}
+
+/* 中古車: 業者オークションの値が競り上がり、落札の印が出る */
+.auction {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 0 var(--doa-space-3);
+  margin-top: var(--doa-space-2);
+  padding: var(--doa-space-3) var(--doa-space-4);
+  border-radius: var(--doa-radius-lg);
+  background: var(--doa-subtle);
+}
+
+.lot {
+  grid-column: 1 / -1;
+  color: var(--doa-muted);
+  font-family: var(--doa-font-mono);
+  font-size: var(--doa-text-xs);
+}
+
+/* 値は 1 行分の高さの窓。中の 3 つの値を縦に並べ、窓の中を上へ送る (素の姿は落札の値) */
+.price {
+  height: 1.6em;
+  overflow: hidden;
+  font-family: var(--doa-font-mono);
+  font-size: var(--doa-text-lg);
+  font-weight: var(--doa-weight-bold);
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+}
+
+.roll {
+  display: grid;
+  translate: 0 -3.2em;
+}
+
+.sold {
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--doa-err) 14%, transparent);
+  color: var(--doa-err-text);
+  font-size: var(--doa-text-xs);
+  font-weight: var(--doa-weight-bold);
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .roll {
+      animation: bid linear both;
+      animation-timeline: --tile;
+      animation-range: cover 10% cover 35%;
+    }
+
+    .sold {
+      animation: sold linear both;
+      animation-timeline: --tile;
+      animation-range: cover 35% cover 40%;
+    }
+  }
+}
+
+/* 値は止まりながら 2 段上がる (止まる所を作るため、同じ値の区間を置く) */
+@keyframes bid {
+  0%,
+  25% {
+    translate: 0 0;
+  }
+  45%,
+  70% {
+    translate: 0 -1.6em;
+  }
+  90%,
+  100% {
+    translate: 0 -3.2em;
+  }
+}
+
+@keyframes sold {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+}
+
+/* 登録手続き: 車検証の項目が上から順に埋まる (値の上に面の色の覆いをかけ、右へ縮めて見せる) */
+.cert {
+  display: grid;
+  gap: 0.3rem;
+  margin: var(--doa-space-2) 0 0;
+  padding: var(--doa-space-3) var(--doa-space-4);
+  border-radius: var(--doa-radius-lg);
+  background: var(--doa-subtle);
+  font-size: var(--doa-text-sm);
+}
+
+.cert > div {
+  display: grid;
+  grid-template-columns: 3.5rem 1fr;
+  gap: var(--doa-space-3);
+}
+
+.cert dt {
+  color: var(--doa-muted);
+  font-weight: var(--doa-weight);
+}
+
+.cert dd {
+  position: relative;
+  margin: 0;
+  font-family: var(--doa-font-mono);
+}
+
+.cert dd span {
+  position: relative;
+}
+
+.cert dd span::after {
+  content: "";
+  position: absolute;
+  inset: 0 -0.25rem;
+  background: var(--doa-subtle);
+  transform-origin: right;
+  scale: 0 1;
+}
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .cert dd span::after {
+      animation: fill steps(8, end) both;
+      animation-timeline: --tile;
+      animation-range: cover calc(12% + var(--n) * 7%) cover
+        calc(18% + var(--n) * 7%);
+    }
+  }
+}
+
+@keyframes fill {
+  from {
+    scale: 1 1;
+  }
+}
+</style>

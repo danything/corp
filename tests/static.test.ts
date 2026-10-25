@@ -57,6 +57,17 @@ describe("resolvePath", () => {
     ).toEqual({ kind: "file", file: "/static/favicons/favicon-32x32.png" });
   });
 
+  test("無くなったページは移り先へ", () => {
+    expect(resolvePath("/business/", "", files)).toEqual({
+      kind: "redirect",
+      location: "/#business",
+    });
+    expect(resolvePath("/en/business", "", files)).toEqual({
+      kind: "redirect",
+      location: "/en/#business",
+    });
+  });
+
   test("dist に無いパスはブログの同じパスとクエリへ", () => {
     expect(resolvePath("/posts/renewal/", "", files)).toEqual({
       kind: "redirect",

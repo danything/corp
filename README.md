@@ -1,7 +1,9 @@
 # corp
 
 [doany.io](https://doany.io) — 屋号 Doa の事業者サイト。Astro で書き出した静的なページを、小さな Bun のサーバー (`server.ts`) が配信する。
-見た目は [Blades](https://blades.dev/) (Pico CSS の後継) の部品だけを読み、その上に denpa の [見た目の決まり](https://github.com/danything/denpa/blob/main/docs/design.md) (塗らない・層で浮かせる・動きは CSS だけ) をそのまま当てている。
+見た目は [Blades](https://blades.dev/) (Pico CSS の後継) の部品だけを読み、その上に denpa の [見た目の決まり](https://github.com/danything/denpa/blob/main/docs/design.md) (塗らない・層で浮かせる・動きは CSS だけ) を土台に当てている。
+トップは事業者サイトとして見せるため決まりから一歩出て、主の色の淡い光・大きさの違う件の並び (ベント)・巻くのに合わせて組み上がる見本・重なっていく自社サービスの画面・数え上がる数字を足している。
+どれも CSS だけで、動かすのは透明度と transform (と数字の @property) だけ。時間で回し続ける動きは置かず、止まっている間は何も描き直さない (GPU を切った Chrome でも、止まっている間の CPU は 0%)。
 ページの移り変わりは cross-document view transitions、巻いて出る件とヘッダーの浮き方は scroll-driven animations で、JS は使わない。動きを減らす設定では全部止める。
 
 日本語は `/`、英語は `/en/` 以下 (ブログと同じ作り)。
@@ -10,16 +12,16 @@
 
 ## 構成
 
-|                                    |                                                                                                                                                                           |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `src/pages/[...lang]/`             | ページ (`/`・`/business/`・`/works/`・`/company/` (代表のプロフィールは `#profile`)・`/privacy/`・`/contact/`・`/contact/thanks/`)。`getStaticPaths` で日本語と英語を作る |
-| `src/i18n/languages/`              | 文言 (`ja.ts`・`en.ts`)。英語版は日本語版と同じ形にする                                                                                                                   |
-| `src/config.ts`                    | 事業者の情報とリンク (サービス・実績・OSS・SNS)                                                                                                                           |
-| `src/components/ContactForm.astro` | 問い合わせフォーム。Turnstile のスクリプトは `/contact/` でだけ読む                                                                                                       |
-| `src/styles/main.css`              | 全ページの土台 (`Layout.astro` が読む)。全ページで使う Blades の部品・トークン (`--doa-*`)・地と字・ボタン・動き。ほかの見た目は各 `.astro` の `<style>`                  |
-| `server.ts`                        | 配信サーバー。`server/` に中身 (`static.ts`・`contact.ts`・`contact-page.ts`・`markdown.ts`・`rate-limit.ts`)                                                             |
-| `tests/`                           | サーバーのテスト (`bun test`)                                                                                                                                             |
-| `deploy/`                          | k8s のマニフェスト。Argo CD が同期する (`deploy/argocd.yaml`)                                                                                                             |
+|                                    |                                                                                                                                                                                                                              |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `src/pages/[...lang]/`             | ページ (`/` (事業内容は `#business`。旧 `/business/` はサーバーがここへ送る)・`/works/`・`/company/` (代表のプロフィールは `#profile`)・`/privacy/`・`/contact/`・`/contact/thanks/`)。`getStaticPaths` で日本語と英語を作る |
+| `src/i18n/languages/`              | 文言 (`ja.ts`・`en.ts`)。英語版は日本語版と同じ形にする                                                                                                                                                                      |
+| `src/config.ts`                    | 事業者の情報とリンク (サービス・実績・OSS・SNS)                                                                                                                                                                              |
+| `src/components/ContactForm.astro` | 問い合わせフォーム。Turnstile のスクリプトは `/contact/` でだけ読む                                                                                                                                                          |
+| `src/styles/main.css`              | 全ページの土台 (`Layout.astro` が読む)。全ページで使う Blades の部品・トークン (`--doa-*`)・地と字・ボタン・動き。ほかの見た目は各 `.astro` の `<style>`                                                                     |
+| `server.ts`                        | 配信サーバー。`server/` に中身 (`static.ts`・`contact.ts`・`contact-page.ts`・`markdown.ts`・`rate-limit.ts`)                                                                                                                |
+| `tests/`                           | サーバーのテスト (`bun test`)                                                                                                                                                                                                |
+| `deploy/`                          | k8s のマニフェスト。Argo CD が同期する (`deploy/argocd.yaml`)                                                                                                                                                                |
 
 ## サーバー
 
@@ -29,6 +31,7 @@
   (`/posts/renewal/` → `https://b.doany.io/posts/renewal/`)。ページのパスに `/` が無ければ `/` 付きへ 301 (`/contact` → `/contact/`)。
   判定は起動時に読んだ `dist/` のファイルの一覧だけで決める。`/.well-known/matrix/*` は Gateway で Matrix へ向けているので来ない。
   **事業者サイトに足すページの名前は、ブログのパス (`/about/`・`/archive/`・`/posts/` など) とぶつけないこと** (ぶつけると旧ブログの URL が転送されなくなる)
+- **無くなったページの転送。** 事業内容 (`/business/`・`/en/business/`) はトップの節にしたので、ブログへ送る前にトップの `#business` へ 301 で送る (`server/static.ts` の `MOVED`)
 - **`POST /api/contact`** — 問い合わせ。JSON かフォームの送信 (`application/x-www-form-urlencoded`) を受け、
   入力を確かめ (名前・メール・本文は必須、会社は任意)、見えない項目 (`website`) に値があればボットとみなして送ったふりをし、
   IP ごとに 1 時間 5 回まで (`CF-Connecting-IP`、無ければ `X-Forwarded-For`)、Turnstile のトークンを Cloudflare に確かめてから、
