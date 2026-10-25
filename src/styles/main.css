@@ -300,12 +300,16 @@ dl {
 }
 
 /*
- * いちばん大事な操作 (トップのお問い合わせ) だけ、縁を主の色の光が回る (.ring)。ページを巻くのに合わせて回り、
- * 止まっている間は動かない (時間で回し続けると、見ているだけで描き続ける)。
+ * いちばん大事な操作 (トップのお問い合わせ) だけ、縁を主の色の光がゆっくり回る (.ring)。
  * 回すのは縁の裏に敷いた正方形の conic-gradient の rotate だけ (合成だけで済み、描き直さない)。
+ * 回す面が大きいほど重い (GPU の無い端末では合成を CPU でやる) ので、正方形はボタンの幅ちょうど
+ * (カプセルはボタンの幅を直径とする円に収まるので、回しても角が欠けない)。
+ * 画面の外では止め (使う側の content-visibility: auto)、ソフトウェアで描いている端末 (<html data-lite>) では回さない。
  * 内側は ::after でボタンの面を敷き直し、字はその上に出る (isolation で層を閉じる)
  */
 a.button.ring {
+  /* 主の操作の印は光にするので、影では浮かせない (1 つの意味に印は 1 つ。denpa の design.md 8 章) */
+  --pico-box-shadow: none;
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -322,7 +326,7 @@ a.button.ring::before {
   z-index: -2;
   top: 50%;
   left: 50%;
-  width: max(100%, 12rem);
+  width: 100%;
   aspect-ratio: 1;
   translate: -50% -50%;
   background: conic-gradient(
@@ -341,18 +345,15 @@ a.button.ring::after {
   background: var(--pico-background-color);
 }
 
-@supports (animation-timeline: scroll()) {
-  @media (prefers-reduced-motion: no-preference) {
-    a.button.ring::before {
-      animation: ring-spin linear both;
-      animation-timeline: scroll(root block);
-    }
+@media (prefers-reduced-motion: no-preference) {
+  :root:not([data-lite]) a.button.ring::before {
+    animation: ring-spin 4s linear infinite;
   }
 }
 
 @keyframes ring-spin {
   to {
-    rotate: 3turn;
+    rotate: 1turn;
   }
 }
 

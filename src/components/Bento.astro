@@ -271,15 +271,21 @@ const [licenseBefore, licenseAfter] = home.licenseNote.split("{link}");
 
 /* ---- 小さな見本 ---- */
 /*
- * 件が巻いて見えてくるのに合わせて、見本が組み上がる (件の view-timeline。止まっている間は何も動かない)。
- * 動かすのは透明度と transform だけ (描き直しが要らず、合成だけで済む)。
- * 素の姿は組み上がった後なので、知らないブラウザと動きを減らす設定では、はじめから出そろって見える
+ * どれも 6〜8 秒の 1 周を繰り返す。動かすのは透明度と transform だけ (描き直しが要らず、合成だけで済む)。
+ * 重くしないための約束:
+ * - 画面の外にある見本は content-visibility: auto で描くのをやめる (外で回り続けると、それだけで CPU を使う)。
+ *   高さは描いたときの値を覚える (auto)。まだ描いていないうちは contain-intrinsic-size の見込みの高さ
+ * - ソフトウェアで描いている端末 (<html data-lite>。index.astro が見分ける) では回さない
+ * 素の姿は出そろった後なので、回さないとき (data-lite・動きを減らす設定) はそのまま見せる
  */
-.tile {
-  view-timeline-name: --tile;
+.term,
+.wire,
+.auction,
+.cert {
+  content-visibility: auto;
 }
 
-/* 受託開発: 端末にデプロイのログが 1 行ずつ出る。端末はテーマにかかわらず暗い */
+/* 受託開発: 端末にデプロイのログが 1 行ずつ出て、終わると消えてまた出る。端末はテーマにかかわらず暗い */
 .term {
   display: grid;
   gap: 0.15rem;
@@ -292,6 +298,7 @@ const [licenseBefore, licenseAfter] = home.licenseNote.split("{link}");
   font-family: var(--doa-font-mono);
   font-size: var(--doa-text-sm);
   line-height: 1.6;
+  contain-intrinsic-size: auto 13rem;
 }
 
 .term .ok {
@@ -304,21 +311,38 @@ const [licenseBefore, licenseAfter] = home.licenseNote.split("{link}");
   background: #c9d1d9;
 }
 
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .term .line {
-      animation: type-line linear both;
-      animation-timeline: --tile;
-      animation-range: cover calc(8% + var(--n) * 3.5%) cover
-        calc(11% + var(--n) * 3.5%);
-    }
+@media (prefers-reduced-motion: no-preference) {
+  :global(:root:not([data-lite])) .term .line {
+    animation: type-line 8s var(--doa-ease) infinite both;
+    animation-delay: calc(var(--n) * 0.45s);
+  }
+
+  :global(:root:not([data-lite])) .caret {
+    animation: blink 1s steps(1) infinite;
   }
 }
 
+/* 1 周の頭で出て、終わりに消える。行ごとに遅らせるので、消えるのも上から順 */
 @keyframes type-line {
-  from {
+  0%,
+  3% {
     opacity: 0;
     translate: -0.25rem 0;
+  }
+  8%,
+  80% {
+    opacity: 1;
+    translate: 0 0;
+  }
+  88%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
   }
 }
 
@@ -330,6 +354,7 @@ const [licenseBefore, licenseAfter] = home.licenseNote.split("{link}");
   padding: var(--doa-space-3);
   border-radius: var(--doa-radius-lg);
   background: var(--doa-subtle);
+  contain-intrinsic-size: auto 6.5rem;
 }
 
 .wire > span {
@@ -365,37 +390,44 @@ const [licenseBefore, licenseAfter] = home.licenseNote.split("{link}");
   background: var(--pico-primary);
 }
 
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .wire > span {
-      animation: build var(--doa-ease) both;
-      animation-timeline: --tile;
-      animation-range: cover calc(15% + var(--n) * 5%) cover
-        calc(25% + var(--n) * 5%);
-    }
+@media (prefers-reduced-motion: no-preference) {
+  :global(:root:not([data-lite])) .wire > span {
+    animation: build 6s var(--doa-ease) infinite both;
+    animation-delay: calc(var(--n, 0) * 0.22s);
+  }
 
-    .wire > :nth-child(2) {
-      --n: 1;
-    }
+  .wire > :nth-child(2) {
+    --n: 1;
+  }
 
-    .wire > :nth-child(3) {
-      --n: 2;
-    }
+  .wire > :nth-child(3) {
+    --n: 2;
+  }
 
-    .wire > :nth-child(4) {
-      --n: 3;
-    }
+  .wire > :nth-child(4) {
+    --n: 3;
+  }
 
-    .wire > :nth-child(5) {
-      --n: 4;
-    }
+  .wire > :nth-child(5) {
+    --n: 4;
   }
 }
 
 @keyframes build {
-  from {
+  0%,
+  4% {
     opacity: 0;
     scale: 0 1;
+  }
+  14%,
+  84% {
+    opacity: 1;
+    scale: 1 1;
+  }
+  94%,
+  100% {
+    opacity: 0;
+    scale: 1 1;
   }
 }
 
@@ -409,6 +441,7 @@ const [licenseBefore, licenseAfter] = home.licenseNote.split("{link}");
   padding: var(--doa-space-3) var(--doa-space-4);
   border-radius: var(--doa-radius-lg);
   background: var(--doa-subtle);
+  contain-intrinsic-size: auto 4.5rem;
 }
 
 .lot {
@@ -443,42 +476,45 @@ const [licenseBefore, licenseAfter] = home.licenseNote.split("{link}");
   font-weight: var(--doa-weight-bold);
 }
 
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .roll {
-      animation: bid linear both;
-      animation-timeline: --tile;
-      animation-range: cover 10% cover 35%;
-    }
+@media (prefers-reduced-motion: no-preference) {
+  :global(:root:not([data-lite])) .roll {
+    animation: bid 7s var(--doa-ease) infinite both;
+  }
 
-    .sold {
-      animation: sold linear both;
-      animation-timeline: --tile;
-      animation-range: cover 35% cover 40%;
-    }
+  :global(:root:not([data-lite])) .sold {
+    animation: sold 7s var(--doa-ease-spring) infinite both;
   }
 }
 
-/* 値は止まりながら 2 段上がる (止まる所を作るため、同じ値の区間を置く) */
 @keyframes bid {
   0%,
-  25% {
+  18% {
     translate: 0 0;
   }
-  45%,
-  70% {
+  26%,
+  42% {
     translate: 0 -1.6em;
   }
-  90%,
+  50%,
   100% {
     translate: 0 -3.2em;
   }
 }
 
 @keyframes sold {
-  from {
+  0%,
+  52% {
     opacity: 0;
     scale: 0.6;
+  }
+  60%,
+  92% {
+    opacity: 1;
+    scale: 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 1;
   }
 }
 
@@ -491,6 +527,7 @@ const [licenseBefore, licenseAfter] = home.licenseNote.split("{link}");
   border-radius: var(--doa-radius-lg);
   background: var(--doa-subtle);
   font-size: var(--doa-text-sm);
+  contain-intrinsic-size: auto 6rem;
 }
 
 .cert > div {
@@ -523,20 +560,20 @@ const [licenseBefore, licenseAfter] = home.licenseNote.split("{link}");
   scale: 0 1;
 }
 
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .cert dd span::after {
-      animation: fill steps(8, end) both;
-      animation-timeline: --tile;
-      animation-range: cover calc(12% + var(--n) * 7%) cover
-        calc(18% + var(--n) * 7%);
-    }
+@media (prefers-reduced-motion: no-preference) {
+  :global(:root:not([data-lite])) .cert dd span::after {
+    animation: fill 6s steps(8, end) infinite both;
+    animation-delay: calc(var(--n) * 0.8s);
   }
 }
 
 @keyframes fill {
-  from {
+  0% {
     scale: 1 1;
+  }
+  15%,
+  100% {
+    scale: 0 1;
   }
 }
 </style>

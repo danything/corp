@@ -67,6 +67,25 @@ const home = text.home;
 	</section>
 </Layout>
 
+<script>
+	/*
+	 * ソフトウェアで描いている端末 (GPU が無い・ハードウェアアクセラレーションを切ったブラウザ) を見分け、<html data-lite> を付けて、
+	 * 動き続ける飾り (事業の見本・お問い合わせの縁の光) を止める。そうした端末では合成まで CPU がやるので、
+	 * 止まって見ているだけで CPU を使い続ける (GPU を切った Chrome で、見本 4 つが見えていると 1 コアの 2 割ほど)。
+	 * WebGL の描き手の名前で見分ける (Chrome は SwiftShader、Mesa は llvmpipe・softpipe、Windows は Microsoft Basic Render Driver)。
+	 * WebGL を作れないときもソフトウェアとみなす。結果はどこにも残さず、トップを開くたびに手の空いたときに 1 回だけ見る
+	 */
+	const detect = () => {
+		const gl = document.createElement("canvas").getContext("webgl");
+		const info = gl?.getExtension("WEBGL_debug_renderer_info");
+		const renderer = info ? String(gl?.getParameter(info.UNMASKED_RENDERER_WEBGL)) : "";
+		gl?.getExtension("WEBGL_lose_context")?.loseContext();
+		if (!gl || /swiftshader|llvmpipe|softpipe|basic render/i.test(renderer)) document.documentElement.dataset.lite = "";
+	};
+	if ("requestIdleCallback" in window) requestIdleCallback(detect);
+	else setTimeout(detect, 0);
+</script>
+
 <style>
 /*
  * トップの頭。事実 (所在地・開業・許可) を控えた字で上に添え、名前を大きく。
@@ -130,6 +149,13 @@ const home = text.home;
   display: flex;
   flex-wrap: wrap;
   gap: var(--doa-space-3);
+  /*
+   * 縁の光の回るボタン (.ring) があるので、画面の外にある間は描くのをやめる (回り続けると、それだけで CPU を使う)。
+   * content-visibility は中身を切り取るので、キーボードの焦点の線 (外側 2px + 間 2px) の分だけ切り取りの外枠を広げる
+   */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 2.75rem;
+  overflow-clip-margin: 0.5rem;
 }
 
 /* 下の節へ送るリンクの矢印は、乗せると少し下へ */
