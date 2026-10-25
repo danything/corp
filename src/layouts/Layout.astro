@@ -37,6 +37,55 @@ const alternates = LANGS.map((l) => ({
 }));
 const ogImage = new URL(site.ogImage, Astro.site).href;
 
+/*
+ * ブラウザの Speculation Rules で、サイトの中のページを開かれる前に読んでおく (ブログと同じ)。
+ * どちらもマウスを少し乗せた時点。スマホでは画面に見えているリンク (eagerness は eager)。
+ * - prerender (裏で描画まで済ませる): 押したら待たずに切り替わる
+ * - prefetch (HTML だけを取る): prerender が間に合わない・数の上限で捨てられたときも、通信は待たずに済む
+ * お問い合わせ (/contact/) は prefetch だけにする。裏で描くとボット対策 (Turnstile) の枠を開く前に作ってしまい、
+ * 確かめの期限が開いたときに切れていることがある。裏で描いたページの明暗は、開かれたときに合わせ直す (下の head のスクリプト)。
+ * 対応していないブラウザ (Firefox・Safari) では普通に移る
+ * https://developer.chrome.com/docs/web-platform/prerender-pages
+ */
+const speculationTargets = {
+	source: "document",
+	where: {
+		and: [
+			{ href_matches: "/*" },
+			// ページではないもの (サイトマップ・画像・問い合わせの API など)
+			{
+				not: {
+					href_matches: [
+						"/*.xml",
+						"/*.txt",
+						"/static/*",
+						"/_astro/*",
+						"/api/*",
+					],
+				},
+			},
+			// 同じページの中への移動と、新しいタブで開くもの・ダウンロード
+			{ not: { selector_matches: ['[href^="#"]', "[target]", "[download]"] } },
+		],
+	},
+};
+const contactPages = [localeUrl("/contact/*", "ja"), localeUrl("/contact/*", "en")];
+const speculationRules = {
+	prefetch: [{ ...speculationTargets, eagerness: "eager" }],
+	prerender: [
+		{
+			...speculationTargets,
+			where: {
+				and: [
+					...speculationTargets.where.and,
+					{ not: { href_matches: contactPages } },
+				],
+			},
+			eagerness: "eager",
+		},
+	],
+};
+
 // 検索エンジン向けの事業者の情報(トップだけ)
 const jsonLd =
 	basePath === "/"
@@ -89,13 +138,24 @@ const jsonLd =
 		<meta name="twitter:card" content="summary_large_image" />
 
 		<meta name="color-scheme" content="light dark" />
-		{/* 選んだ明暗 (ThemeSwitch が localStorage に置く) を描く前に <html> へ移す。無ければ OS に従う */}
+		{/*
+			選んだ明暗 (ThemeSwitch が localStorage に置く) を描く前に <html> へ移す。無ければ OS に従う。
+			裏で描いた (prerender) ページは、描いてから開かれるまでに別のページで明暗を変えていることがあるので、開かれたときにもう一度移す
+		*/}
 		<script is:inline>
-			try {
-				const t = localStorage.getItem("theme");
-				if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
-			} catch {}
+			{
+				const apply = () => {
+					try {
+						const t = localStorage.getItem("theme");
+						if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+						else delete document.documentElement.dataset.theme;
+					} catch {}
+				};
+				apply();
+				if (document.prerendering) document.addEventListener("prerenderingchange", apply, { once: true });
+			}
 		</script>
+		<script is:inline type="speculationrules" set:html={JSON.stringify(speculationRules)} />
 		<link rel="icon" href="/static/favicons/favicon-32x32.png" sizes="32x32" />
 		<link rel="icon" href="/static/favicons/favicon-16x16.png" sizes="16x16" />
 		<link rel="apple-touch-icon" href="/static/favicons/apple-touch-icon.png" sizes="180x180" />

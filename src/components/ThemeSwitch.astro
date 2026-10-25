@@ -59,6 +59,8 @@ const text = t(lang).theme;
 
 	for (const button of document.querySelectorAll<HTMLElement>("[data-theme-switch]")) {
 		show(button, current());
+		// 裏で描いたページが開かれたら、合わせ直した明暗 (Layout.astro の head) をボタンにも出す
+		document.addEventListener("prerenderingchange", () => show(button, current()), { once: true });
 		button.addEventListener("click", () => {
 			const modes = order();
 			const next = modes[(modes.indexOf(current()) + 1) % modes.length];
