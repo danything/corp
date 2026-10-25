@@ -308,6 +308,8 @@ dl {
  * 内側は ::after でボタンの面を敷き直し、字はその上に出る (isolation で層を閉じる)
  */
 a.button.ring {
+  /* 主の操作の印は光にするので、影では浮かせない (1 つの意味に印は 1 つ。denpa の design.md 8 章) */
+  --pico-box-shadow: none;
   position: relative;
   isolation: isolate;
   overflow: hidden;

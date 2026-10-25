@@ -151,11 +151,11 @@ const home = text.home;
   gap: var(--doa-space-3);
   /*
    * 縁の光の回るボタン (.ring) があるので、画面の外にある間は描くのをやめる (回り続けると、それだけで CPU を使う)。
-   * content-visibility は中身を切り取るので、ボタンの影の分だけ切り取りの外枠を広げる
+   * content-visibility は中身を切り取るので、キーボードの焦点の線 (外側 2px + 間 2px) の分だけ切り取りの外枠を広げる
    */
   content-visibility: auto;
   contain-intrinsic-size: auto 2.75rem;
-  overflow-clip-margin: 3rem;
+  overflow-clip-margin: 0.5rem;
 }
 
 /* 下の節へ送るリンクの矢印は、乗せると少し下へ */
