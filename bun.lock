@@ -5,7 +5,7 @@
     "": {
       "name": "corp",
       "devDependencies": {
-        "@anyblades/blades": "3.1.0-beta.5",
+        "@anyblades/blades": "3.1.0-beta.6",
         "@astrojs/check": "^0.9.12",
         "@astrojs/sitemap": "^3.7.4",
         "@types/bun": "^1.4.4",
@@ -16,7 +16,7 @@
     },
   },
   "packages": {
-    "@anyblades/blades": ["@anyblades/blades@3.1.0-beta.5", "", {}, "sha512-UjN8asQuQhbak6UQ40mFTcbcOmzN0yWxNQv1HHO70oIGQItQYJnpzpm/x21FotyhbP7o+SETtC0NFWoS4OPM7g=="],
+    "@anyblades/blades": ["@anyblades/blades@3.1.0-beta.6", "", {}, "sha512-nWKtT6ULFW7k6fUKYfpP7MdEbyjdJV/TARSeL3qISVtVkSglLeWuRKjf3sLkbEioPrzjDbdGpWimCSugQ6bxrg=="],
 
     "@astrojs/astro2tsx": ["@astrojs/astro2tsx@0.1.3", "", { "dependencies": { "@emnapi/core": "1.11.3", "@napi-rs/wasm-runtime": "1.2.4" } }, "sha512-GMDC7Eo0myBUA/QLBl0u+OcegJ8LiBhccmNZR34KmprQNP8gQUJlWlOOZWUsxNA2rNS6GuPYcGDyLoPnjmn4/Q=="],
 
