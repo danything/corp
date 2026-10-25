@@ -4,7 +4,8 @@ import { getImage } from "astro:assets";
 /*
  * 窓の枠 (BrowserFrame) に入れる画面 1 つ。dark があれば明暗 2 枚を並べ、選んだ明暗で片方を隠す
  * (下の .only-light・.only-dark。<picture> の media は OS しか見ないため)。
- * priority を付けると遅延させず先に取る (トップの前の 1 枚。ページでいちばん大きい絵 (LCP))
+ * priority を付けると優先して取る (トップの前の 1 枚。ページでいちばん大きい絵 (LCP))。1 枚なら遅延もさせない。
+ * 明暗 2 枚のときは遅延 (lazy) のままにする。隠した側 (display: none) は画面に入らないので取らず、見える側だけを優先して取る
  */
 interface Props {
 	src: ImageMetadata;
@@ -46,7 +47,7 @@ const pictures = dark
 			alt={alt}
 			width={width}
 			height={height}
-			loading={priority ? undefined : "lazy"}
+			loading={priority && !dark ? undefined : "lazy"}
 			fetchpriority={priority ? "high" : undefined}
 			decoding="async"
 		/>
