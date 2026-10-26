@@ -58,10 +58,22 @@ export const works = [
     url: "https://github.com/DAnything/denpa",
   },
   { id: "noren", url: "https://github.com/5ym/noren" },
+  { id: "mado", url: "https://github.com/danything/mado" },
+  { id: "aizuchi", url: "https://github.com/danything/aizuchi" },
   {
     id: "yuzuriha",
     url: "https://y.doany.io/",
     source: "https://github.com/DAnything/yuzuriha",
+  },
+  {
+    id: "xool",
+    url: "https://x.doany.io/",
+    source: "https://github.com/danything/xool",
+  },
+  {
+    id: "lgtm",
+    url: "https://l.doany.io/",
+    source: "https://github.com/danything/lgtm",
   },
   {
     id: "helmMosp",
