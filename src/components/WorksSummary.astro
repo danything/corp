@@ -1,14 +1,18 @@
 ---
 import Logo from "@components/Logo.astro";
 import { type Lang, localeUrl, t } from "@i18n/translation";
+import aizuchi from "@/assets/logos/aizuchi.png";
 import blades from "@/assets/logos/blades.png";
 import denpa from "@/assets/logos/denpa.svg";
 import epgstation from "@/assets/logos/epgstation.png";
 import ffmpeg from "@/assets/logos/ffmpeg.svg";
 import helm from "@/assets/logos/helm.svg";
 import kubernetes from "@/assets/logos/kubernetes.svg";
+import lgtm from "@/assets/logos/lgtm.svg";
+import mado from "@/assets/logos/mado.svg";
 import noren from "@/assets/logos/noren.svg";
 import talos from "@/assets/logos/talos.svg";
+import xool from "@/assets/logos/xool.svg";
 import yuzuriha from "@/assets/logos/yuzuriha.svg";
 import { oss, services, site, works } from "@/config";
 
@@ -41,7 +45,11 @@ const values: Record<string, number> = {
 const logos = [
 	{ id: "denpa", name: text.works.denpa.name, logo: { src: denpa }, href: "/works/#works" },
 	{ id: "noren", name: text.works.noren.name, logo: { src: noren }, href: "/works/#works" },
+	{ id: "mado", name: text.works.mado.name, logo: { src: mado }, href: "/works/#works" },
+	{ id: "aizuchi", name: text.works.aizuchi.name, logo: { src: aizuchi }, href: "/works/#works" },
 	{ id: "yuzuriha", name: text.works.yuzuriha.name, logo: { src: yuzuriha }, href: "/works/#works" },
+	{ id: "xool", name: text.works.xool.name, logo: { src: xool }, href: "/works/#works" },
+	{ id: "lgtm", name: text.works.lgtm.name, logo: { src: lgtm }, href: "/works/#works" },
 	{ id: "helmMosp", name: text.works.helmMosp.name, logo: { src: helm, plate: true }, href: "/works/#works" },
 	{ id: "gitops", name: text.works.gitops.name, logo: { src: kubernetes, plate: true }, href: "/works/#works" },
 	{ id: "ffmpeg", name: text.oss.ffmpeg.name, logo: { src: ffmpeg, plate: true }, href: "/works/#oss" },

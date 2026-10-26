@@ -168,7 +168,7 @@ export const en: Translation = {
     worksTitle: "Work",
     source: "Source",
     others:
-      "Smaller tools such as 𝕏ool, fixeed, cash-tabelog and svelte-slider are on GitHub ({user}, {org}).",
+      "Smaller tools such as svelte-slider, fixeed and cash-tabelog are on GitHub ({user}, {org}).",
     ossTitle: "Open source contributions",
     ossLead:
       "Fixes for bugs found in software Doa uses, sent upstream as pull requests.",
@@ -191,9 +191,25 @@ export const en: Translation = {
       name: "noren (暖簾)",
       body: "A web app for selling at small shops and events. Downloads are emailed after payment; goods and tickets are picked up at the venue by showing a QR code. Staff get screens for scanning QR codes at pickup and entry, and for counter sales with cash or Square, and sign in with OIDC. It merges the noren download shop with mogiri, which handled QR admission, pickup and counter sales. A single Bun, SvelteKit and SQLite app.",
     },
+    mado: {
+      name: "mado (窓)",
+      body: "A gateway for connecting to Windows over Remote Desktop from the browser, with OIDC sign-in. A TypeScript client in the browser speaks RDP, and the server only checks sign-in and relays, so it never draws the screen. The relay tries WebTransport (HTTP/3) first and falls back to WebSocket. The server is .NET 10 Native AOT, installed with an MSI and run as a Windows service.",
+    },
+    aizuchi: {
+      name: "aizuchi (相槌)",
+      body: "An AI chat bot. The chat it connects to (Slack), the model (Claude) and its tools (reading GitHub and OpenProject) can each be swapped. It can also take webhooks from other services and post them to a channel, in place of paid Slack integrations. A single .NET 10 Native AOT binary, deployed to Kubernetes with a Helm chart.",
+    },
     yuzuriha: {
       name: "yuzuriha (譲葉)",
       body: "Collects zero-yen properties from several listing sites every day and plots them on a satellite map.",
+    },
+    xool: {
+      name: "𝕏ool",
+      body: "Tallies your posts on 𝕏 from the day before and posts a daily report card: post count, reactions, impressions and more. The API charges for every post it reads or writes, so it skips days with no posts.",
+    },
+    lgtm: {
+      name: "lgtm",
+      body: "Puts LGTM on an image and shares it. The conversion runs in the browser: giflib and libwebp, built to wasm, keep animated GIFs and WebPs animated as WebP, and two Web Workers decode and encode at the same time. When it's done, an img tag ready to paste is copied to the clipboard.",
     },
     helmMosp: {
       name: "helm-mosp",
@@ -212,7 +228,7 @@ export const en: Translation = {
     },
     blades: {
       name: "Blades CSS",
-      body: "The successor to Pico CSS. Merged changes include light-dark() colours, contrast fixes for focus rings and other parts, an opt-in compact mode, layered per-part builds, dialog and popover parts, and moving minification to lightningcss.",
+      body: "The successor to Pico CSS. Merged changes include light-dark() colours, contrast fixes for focus rings and other parts, an opt-in compact mode, dialog and popover parts, a build on lightningcss alone that cut the dev dependencies from nine to two, layered per-part builds that are now the default exports, and examples for using it in frameworks.",
     },
     talos: {
       name: "Talos Linux",

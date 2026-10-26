@@ -170,7 +170,7 @@ export const ja = {
     worksTitle: "制作実績",
     source: "ソース",
     others:
-      "ほかにも 𝕏ool・fixeed・cash-tabelog・svelte-slider などの小さなツールを GitHub（{user}・{org}）に置いています。",
+      "ほかにも svelte-slider・fixeed・cash-tabelog などの小さなツールを GitHub（{user}・{org}）に置いています。",
     ossTitle: "OSS への貢献",
     ossLead:
       "使っているソフトウェアで不具合を見つけたら、直して上流に送っています。",
@@ -194,9 +194,25 @@ export const ja = {
       name: "noren（暖簾）",
       body: "小さな店や催しで商品を売るための Web アプリです。ダウンロード商品は支払いのあとメールで届け、グッズとチケットは会場で QR を見せて受け取ってもらいます。スタッフ向けには、受け取りと入場の QR 読み取りと、現金・Square での当日販売の画面があり、ログインは OIDC です。ダウンロード販売の noren に、QR での入場受付・受け取り・当日販売をしていた mogiri を統合しました。Bun・SvelteKit・SQLite の 1 つのアプリです。",
     },
+    mado: {
+      name: "mado（窓）",
+      body: "OIDC でログインして、ブラウザから Windows にリモートデスクトップでつなぐゲートウェイです。RDP はブラウザの中の TypeScript の実装が話し、サーバーはログインの確認と中継だけをするので、画面を描きません。中継はまず WebTransport（HTTP/3）で試し、開けなければ WebSocket に移ります。サーバーは .NET 10 の Native AOT で、MSI で入れて Windows のサービスとして動きます。",
+    },
+    aizuchi: {
+      name: "aizuchi（相槌）",
+      body: "チャットで話しかけると AI が答えるボットです。つなぐ先（Slack）、モデル（Claude）、使う道具（GitHub・OpenProject を読む）を差し替えられます。外部サービスの webhook を受けてチャンネルに流せるので、有料の Slack 連携の代わりにもなります。.NET 10 の Native AOT の 1 つのバイナリで、Helm chart で Kubernetes に置けます。",
+    },
     yuzuriha: {
       name: "yuzuriha（譲葉）",
       body: "0 円物件を複数の掲載サイトから毎日集めて、衛星写真の地図の上に出すサイトです。",
+    },
+    xool: {
+      name: "𝕏ool",
+      body: "前の日に 𝕏 にした自分のポストを集計して、件数・反応・インプレッションなどを通信簿として毎日自動でポストするサービスです。API が 1 件ごとに課金されるので、ポストしなかった日は何もポストしません。",
+    },
+    lgtm: {
+      name: "lgtm",
+      body: "画像に LGTM の文字を重ねて共有するサービスです。変換はブラウザの中でします。wasm にした giflib と libwebp で、アニメーションの GIF・WebP も動きを残したまま WebP にし、読み込みと書き出しは 2 つの Web Worker で同時に進めます。できあがると、貼り付け用の img タグがクリップボードに入ります。",
     },
     helmMosp: {
       name: "helm-mosp",
@@ -215,7 +231,7 @@ export const ja = {
     },
     blades: {
       name: "Blades CSS",
-      body: "Pico CSS の後継の CSS フレームワークです。light-dark() での配色、フォーカスリングなどのコントラストの修正、オプトインのコンパクト表示、部品ごとの層付きビルド、dialog と popover の部品、縮小を lightningcss に切り替える変更などが取り込まれました。",
+      body: "Pico CSS の後継の CSS フレームワークです。light-dark() での配色、フォーカスリングなどのコントラストの修正、オプトインのコンパクト表示、dialog と popover の部品、ビルドを lightningcss だけにして開発用の依存を 9 個から 2 個に減らす変更、部品ごとの層付きビルドとそれを既定の読み込み先にする変更、フレームワークでの使い方の例などが取り込まれました。",
     },
     talos: {
       name: "Talos Linux",
