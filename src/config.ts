@@ -85,10 +85,15 @@ export const works = [
   },
 ] as const;
 
-/** OSS への貢献。文言は languages の oss。links はリポジトリ名などで、言語によらない */
+/**
+ * OSS への貢献。文言は languages の oss。links はリポジトリ名などで、言語によらない。
+ * merged は取り込まれた PR の本数(トップの数字はこの合計)。数え直すときは `gh pr list -R <repo> --author 5ym --state merged`、
+ * FFmpeg は code.ffmpeg.org の PR
+ */
 export const oss = [
   {
     id: "ffmpeg",
+    merged: 1,
     links: [
       {
         label: "FFmpeg/FFmpeg#24067",
@@ -98,6 +103,7 @@ export const oss = [
   },
   {
     id: "blades",
+    merged: 24,
     links: [
       {
         label: "anyblades/blades",
@@ -107,6 +113,7 @@ export const oss = [
   },
   {
     id: "talos",
+    merged: 2,
     links: [
       {
         label: "siderolabs/extensions#1238",
@@ -120,6 +127,7 @@ export const oss = [
   },
   {
     id: "epgstation",
+    merged: 28,
     links: [
       {
         label: "l3tnun/EPGStation",
