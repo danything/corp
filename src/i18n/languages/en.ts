@@ -94,7 +94,7 @@ export const en: Translation = {
       { id: "works", label: "Public projects", unit: "" },
       {
         id: "oss",
-        label: "Open source projects with merged changes",
+        label: "Changes merged into open source",
         unit: "",
       },
       { id: "services", label: "In-house services running", unit: "" },

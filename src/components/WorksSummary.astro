@@ -38,7 +38,7 @@ const years = Math.floor(
 const values: Record<string, number> = {
 	years,
 	works: works.length,
-	oss: oss.length,
+	oss: oss.reduce((n, o) => n + o.merged, 0),
 	services: services.length,
 };
 

@@ -96,7 +96,7 @@ export const ja = {
     stats: [
       { id: "years", label: "開業から", unit: "年" },
       { id: "works", label: "公開している制作物", unit: "件" },
-      { id: "oss", label: "変更が取り込まれた OSS", unit: "件" },
+      { id: "oss", label: "OSS に取り込まれた変更", unit: "本" },
       { id: "services", label: "運営中の自社サービス", unit: "件" },
     ],
     worksLink: "実績をすべて見る",
