@@ -1,0 +1,12 @@
+services:
+  web:
+    build:
+      context: .
+      target: base
+    command: bun run dev --host 0.0.0.0 --port 5173
+    volumes:
+      - .:/home/bun/app
+      - app-node-modules:/home/bun/app/node_modules
+
+volumes:
+  app-node-modules:

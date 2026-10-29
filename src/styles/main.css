@@ -76,17 +76,19 @@
   --doa-duration-exit: 150ms;
   --doa-duration-reveal: 480ms;
   --doa-ease: cubic-bezier(0.2, 0, 0, 1);
-  --doa-ease-spring: linear(0,
-      0.06 4%,
-      0.24 9%,
-      0.5 15%,
-      0.74 22%,
-      0.9 30%,
-      1.02 40%,
-      1.04 48%,
-      1.02 60%,
-      1 75%,
-      1);
+  --doa-ease-spring: linear(
+    0,
+    0.06 4%,
+    0.24 9%,
+    0.5 15%,
+    0.74 22%,
+    0.9 30%,
+    1.02 40%,
+    1.04 48%,
+    1.02 60%,
+    1 75%,
+    1
+  );
   --doa-ease-exit: cubic-bezier(0.3, 0, 1, 1);
   --pico-transition: var(--doa-duration) var(--doa-ease);
 
@@ -330,11 +332,13 @@ a.button.ring::before {
   width: 100%;
   aspect-ratio: 1;
   translate: -50% -50%;
-  background: conic-gradient(from 0deg,
-      transparent 0 55%,
-      color-mix(in srgb, var(--pico-primary) 70%, transparent) 75%,
-      #8b5cf6 85%,
-      transparent 100%);
+  background: conic-gradient(
+    from 0deg,
+    transparent 0 55%,
+    color-mix(in srgb, var(--pico-primary) 70%, transparent) 75%,
+    #8b5cf6 85%,
+    transparent 100%
+  );
 }
 
 a.button.ring::after {
@@ -368,11 +372,11 @@ a.button.ring:hover::after {
   transition: translate var(--doa-duration-move) var(--doa-ease-spring);
 }
 
-a:hover>.arrow {
+a:hover > .arrow {
   translate: 0.2rem 0;
 }
 
-a:hover>.arrow.back {
+a:hover > .arrow.back {
   translate: -0.2rem 0;
 }
 
@@ -389,7 +393,7 @@ main {
   padding-top: var(--doa-space-6);
 }
 
-main>h1,
+main > h1,
 .page-title {
   font-size: clamp(2rem, 6vw, 2.75rem);
   line-height: 1.3;
@@ -397,11 +401,11 @@ main>h1,
   margin-block: var(--doa-space-6) 2.5rem;
 }
 
-section+section {
+section + section {
   margin-top: clamp(3.5rem, 8vw, 5.5rem);
 }
 
-section>h2 {
+section > h2 {
   font-size: var(--doa-text-xl);
   line-height: 1.4;
   margin-bottom: var(--doa-space-4);
