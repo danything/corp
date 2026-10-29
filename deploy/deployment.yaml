@@ -31,7 +31,7 @@ spec:
           type: RuntimeDefault
       containers:
         - name: corp
-          image: ghcr.io/danything/corp:745e8ea4e3ee4edacf5d6da4556c15ebc77cc31b
+          image: ghcr.io/danything/corp:fa7a8c2f673c2b3b9428852bf3f49da7f9a18c3b
           ports:
             - name: http
               containerPort: 8080
