@@ -15,13 +15,13 @@
  * 並ぶが、utilities (cursor・方向・動きを減らす設定) と同じ性質を決める規則は無い。
  * 明暗は OS の設定に従う。色はトークンごとに light-dark() で両方を書く (Blades の variables も同じ作り)
  */
-@import "@anyblades/blades/layered/variables";
-@import "@anyblades/blades/layered/layout/document";
-@import "@anyblades/blades/layered/content/typography";
-@import "@anyblades/blades/layered/content/link";
-@import "@anyblades/blades/layered/content/button";
-@import "@anyblades/blades/layered/content/misc";
-@import "@anyblades/blades/layered/utilities";
+@import "@anyblades/blades/variables";
+@import "@anyblades/blades/layout/document";
+@import "@anyblades/blades/content/typography";
+@import "@anyblades/blades/content/link";
+@import "@anyblades/blades/content/button";
+@import "@anyblades/blades/content/misc";
+@import "@anyblades/blades/utilities";
 
 /* ---- トークン ---- */
 :root {
@@ -137,6 +137,7 @@
   --doa-shadow-pop:
     0 4px 12px rgb(24 28 37 / 0.06), 0 16px 32px -8px rgb(24 28 37 / 0.14);
 }
+
 /* 暗いのは、OS が暗くてライトを選んでいないときと、ダークを選んだとき (ThemeSwitch) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -146,11 +147,13 @@
       0 4px 12px rgb(0 0 0 / 0.3), 0 16px 40px -8px rgb(0 0 0 / 0.5);
   }
 }
+
 :root[data-theme="dark"] {
   --doa-item-shadow: none;
   --doa-shadow-pop:
     0 4px 12px rgb(0 0 0 / 0.3), 0 16px 40px -8px rgb(0 0 0 / 0.5);
 }
+
 @media (prefers-reduced-transparency: reduce) {
   :root {
     --doa-float: var(--doa-pop);
