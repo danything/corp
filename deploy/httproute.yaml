@@ -3,7 +3,7 @@
 # ここでは指定しない。
 # doany.io (apex) はもとはブログ (danything/blog) で、ブログは b.doany.io へ移った。
 # 旧ブログの URL は server.ts が b.doany.io へ 301 で送る。
-# /.well-known/matrix/* は danything/gitops の apps/matrix/httproute.yaml (より長い一致) が Matrix へ向けるので、ここには来ない
+# /.well-known/matrix/* は danything/gitops の deploy/matrix/httproute.yaml (より長い一致) が Matrix へ向けるので、ここには来ない
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
