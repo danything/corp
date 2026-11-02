@@ -4,8 +4,8 @@ metadata:
   name: corp
   namespace: corp
   annotations:
-    # 参照している Secret を Infisical operator が同期したら、自動でローリング再起動する
-    secrets.infisical.com/auto-reload: "true"
+    # 参照している Secret が変わったら、Reloader が自動でローリング再起動する
+    reloader.stakater.com/auto: "true"
 spec:
   replicas: 1
   strategy:
@@ -37,7 +37,7 @@ spec:
               containerPort: 8080
           env:
             # 問い合わせの送り先 (matrix-hookshot の汎用 webhook) と Turnstile のシークレット。
-            # Infisical の /corp/corp-secrets (secret.yaml)
+            # Secret corp-secrets (secrets.sops.yaml)
             - name: CONTACT_WEBHOOK_URL
               valueFrom:
                 secretKeyRef:
