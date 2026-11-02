@@ -93,6 +93,6 @@ main に push すると GitHub Actions (`.github/workflows/docker.yml`) がイ�
 `deploy/deployment.yaml` のタグを書き換えて push する。Argo CD (danything/gitops の ApplicationSet) が `deploy/` を namespace `corp` に同期する。
 
 - `deploy/httproute.yaml` — Cilium Gateway `doany` の `https-apex` リスナー、`doany.io`
-- `deploy/secret.yaml` — `InfisicalSecret`。Infisical の `/corp/corp-secrets` (`contact-webhook-url`・`turnstile-secret`) を Secret `corp-secrets` にする
+- `deploy/secrets.sops.yaml` — `SopsSecret` (値は SOPS で暗号化)。Secret `corp-secrets` (`contact-webhook-url`・`turnstile-secret`) を作る。直すときは管理者の鍵で `sops edit` して push する
 
 イメージは distroless の Bun に `server.js` (`server.ts` を 1 ファイルにまとめたもの) と `dist/` だけを置き、uid 65532 で、ルートを読み取り専用にして動かす。
