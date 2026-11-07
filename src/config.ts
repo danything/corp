@@ -93,17 +93,21 @@ export const works = [
 export const oss = [
   {
     id: "ffmpeg",
-    merged: 1,
+    merged: 2,
     links: [
       {
         label: "FFmpeg/FFmpeg#24067",
         url: "https://code.ffmpeg.org/FFmpeg/FFmpeg/pulls/24067",
       },
+      {
+        label: "FFmpeg/FFmpeg#24992",
+        url: "https://code.ffmpeg.org/FFmpeg/FFmpeg/pulls/24992",
+      },
     ],
   },
   {
     id: "blades",
-    merged: 24,
+    merged: 25,
     links: [
       {
         label: "anyblades/blades",
