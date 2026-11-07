@@ -227,7 +227,7 @@ export const ja = {
   oss: {
     ffmpeg: {
       name: "FFmpeg",
-      body: "libaribcaption を使う ARIB 字幕デコーダの修正を送っています。ビットマップ出力で字幕を消す処理の修正が取り込まれました。",
+      body: "libaribcaption を使う ARIB 字幕デコーダの修正を送っています。ビットマップ出力で字幕を消す処理の修正と、すべての出力形式でのメモリの不具合と字幕を消す処理の修正が取り込まれました。",
     },
     blades: {
       name: "Blades CSS",

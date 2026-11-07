@@ -224,7 +224,7 @@ export const en: Translation = {
   oss: {
     ffmpeg: {
       name: "FFmpeg",
-      body: "Fixes for the ARIB caption decoder that uses libaribcaption. A fix for clearing captions in bitmap mode has been merged.",
+      body: "Fixes for the ARIB caption decoder that uses libaribcaption. A fix for clearing captions in bitmap mode, and fixes for memory errors and caption clearing in all output modes, have been merged.",
     },
     blades: {
       name: "Blades CSS",
