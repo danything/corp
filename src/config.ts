@@ -45,10 +45,14 @@ export const business = [
   "services",
 ] as const;
 
-/** 自社サービス(運用中のもの)。文言は languages の services */
+/**
+ * 自社サービス(運用中のもの)。文言は languages の services。
+ * legal は特定商取引法に基づく表記 (サービスの /legal) があるもの (足のリンクに出す。売っていない tama には無い)
+ */
 export const services = [
-  { id: "todoroku", url: "https://tk.doany.io/" },
-  { id: "worklog", url: "https://w.doany.io/" },
+  { id: "todoroku", url: "https://tk.doany.io/", legal: true },
+  { id: "worklog", url: "https://w.doany.io/", legal: true },
+  { id: "tama", url: "https://ts.doany.io/", legal: false },
 ] as const;
 
 /** 制作実績。文言は languages の works */
@@ -57,6 +61,7 @@ export const works = [
     id: "denpa",
     url: "https://github.com/DAnything/denpa",
   },
+  { id: "sonae", url: "https://github.com/danything/sonae" },
   { id: "noren", url: "https://github.com/5ym/noren" },
   { id: "mado", url: "https://github.com/danything/mado" },
   { id: "aizuchi", url: "https://github.com/danything/aizuchi" },
@@ -106,6 +111,20 @@ export const oss = [
       {
         label: "FFmpeg/FFmpeg#25651",
         url: "https://code.ffmpeg.org/FFmpeg/FFmpeg/pulls/25651",
+      },
+    ],
+  },
+  {
+    id: "libaribcaption",
+    merged: 2,
+    links: [
+      {
+        label: "xqq/libaribcaption#30",
+        url: "https://github.com/xqq/libaribcaption/pull/30",
+      },
+      {
+        label: "xqq/libaribcaption#31",
+        url: "https://github.com/xqq/libaribcaption/pull/31",
       },
     ],
   },

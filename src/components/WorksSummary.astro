@@ -11,6 +11,7 @@ import kubernetes from "@/assets/logos/kubernetes.svg";
 import lgtm from "@/assets/logos/lgtm.svg";
 import mado from "@/assets/logos/mado.svg";
 import noren from "@/assets/logos/noren.svg";
+import sonae from "@/assets/logos/sonae.png";
 import talos from "@/assets/logos/talos.svg";
 import xool from "@/assets/logos/xool.svg";
 import yuzuriha from "@/assets/logos/yuzuriha.svg";
@@ -44,6 +45,7 @@ const values: Record<string, number> = {
 
 const logos = [
 	{ id: "denpa", name: text.works.denpa.name, logo: { src: denpa }, href: "/works/#works" },
+	{ id: "sonae", name: text.works.sonae.name, logo: { src: sonae }, href: "/works/#works" },
 	{ id: "noren", name: text.works.noren.name, logo: { src: noren }, href: "/works/#works" },
 	{ id: "mado", name: text.works.mado.name, logo: { src: mado }, href: "/works/#works" },
 	{ id: "aizuchi", name: text.works.aizuchi.name, logo: { src: aizuchi }, href: "/works/#works" },
@@ -53,6 +55,7 @@ const logos = [
 	{ id: "helmMosp", name: text.works.helmMosp.name, logo: { src: helm, plate: true }, href: "/works/#works" },
 	{ id: "gitops", name: text.works.gitops.name, logo: { src: kubernetes, plate: true }, href: "/works/#works" },
 	{ id: "ffmpeg", name: text.oss.ffmpeg.name, logo: { src: ffmpeg, plate: true }, href: "/works/#oss" },
+	{ id: "libaribcaption", name: text.oss.libaribcaption.name, logo: undefined, href: "/works/#oss" },
 	{ id: "blades", name: text.oss.blades.name, logo: { src: blades, plate: true }, href: "/works/#oss" },
 	{ id: "talos", name: text.oss.talos.name, logo: { src: talos, plate: true }, href: "/works/#oss" },
 	{ id: "epgstation", name: text.oss.epgstation.name, logo: { src: epgstation, plate: true }, href: "/works/#oss" },
@@ -71,7 +74,7 @@ const logos = [
 <ul class="logos">
 	{logos.map((l) => (
 		<li data-reveal>
-			<a href={localeUrl(l.href, lang)}><Logo src={l.logo.src} plate={l.logo.plate} />{l.name}</a>
+			<a href={localeUrl(l.href, lang)}>{l.logo && <Logo src={l.logo.src} plate={l.logo.plate} />}{l.name}</a>
 		</li>
 	))}
 </ul>

@@ -13,12 +13,14 @@ import kubernetes from "@/assets/logos/kubernetes.svg";
 import lgtmLogo from "@/assets/logos/lgtm.svg";
 import madoLogo from "@/assets/logos/mado.svg";
 import norenLogo from "@/assets/logos/noren.svg";
+import sonaeLogo from "@/assets/logos/sonae.png";
 import talos from "@/assets/logos/talos.svg";
 import xoolLogo from "@/assets/logos/xool.svg";
 import yuzurihaLogo from "@/assets/logos/yuzuriha.svg";
 import denpaShot from "@/assets/works/denpa.webp";
 import norenDark from "@/assets/works/noren-dark.webp";
 import norenLight from "@/assets/works/noren-light.webp";
+import sonaeShot from "@/assets/works/sonae.webp";
 import yuzurihaShot from "@/assets/works/yuzuriha.webp";
 import { github, oss, works } from "@/config";
 
@@ -39,6 +41,7 @@ const [between, afterOrg] = rest.split("{org}");
 type Logo = { src: ImageMetadata; plate?: boolean };
 const logos: Record<string, Logo> = {
 	denpa: { src: denpaLogo },
+	sonae: { src: sonaeLogo },
 	noren: { src: norenLogo },
 	mado: { src: madoLogo },
 	aizuchi: { src: aizuchiLogo },
@@ -60,6 +63,7 @@ const shots: Record<
 	{ src: ImageMetadata; dark?: ImageMetadata; label: string; alt: string }
 > = {
 	denpa: { src: denpaShot, label: "denpa", alt: page.shots.denpa },
+	sonae: { src: sonaeShot, label: "sonae", alt: page.shots.sonae },
 	noren: {
 		src: norenLight,
 		dark: norenDark,

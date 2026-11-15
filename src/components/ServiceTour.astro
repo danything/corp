@@ -1,6 +1,8 @@
 ---
 import BrowserFrame from "@components/BrowserFrame.astro";
 import { type Lang, t } from "@i18n/translation";
+import tamaDark from "@/assets/hero/tama-dark.webp";
+import tamaLight from "@/assets/hero/tama-light.webp";
 import todoroku from "@/assets/hero/todoroku.webp";
 import worklogDark from "@/assets/hero/worklog-dark.webp";
 import worklogLight from "@/assets/hero/worklog-light.webp";
@@ -10,7 +12,7 @@ import { services } from "@/config";
  * トップの自社サービス。左に 1 件ずつ説明を縦に並べ、右の画面は貼り付けて重ねる。
  * 巻いて次の説明に入ると、次の画面が下から来て前の画面に重なり、前の画面は少し沈む。
  * 重ねるのは position: sticky、沈むのは次の説明の view-timeline で、JS は使わない。
- * 狭い画面では説明の下に画面を置くだけ。worklog は選んだ明暗で画面を出し分ける
+ * 狭い画面では説明の下に画面を置くだけ。worklog と tama は選んだ明暗で画面を出し分ける
  */
 interface Props {
 	lang: Lang;
@@ -28,6 +30,7 @@ const scope = services
 const shots = {
 	todoroku: { src: todoroku, dark: undefined },
 	worklog: { src: worklogLight, dark: worklogDark },
+	tama: { src: tamaLight, dark: tamaDark },
 };
 ---
 

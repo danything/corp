@@ -40,6 +40,7 @@ export const ja = {
         "トドロクのトップページ。車両台帳に車名・型式などを入れている画面が映っている",
       worklog:
         "worklog のトップページ。Slack や GitHub のログから作った稼働表のサンプルが出ている",
+      tama: "tama 車両カタログで「プリウス」を探した画面。型式・通称名・区分・掲載年・排気量・燃費の表に 21 型式が並んでいる",
     },
 
     businessTitle: "事業内容",
@@ -149,7 +150,8 @@ export const ja = {
     },
     services: {
       title: "自社サービスの開発・運営",
-      summary: "車両台帳のトドロクと、稼働表の worklog を運営しています。",
+      summary:
+        "車両台帳のトドロク、稼働表の worklog、車両カタログの tama を運営しています。",
     },
   },
 
@@ -162,6 +164,10 @@ export const ja = {
       name: "worklog",
       body: "Slack・GitHub・GitLab・Backlog・Jira・OpenProject・Redmine の API のログを横断して、日ごとの稼働の開始・終了・休憩・実働を推定するサービスです。常駐エージェントを入れずに、過去の月にさかのぼって稼働表を作れます。",
     },
+    tama: {
+      name: "tama 車両カタログ",
+      body: "日本で型式指定を受けた自動車 2 万型式超のカタログです。型式・通称名・型式指定番号から、諸元・燃費・販売期間・官報の型式指定・リコール届出を横断して探せます。トドロクの車両の情報もここから引いています。",
+    },
   },
 
   worksPage: {
@@ -170,7 +176,7 @@ export const ja = {
     worksTitle: "制作実績",
     source: "ソース",
     others:
-      "ほかにも svelte-slider・fixeed・cash-tabelog などの小さなツールを GitHub（{user}・{org}）に置いています。",
+      "ほかにも wslc-compose・genkan・seisho・svelte-slider などの小さなツールを GitHub（{user}・{org}）に置いています。",
     ossTitle: "OSS への貢献",
     ossLead:
       "使っているソフトウェアで不具合を見つけたら、直して上流に送っています。",
@@ -178,6 +184,8 @@ export const ja = {
     shots: {
       denpa:
         "denpa の録画の一覧。架空の番組の録画と予約が並び、右に月のカレンダーと絞り込みがある",
+      sonae:
+        "sonae の画面。試験用のデータで、日本の衛星写真の地図に津波注意報の海岸と気象の警報の地域が出ていて、右に津波・地震・緊急地震速報・警報の一覧がある",
       noren:
         "noren の商品一覧。見本のダウンロード商品・T シャツ (会場で受け取り)・入場チケットのカードが価格つきで並び、下に購入の流れの 3 段階がある",
       yuzuriha:
@@ -188,7 +196,11 @@ export const ja = {
   works: {
     denpa: {
       name: "denpa",
-      body: "テレビを録って観るためのシステムです。チューナーを扱って素の TS を流すエージェントと、番組表・予約・録画・エンコード・配信・ライブ視聴を受け持つ本体の 2 つで完結していて、別にメディアサーバを置きません。TypeScript と Svelte、チューナー側は C# で書いています。",
+      body: "チューナーを挿して起動すれば使える、自宅用のテレビ録画サーバです。設定ファイルは書かず、番組表から予約し、CM は自動で飛ばし、ライブも録画もブラウザで字幕・データ放送つきで観られます。チューナーを扱って素の TS を流すエージェントと、それ以外の全部を受け持つ本体の 2 つで完結していて、Mirakurun やメディアサーバは要りません。Linux・Mac・Windows・Kubernetes で動きます。テレビで観る Android TV のアプリ（denpa-tv）と、字幕・番組表のための丸ゴシックの書体（Denpa Font）も作っています。",
+    },
+    sonae: {
+      name: "sonae（備え）",
+      body: "地震・津波・火山・気象の情報を家のサーバーで受けて、ブラウザで見たり、Web Push で知らせを受けたりするアプリです。緊急地震速報・地震・津波・噴火・気象の警報を気象庁などから受け、地図と一覧に出し、開いている画面では短い音と VOICEVOX の声で読み上げます。Windows・Mac・Linux には 1 行で入り、Kubernetes には Helm chart で置けます。",
     },
     noren: {
       name: "noren（暖簾）",
@@ -196,7 +208,7 @@ export const ja = {
     },
     mado: {
       name: "mado（窓）",
-      body: "OIDC でログインして、ブラウザから Windows にリモートデスクトップでつなぐゲートウェイです。RDP はブラウザの中の TypeScript の実装が話し、サーバーはログインの確認と中継だけをするので、画面を描きません。中継はまず WebTransport（HTTP/3）で試し、開けなければ WebSocket に移ります。サーバーは .NET 10 の Native AOT で、MSI で入れて Windows のサービスとして動きます。",
+      body: "OIDC でログインして、ブラウザから Windows にリモートデスクトップでつなぐゲートウェイです。RDP はブラウザの中の TypeScript の実装が話し、サーバーはログインの確認と中継だけをするので、画面を描きません。中継はまず WebTransport（HTTP/3）で試し、開けなければ WebSocket に移ります。サーバーは .NET 10 の Native AOT で、MSI で入れて Windows のサービスとして動きます。Intel AMT の機械の電源の操作・シリアルの端末・ISO からの起動もブラウザからできます。",
     },
     aizuchi: {
       name: "aizuchi（相槌）",
@@ -220,7 +232,7 @@ export const ja = {
     },
     gitops: {
       name: "gitops",
-      body: "自社のサービスを動かしている Kubernetes 基盤のリポジトリです。Talos Linux のクラスタを Argo CD で GitOps 管理しています。公開は Cilium の Gateway API、秘密は Infisical、バックアップは k8up で Cloudflare R2 へ。ログインは Entra ID のシングルサインオンで、Cloudflare と Entra の設定は Pulumi で持っています。Matrix や Forgejo もここで動かしています。",
+      body: "自社のサービスを動かしている Kubernetes 基盤のリポジトリです。Talos Linux のクラスタを Argo CD で GitOps 管理しています。公開は Cilium の Gateway API、秘密は SOPS で暗号化して git に置き、バックアップは VolSync で Cloudflare R2 へ。ログインは Entra ID のシングルサインオンで、Cloudflare と Entra の設定は Pulumi で持っています。Matrix や Forgejo もここで動かしています。",
     },
   },
 
@@ -228,6 +240,10 @@ export const ja = {
     ffmpeg: {
       name: "FFmpeg",
       body: "libaribcaption を使う ARIB 字幕デコーダの修正 (字幕を消す処理とメモリの不具合) と、VAAPI の AV1 エンコーダで CQP のときにループフィルタと CDEF を有効にする修正が取り込まれました。",
+    },
+    libaribcaption: {
+      name: "libaribcaption",
+      body: "ARIB 字幕を描くライブラリです。字幕の外字（DRCS）を普通の文字や絵文字に置き換える対応表に、地上波で見つけた字と、電話・テレビ・ラジオ・スピーカーの記号を足す変更が取り込まれました。",
     },
     blades: {
       name: "Blades CSS",
