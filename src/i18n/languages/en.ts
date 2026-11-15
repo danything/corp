@@ -40,6 +40,7 @@ export const en: Translation = {
         "The Todoroku home page, showing the vehicle ledger form with the make, model and engine type filled in",
       worklog:
         "The worklog home page, with a sample timesheet built from Slack and GitHub logs",
+      tama: "A search for “Prius” in the tama vehicle catalogue: a table of 21 type designations with model name, category, years listed, displacement and fuel economy",
     },
 
     businessTitle: "What we do",
@@ -147,7 +148,8 @@ export const en: Translation = {
     },
     services: {
       title: "Own services",
-      summary: "Todoroku for vehicle ledgers, and worklog for timesheets.",
+      summary:
+        "Todoroku for vehicle ledgers, worklog for timesheets, and tama, a vehicle catalogue.",
     },
   },
 
@@ -160,6 +162,10 @@ export const en: Translation = {
       name: "worklog",
       body: "Works out each day's start, end, breaks and working time from the API logs of Slack, GitHub, GitLab, Backlog, Jira, OpenProject and Redmine. There's no agent to install, and it can build timesheets for past months.",
     },
+    tama: {
+      name: "tama vehicle catalogue",
+      body: "A catalogue of more than 20,000 vehicle type designations approved in Japan. Search by type, model name or type designation number across specifications, fuel economy, years on sale, type designations in the official gazette and recall filings. Todoroku takes its vehicle data from here too.",
+    },
   },
 
   worksPage: {
@@ -168,13 +174,15 @@ export const en: Translation = {
     worksTitle: "Work",
     source: "Source",
     others:
-      "Smaller tools such as svelte-slider, fixeed and cash-tabelog are on GitHub ({user}, {org}).",
+      "Smaller tools such as wslc-compose, genkan, seisho and svelte-slider are on GitHub ({user}, {org}).",
     ossTitle: "Open source contributions",
     ossLead:
       "Fixes for bugs found in software Doa uses, sent upstream as pull requests.",
     shots: {
       denpa:
         "The denpa recordings list, with recordings and reservations of made-up programmes, and a month calendar and filters on the right",
+      sonae:
+        "sonae with test data: a satellite map of Japan showing coasts under a tsunami advisory and areas under weather warnings, with a list of tsunami, earthquake, earthquake early warning and weather warning reports on the right",
       noren:
         "The noren storefront: cards with prices for a sample download, a T-shirt picked up at the venue and an admission ticket, with the three steps of buying below",
       yuzuriha:
@@ -185,7 +193,11 @@ export const en: Translation = {
   works: {
     denpa: {
       name: "denpa",
-      body: "A system for recording and watching TV. It has two parts: an agent that drives the tuner and streams the raw TS, and the main app for the programme guide, reservations, recording, encoding, streaming and live viewing. No separate media server. Written in TypeScript and Svelte, with C# on the tuner side.",
+      body: "A home TV recording server that works as soon as you plug in a tuner and start it. There are no config files: reserve from the programme guide, CMs are skipped automatically, and live TV and recordings play in the browser with captions and data broadcasting. It has two parts, an agent that drives the tuner and streams the raw TS and the main app that does everything else, so it needs neither Mirakurun nor a media server. Runs on Linux, Mac, Windows and Kubernetes. Doa also makes an Android TV app for watching on a TV (denpa-tv) and a rounded typeface for captions and programme guides (Denpa Font).",
+    },
+    sonae: {
+      name: "sonae (備え)",
+      body: "An app that receives earthquake, tsunami, volcano and weather information on a home server, to view in the browser and get as Web Push notifications. It takes earthquake early warnings, earthquake and tsunami reports, eruption notices and weather warnings from the Japan Meteorological Agency and others, shows them on a map and in a list, and reads them out with a short chime and a VOICEVOX voice on open screens. It installs with one line on Windows, Mac and Linux, and on Kubernetes with a Helm chart.",
     },
     noren: {
       name: "noren (暖簾)",
@@ -193,7 +205,7 @@ export const en: Translation = {
     },
     mado: {
       name: "mado (窓)",
-      body: "A gateway for connecting to Windows over Remote Desktop from the browser, with OIDC sign-in. A TypeScript client in the browser speaks RDP, and the server only checks sign-in and relays, so it never draws the screen. The relay tries WebTransport (HTTP/3) first and falls back to WebSocket. The server is .NET 10 Native AOT, installed with an MSI and run as a Windows service.",
+      body: "A gateway for connecting to Windows over Remote Desktop from the browser, with OIDC sign-in. A TypeScript client in the browser speaks RDP, and the server only checks sign-in and relays, so it never draws the screen. The relay tries WebTransport (HTTP/3) first and falls back to WebSocket. The server is .NET 10 Native AOT, installed with an MSI and run as a Windows service. Intel AMT machines can also be powered on and off, reached over a serial console and booted from an ISO, all from the browser.",
     },
     aizuchi: {
       name: "aizuchi (相槌)",
@@ -217,7 +229,7 @@ export const en: Translation = {
     },
     gitops: {
       name: "gitops",
-      body: "The Kubernetes platform Doa's services run on. A Talos Linux cluster managed with Argo CD. Traffic comes in through Cilium's Gateway API, secrets are in Infisical, and k8up backs up to Cloudflare R2. Sign-in is Entra ID single sign-on, and the Cloudflare and Entra settings are in Pulumi. Matrix and Forgejo are self-hosted here too.",
+      body: "The Kubernetes platform Doa's services run on. A Talos Linux cluster managed with Argo CD. Traffic comes in through Cilium's Gateway API, secrets are encrypted with SOPS and kept in git, and VolSync backs up to Cloudflare R2. Sign-in is Entra ID single sign-on, and the Cloudflare and Entra settings are in Pulumi. Matrix and Forgejo are self-hosted here too.",
     },
   },
 
@@ -225,6 +237,10 @@ export const en: Translation = {
     ffmpeg: {
       name: "FFmpeg",
       body: "Fixes for the ARIB caption decoder that uses libaribcaption (caption clearing and memory errors), and a change that enables the loop filter and CDEF in the VAAPI AV1 encoder in CQP mode, have been merged.",
+    },
+    libaribcaption: {
+      name: "libaribcaption",
+      body: "A library that renders ARIB captions. Merged changes add characters found in terrestrial broadcasts, and phone, TV, radio and speaker symbols, to its table that replaces caption DRCS glyphs with ordinary characters and emoji.",
     },
     blades: {
       name: "Blades CSS",

@@ -23,7 +23,7 @@ const text = t(lang);
 		<a href={localeUrl("/company/", lang)}>{text.nav.company}</a> ·
 		<a href={localeUrl("/privacy/", lang)}>{text.footer.privacy}</a> ·
 		{text.footer.tokushoho}:
-		{services.map((s, i) => (<>{i > 0 && "・"}<a href={new URL("/legal", s.url).href}>{text.services[s.id].name}</a></>))} ·
+		{services.filter((s) => s.legal).map((s, i) => (<>{i > 0 && "・"}<a href={new URL("/legal", s.url).href}>{text.services[s.id].name}</a></>))} ·
 		{text.footer.copyright}
 	</p>
 </footer>
