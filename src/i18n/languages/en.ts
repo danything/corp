@@ -186,7 +186,7 @@ export const en: Translation = {
       noren:
         "The noren storefront: cards with prices for a sample download, a T-shirt picked up at the venue and an admission ticket, with the three steps of buying below",
       yuzuriha:
-        "Yuzuriha: a satellite map of Japan with property counts grouped by area, and filters on the left",
+        "Yuzuriha: a satellite map of Japan with property counts grouped by area, a search box on top and filters with counts on the right",
     },
   },
 
