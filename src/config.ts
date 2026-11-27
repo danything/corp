@@ -133,8 +133,8 @@ export const oss = [
     merged: 25,
     links: [
       {
-        label: "anyblades/blades",
-        url: "https://github.com/anyblades/blades/pulls?q=is%3Apr+author%3A5ym+is%3Amerged",
+        label: "open-sveti/blades",
+        url: "https://github.com/open-sveti/blades/pulls?q=is%3Apr+author%3A5ym+is%3Amerged",
       },
     ],
   },

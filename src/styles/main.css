@@ -15,13 +15,13 @@
  * 並ぶが、utilities (cursor・方向・動きを減らす設定) と同じ性質を決める規則は無い。
  * 明暗は OS の設定に従う。色はトークンごとに light-dark() で両方を書く (Blades の variables も同じ作り)
  */
-@import "@anyblades/blades/variables";
-@import "@anyblades/blades/layout/document";
-@import "@anyblades/blades/content/typography";
-@import "@anyblades/blades/content/link";
-@import "@anyblades/blades/content/button";
-@import "@anyblades/blades/content/misc";
-@import "@anyblades/blades/utilities";
+@import "@sveti/blades/variables";
+@import "@sveti/blades/layout/document";
+@import "@sveti/blades/content/typography";
+@import "@sveti/blades/content/link";
+@import "@sveti/blades/content/button";
+@import "@sveti/blades/content/misc";
+@import "@sveti/blades/utilities";
 
 /* ---- トークン ---- */
 :root {
