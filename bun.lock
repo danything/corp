@@ -5,9 +5,9 @@
     "": {
       "name": "corp",
       "devDependencies": {
-        "@anyblades/blades": "^3.1.4",
         "@astrojs/check": "^0.9.12",
         "@astrojs/sitemap": "^3.7.6",
+        "@sveti/blades": "^3.1.4",
         "@types/bun": "^1.4.5",
         "astro": "^7.4.13",
         "oxlint": "^1.95.0",
@@ -16,8 +16,6 @@
     },
   },
   "packages": {
-    "@anyblades/blades": ["@anyblades/blades@3.1.4", "", {}, "sha512-+sFFnRLgyu2mvHTUXrbIObZ/NKpEgK00hdyjBQdTESI3aTAn5BjNgVZW7OfTi/beyohHlTbcTTPvu6nYGleT3w=="],
-
     "@astrojs/astro2tsx": ["@astrojs/astro2tsx@0.1.4", "", { "dependencies": { "@emnapi/core": "1.11.3", "@emnapi/runtime": "1.11.3", "@napi-rs/wasm-runtime": "1.2.4" } }, "sha512-5dJqY4i1AlXxcsSFHkaegnrgdVs9J4U93y/YF0xmvmSOcNYVQnf4db3IhvqHZ5v8biLPlPlFmlYsqHj0c4/ZSA=="],
 
     "@astrojs/check": ["@astrojs/check@0.9.12", "", { "dependencies": { "@astrojs/language-server": "^2.17.3", "chokidar": "^5.0.0", "kleur": "^4.1.5", "yargs": "^18.2.0" }, "peerDependencies": { "typescript": "^5.0.0 || ^6.0.0" }, "bin": { "astro-check": "./bin/astro-check.js" } }, "sha512-hazpqxIfZWj2VhyPyR0pOEQ/IhFDM/2nIApL96zMXABdD8NrUKYDmhxTy7h+drTDl9MQG/Sd1ET/4amadVJUUA=="],
@@ -269,6 +267,8 @@
     "@shikijs/types": ["@shikijs/types@4.6.0", "", { "dependencies": { "@shikijs/vscode-textmate": "^10.1.0", "@types/hast": "^3.0.5" } }, "sha512-+ENG1adsKt/X7cRYw1Nl7BEpBmPOjmQ7bR/eGmHuMlT8gtOFf3KEi5l31DJYyAWhW6Y6bjP1plU7FmaxWGENFw=="],
 
     "@shikijs/vscode-textmate": ["@shikijs/vscode-textmate@10.1.0", "", {}, "sha512-cVBuhDQjBZaNMTwBquYfPydrUP+E3hE6oYGasx8h6ZrODIM7/r+gxLDXdd66oszbrggZHEntdE6j+5gYIVyMWQ=="],
+
+    "@sveti/blades": ["@sveti/blades@3.1.4", "", {}, "sha512-NDTSNpDFTT8JmbeqlXqjLP3dHymdhJigHblgODLSut8pcweME3IPQh/KIJGncG7WLtdg2d0A5DN56V+sRF4isQ=="],
 
     "@tybys/wasm-util": ["@tybys/wasm-util@0.10.4", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-W3c4gRigFS0T/Ma4qIYF3GDAc5AQdHb1yL5znJT1Zv1YaD9Kitx656wBjvr19qbiosmZT8lWDM5BEMynUqX65A=="],
 
