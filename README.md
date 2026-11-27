@@ -37,8 +37,12 @@
 - **`POST /api/contact`** — 問い合わせ。JSON かフォームの送信 (`application/x-www-form-urlencoded`) を受け、
   入力を確かめ (名前・メール・本文は必須、会社は任意)、見えない項目 (`website`) に値があればボットとみなして送ったふりをし、
   IP ごとに 1 時間 5 回まで (`CF-Connecting-IP`、無ければ `X-Forwarded-For`)、Turnstile のトークンを Cloudflare に確かめてから、
-  `CONTACT_WEBHOOK_URL` (matrix-hookshot の汎用 webhook) に `{"text": "<Markdown>"}` を送る。
-  入力は Markdown として解釈されないよう、すべてコード (インラインコードとコードブロック) に入れ、`@` の後ろに幅の無い空白を挟む
+  Twenty (`TWENTY_API_KEY` があるとき) に記録する (`server/twenty.ts`。GraphQL で、人をメールで探して無ければ作り、
+  会社の欄があれば名前で探して無ければ作り、独自のオブジェクト「お問い合わせ」(`inquiry`) とタスクを作る)。
+  通知は Twenty のワークフロー「お問い合わせを Matrix に通知」が、お問い合わせの `notification` の文面を hookshot の webhook に送る。
+  Twenty に記録できなかった (落ちている・キーが無い) ときは、今までどおり `CONTACT_WEBHOOK_URL` (matrix-hookshot の汎用 webhook) に
+  `{"text": "<Markdown>"}` を直接送る (Twenty に記録できなかった、と書き添える)。
+  文面の入力は Markdown として解釈されないよう、すべてコード (インラインコードとコードブロック) に入れ、`@` の後ろに幅の無い空白を挟む
   (`@room` で部屋全員に通知させない)。入力の中身はログに出さない。
   JavaScript があればページが fetch で送り、無ければ普通のフォームの送信になる (成功は完了のページへ 303、失敗はフォームに入力とエラーを書き戻して返す)
 - **`GET /healthz`** — 200 を返す (k8s のプローブ)
@@ -47,14 +51,17 @@
 
 ### 環境変数
 
-| 名前                  |                                                                                      |
-| --------------------- | ------------------------------------------------------------------------------------ |
-| `CONTACT_WEBHOOK_URL` | 問い合わせを送る hookshot の汎用 webhook の URL                                      |
-| `TURNSTILE_SECRET`    | Cloudflare Turnstile の「doany.io」ウィジェット (yosegaki と同じ) のシークレットキー |
-| `PORT`                | 待ち受けるポート (既定 8080)                                                         |
-| `DIST_DIR`            | 配信するディレクトリ (既定 `./dist`)                                                 |
+| 名前                  |                                                                                                     |
+| --------------------- | --------------------------------------------------------------------------------------------------- |
+| `CONTACT_WEBHOOK_URL` | 問い合わせを送る hookshot の汎用 webhook の URL                                                     |
+| `TWENTY_API_KEY`      | 問い合わせを記録する Twenty の API キー (ロール「corp のお問い合わせ」)。無ければ Twenty を使わない |
+| `TWENTY_URL`          | Twenty の URL (既定 `https://t.doany.io`。クラスタでは `http://twenty.twenty.svc:3000`)             |
+| `TWENTY_ASSIGNEE_ID`  | タスクの担当にする Twenty のワークスペースのメンバーの ID (任意)                                    |
+| `TURNSTILE_SECRET`    | Cloudflare Turnstile の「doany.io」ウィジェット (yosegaki と同じ) のシークレットキー                |
+| `PORT`                | 待ち受けるポート (既定 8080)                                                                        |
+| `DIST_DIR`            | 配信するディレクトリ (既定 `./dist`)                                                                |
 
-どちらかの秘密が無ければ、問い合わせは 503 を返す (ページの配信はできる)。
+`TURNSTILE_SECRET` か、送り先 (`CONTACT_WEBHOOK_URL` と `TWENTY_API_KEY` のどちらも) が無ければ、問い合わせは 503 を返す (ページの配信はできる)。
 ビルド時の `PUBLIC_TURNSTILE_SITE_KEY` でサイトキーを差し替えられる (無ければ本番のキー)。
 
 ## 開発
@@ -93,6 +100,12 @@ main に push すると GitHub Actions (`.github/workflows/docker.yml`) がイ�
 `deploy/deployment.yaml` のタグを書き換えて push する。Argo CD (danything/gitops の ApplicationSet) が `deploy/` を namespace `corp` に同期する。
 
 - `deploy/httproute.yaml` — Cilium Gateway `doany` の `https-apex` リスナー、`doany.io`
-- `deploy/secrets.sops.yaml` — `SopsSecret` (値は SOPS で暗号化)。Secret `corp-secrets` (`contact-webhook-url`・`turnstile-secret`) を作る。直すときは管理者の鍵で `sops edit` して push する
+- `deploy/secrets.sops.yaml` — `SopsSecret` (値は SOPS で暗号化)。Secret `corp-secrets` (`contact-webhook-url`・`turnstile-secret`・`twenty-api-key`) を作る (`twenty-api-key` は無くてもよい)。直すときは管理者の鍵で `sops edit` して push する
+
+Twenty (https://t.doany.io) の側には、次のものを手で作ってある (2026-11-27)。
+
+- 独自のオブジェクト「お問い合わせ」(`inquiry`): 名前・メール・会社・団体 (入力)・本文・言語・状態 (新規・返信済み・完了・スパム)・送信元 IP・通知の文面 (Matrix)・人・会社
+- ロール「corp のお問い合わせ」: 人・会社・お問い合わせ・タスク・タスクのつながりを読んで作るだけ (消せない・設定は触れない)。`twenty-api-key` はこのロールの API キー
+- ワークフロー「お問い合わせを Matrix に通知」: `inquiry.created` で、`notification` と Twenty へのリンクを hookshot の webhook (`contact-webhook-url` と同じ URL) に POST する (失敗したら 3 回やり直す)
 
 イメージは distroless の Bun に `server.js` (`server.ts` を 1 ファイルにまとめたもの) と `dist/` だけを置き、uid 65532 で、ルートを読み取り専用にして動かす。

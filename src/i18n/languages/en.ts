@@ -388,7 +388,7 @@ export const en: Translation = {
   privacy: {
     title: "Privacy policy",
     description: "How doany.io handles the personal information it receives.",
-    updated: "Established 24 October 2026",
+    updated: "Established 24 October 2026, revised 27 November 2026",
     lead: "This policy covers the personal information Doa receives on this site (doany.io). Doa's own services, such as Todoroku and worklog, have their own terms and privacy policies.",
     sections: [
       {
@@ -433,7 +433,7 @@ export const en: Translation = {
       {
         title: "Keeping it",
         body: [
-          "Messages arrive in a notification chat on a server Doa runs. They're kept only as long as the conversation needs, then deleted.",
+          "Messages are recorded in a customer management system (Twenty) on a server Doa runs, and arrive in a notification chat on a server Doa runs. They're kept only as long as the conversation needs, then deleted.",
         ],
         items: [],
         links: [],

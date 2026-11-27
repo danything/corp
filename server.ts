@@ -6,7 +6,10 @@
 // 環境変数
 //   PORT                 待ち受けるポート(既定 8080)
 //   DIST_DIR             配信するディレクトリ(既定 ./dist)
-//   CONTACT_WEBHOOK_URL  問い合わせを送る hookshot の汎用 webhook
+//   CONTACT_WEBHOOK_URL  hookshot の汎用 webhook。Twenty に記録できなかった(か使わない)ときに直接送る
+//   TWENTY_API_KEY       問い合わせを記録する Twenty の API キー。無ければ Twenty を使わない
+//   TWENTY_URL           Twenty の URL(既定 https://t.doany.io)
+//   TWENTY_ASSIGNEE_ID   問い合わせのタスクの担当(Twenty のワークスペースのメンバーの ID。任意)
 //   TURNSTILE_SECRET     Cloudflare Turnstile のシークレットキー
 import path from "node:path";
 
@@ -107,6 +110,13 @@ if (import.meta.main) {
     contact: {
       env: {
         webhookUrl: process.env.CONTACT_WEBHOOK_URL || undefined,
+        twenty: process.env.TWENTY_API_KEY
+          ? {
+              url: process.env.TWENTY_URL || "https://t.doany.io",
+              apiKey: process.env.TWENTY_API_KEY,
+              assigneeId: process.env.TWENTY_ASSIGNEE_ID || undefined,
+            }
+          : undefined,
         turnstileSecret: process.env.TURNSTILE_SECRET || undefined,
       },
       fetch,
