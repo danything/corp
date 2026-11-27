@@ -1,4 +1,7 @@
-// POST /api/contact。問い合わせフォームを受け、Turnstile を確かめてから Matrix(hookshot の webhook)へ送る。
+// POST /api/contact。問い合わせフォームを受け、Turnstile を確かめてから Twenty に記録する(twenty.ts)。
+// 通知は Twenty のワークフローが Matrix(hookshot の webhook)へ送る。
+// Twenty に記録できなかったとき(落ちている・設定が無い)は、今までどおり corp から hookshot へ直接送り、
+// 問い合わせを落とさない。
 //
 // 受け付けるのは JSON と、フォームの送信そのもの(application/x-www-form-urlencoded)の 2 通り。
 // - JSON で送られたか、Accept に application/json があれば JSON で返す({ ok } か { ok: false, error })。
@@ -9,6 +12,7 @@
 // 利用者の入力(名前・メール・本文)はログに出さない
 import { buildContactMarkdown } from "./markdown";
 import type { RateLimiter } from "./rate-limit";
+import { recordInquiry, type TwentyEnv } from "./twenty";
 
 export const FIELDS = ["name", "email", "company", "message"] as const;
 export type Field = (typeof FIELDS)[number];
@@ -135,8 +139,10 @@ export function clientIp(req: Request, fallback?: string): string | undefined {
 }
 
 export interface ContactEnv {
-  /** hookshot の汎用 webhook の URL(CONTACT_WEBHOOK_URL) */
+  /** hookshot の汎用 webhook の URL(CONTACT_WEBHOOK_URL)。Twenty に記録できなかったときの送り先 */
   webhookUrl?: string;
+  /** Twenty の接続先(TWENTY_URL・TWENTY_API_KEY)。無ければ Twenty を使わず webhook に送る */
+  twenty?: TwentyEnv;
   /** Turnstile のシークレットキー(TURNSTILE_SECRET) */
   turnstileSecret?: string;
 }
@@ -261,10 +267,10 @@ export async function handleContact(
   if (invalid.length) return fail("invalid", invalid);
   if (!input.token || input.token.length > 2048) return fail("turnstile");
 
-  const { webhookUrl, turnstileSecret } = deps.env;
-  if (!webhookUrl || !turnstileSecret) {
+  const { webhookUrl, twenty, turnstileSecret } = deps.env;
+  if ((!webhookUrl && !twenty) || !turnstileSecret) {
     console.error(
-      "contact: CONTACT_WEBHOOK_URL か TURNSTILE_SECRET が設定されていない",
+      "contact: 送り先 (CONTACT_WEBHOOK_URL か TWENTY_API_KEY) か TURNSTILE_SECRET が設定されていない",
     );
     return fail("unavailable");
   }
@@ -296,11 +302,30 @@ export async function handleContact(
   }
 
   const text = buildContactMarkdown({ ...input, ip });
+
+  if (twenty) {
+    const recorded = await recordInquiry(
+      { ...input, ip, notification: text },
+      twenty,
+      deps.fetch,
+    );
+    if (recorded.ok) {
+      console.info(`contact: Twenty に記録した (${lang})`);
+      return succeed();
+    }
+  }
+  // Twenty が無ければ webhook はある(上で確かめた)。ここで無いのは Twenty に記録できなかったとき
+  if (!webhookUrl) return fail("send_failed");
+
+  // Twenty を使わないか、Twenty に記録できなかった。通知に直接送る
+  const fallback = twenty
+    ? `${text}\n\n(Twenty に記録できなかったので、corp から直接送った)`
+    : text;
   try {
     const res = await deps.fetch(webhookUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text: fallback }),
       signal: AbortSignal.timeout(10_000),
     });
     if (!res.ok) {

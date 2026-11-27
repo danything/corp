@@ -43,6 +43,19 @@ spec:
                 secretKeyRef:
                   name: corp-secrets
                   key: contact-webhook-url
+            # 問い合わせを記録する Twenty。クラスタの中から直接つなぐ (Cloudflare を通らない)。
+            # キーは Twenty のロール「corp のお問い合わせ」の API キー。Secret に無ければ Twenty を使わず、上の webhook に直接送る
+            - name: TWENTY_URL
+              value: http://twenty.twenty.svc:3000
+            - name: TWENTY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: corp-secrets
+                  key: twenty-api-key
+                  optional: true
+            # タスクの担当 (Twenty のワークスペースのメンバー info@doany.io)
+            - name: TWENTY_ASSIGNEE_ID
+              value: 765420f9-76d3-463f-9afc-635176dcbc8b
             - name: TURNSTILE_SECRET
               valueFrom:
                 secretKeyRef:

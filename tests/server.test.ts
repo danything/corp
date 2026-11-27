@@ -13,12 +13,14 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { createApp } from "../server";
-import { TURNSTILE_VERIFY_URL } from "../server/contact";
+import { type ContactEnv, TURNSTILE_VERIFY_URL } from "../server/contact";
 import { contactFormRenderer } from "../server/contact-page";
 import { RateLimiter } from "../server/rate-limit";
 import { BLOG_ORIGIN, listFiles } from "../server/static";
 
 const WEBHOOK = "https://m.example/webhook/abc";
+const TWENTY = { url: "http://twenty.test:3000", apiKey: "key" };
+const TWENTY_GRAPHQL = "http://twenty.test:3000/graphql";
 
 // src/components/ContactForm.astro と同じ作りの最小のフォーム
 const FORM_HTML = (lang: string) => `<!DOCTYPE html><html lang="${lang}"><body>
@@ -37,7 +39,9 @@ let calls: { url: string; init?: RequestInit }[];
 let turnstileResult: unknown;
 let webhookStatus: number;
 let app: ReturnType<typeof createApp>;
-let env: { webhookUrl?: string; turnstileSecret?: string };
+let env: ContactEnv;
+/** Twenty が動いているか。false なら GraphQL が 503 を返す */
+let twentyUp: boolean;
 
 const fakeFetch = (async (
   input: string | URL | Request,
@@ -50,6 +54,17 @@ const fakeFetch = (async (
     return Response.json(turnstileResult);
   }
   if (url === WEBHOOK) return new Response("", { status: webhookStatus });
+  if (url === TWENTY_GRAPHQL) {
+    if (!twentyUp) return new Response("", { status: 503 });
+    // 人も会社も見つからない Twenty。作れば ID を返す
+    const { query } = JSON.parse(String(init?.body));
+    const op = /(?:query|mutation)[^{]*\{\s*(\w+)/.exec(query)?.[1] ?? "?";
+    const data =
+      op === "people" || op === "companies"
+        ? { edges: [] }
+        : { id: `${op}-id` };
+    return Response.json({ data: { [op]: data } });
+  }
   throw new Error(`unexpected fetch ${url}`);
 }) as typeof fetch;
 
@@ -71,6 +86,7 @@ beforeEach(async () => {
   calls = [];
   turnstileResult = { success: true };
   webhookStatus = 200;
+  twentyUp = true;
   env = { webhookUrl: WEBHOOK, turnstileSecret: "secret" };
   app = createApp({
     distDir: dir,
@@ -216,6 +232,49 @@ describe("POST /api/contact", () => {
     const res = await postJson(valid);
     expect(res.status).toBe(502);
     expect(await res.json()).toEqual({ ok: false, error: "send_failed" });
+  });
+
+  describe("Twenty がある", () => {
+    beforeEach(() => {
+      env.twenty = TWENTY;
+    });
+
+    test("Twenty に記録したら webhook には送らない (通知は Twenty のワークフローが送る)", async () => {
+      const res = await postJson(valid, { "CF-Connecting-IP": "203.0.113.5" });
+      expect(res.status).toBe(200);
+      const urls = calls.map((c) => c.url);
+      expect(urls[0]).toBe(TURNSTILE_VERIFY_URL);
+      expect(urls.slice(1).every((u) => u === TWENTY_GRAPHQL)).toBe(true);
+      // お問い合わせには、webhook に送っていたのと同じ無害にした文面を入れる
+      const inquiry = calls
+        .filter((c) => c.url === TWENTY_GRAPHQL)
+        .map((c) => JSON.parse(String(c.init?.body)))
+        .find((b) => String(b.query).includes("createInquiry"));
+      expect(inquiry.variables.data.notification).toContain("`山田 太郎`");
+      expect(inquiry.variables.data.ip).toBe("203.0.113.5");
+    });
+
+    test("Twenty が落ちていたら webhook に直接送る", async () => {
+      twentyUp = false;
+      const res = await postJson(valid);
+      expect(res.status).toBe(200);
+      expect(calls.at(-1)?.url).toBe(WEBHOOK);
+      const { text } = JSON.parse(String(calls.at(-1)?.init?.body));
+      expect(text).toContain("`山田 太郎`");
+      expect(text).toContain("Twenty に記録できなかった");
+    });
+
+    test("Twenty が落ちていて webhook も無ければ 502", async () => {
+      twentyUp = false;
+      env.webhookUrl = undefined;
+      const res = await postJson(valid);
+      expect(res.status).toBe(502);
+    });
+
+    test("webhook が無くても Twenty があれば受け付ける", async () => {
+      env.webhookUrl = undefined;
+      expect((await postJson(valid)).status).toBe(200);
+    });
   });
 
   test("設定が無ければ 503", async () => {
